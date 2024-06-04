@@ -1,0 +1,54 @@
+{
+  "properties": [
+    {
+      "name": "jwt.secret.key",
+      "type": "java.lang.String",
+      "description": "A description for 'jwt.secret.key'"
+    },
+    {
+      "name": "jwt.expired.time",
+      "type": "java.lang.String",
+      "description": "A description for 'jwt.expired.time'"
+    },
+    {
+      "name": "goong.api.key",
+      "type": "java.lang.String",
+      "description": "A description for 'goong.api.key'"
+    },
+    {
+      "name": "goong.place.autocomplete",
+      "type": "java.lang.String",
+      "description": "A description for 'goong.place.autocomplete'"
+    },
+    {
+      "name": "goong.place.detail",
+      "type": "java.lang.String",
+      "description": "A description for 'goong.place.detail'"
+    },
+    {
+      "name": "goong.distance",
+      "type": "java.lang.String",
+      "description": "A description for 'goong.distance'"
+    },
+    {
+      "name": "goong.geometry",
+      "type": "java.lang.String",
+      "description": "A description for 'goong.geometry'"
+    },
+    {
+      "name": "app.default.password",
+      "type": "java.lang.String",
+      "description": "A description for 'app.default.password'"
+    },
+    {
+      "name": "app.mobile.default.password",
+      "type": "java.lang.String",
+      "description": "A description for 'app.mobile.default.password'"
+    },
+    {
+      "name": "otp.expired.time",
+      "type": "java.lang.String",
+      "description": "A description for 'otp.expired.time'"
+    }
+  ]
+}
