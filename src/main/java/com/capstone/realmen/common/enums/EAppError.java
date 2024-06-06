@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum EAppError {
     TOKEN_EXCEPTION("RM001", "Yêu cầu đăng nhập không hợp lệ"),
+    AUTH_EXCEPTION("RM002", "Thông tin đăng nhập không đúng"),
     NOT_FOUND("RM002", "Không tìm thấy dữ liệu");
 
     String code;

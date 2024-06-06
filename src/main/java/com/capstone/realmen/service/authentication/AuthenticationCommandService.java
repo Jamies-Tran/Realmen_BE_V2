@@ -1,7 +1,9 @@
 package com.capstone.realmen.service.authentication;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.capstone.realmen.controller.handler.exceptions.LoginException;
 import com.capstone.realmen.controller.security.token.AccessTokenService;
 import com.capstone.realmen.data.dto.access.token.AccessToken;
 import com.capstone.realmen.data.dto.account.Account;
@@ -22,11 +24,16 @@ public class AuthenticationCommandService {
     AccessTokenService accessTokenService;
     @NonNull
     AccountQueryService accountQueryService;
+    @NonNull
+    PasswordEncoder passwordEncoder;
 
     public AccessToken create(CreateRequire createRequire) {
         Account foundAccount = accountQueryService.find(
             SearchByFieldPhoneOrStaffCode.of(createRequire.staffCode())
         );
+        if(passwordEncoder.matches(createRequire.password(), foundAccount.password())) {
+            throw new LoginException();
+        }
         String accessToken = accessTokenService.generateJwtToken(createRequire.staffCode());
         return AccessToken.of(foundAccount.accountId(), 
                               foundAccount.branchId(), 

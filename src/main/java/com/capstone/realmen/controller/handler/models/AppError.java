@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.capstone.realmen.common.enums.EAppError;
 import com.capstone.realmen.controller.handler.exceptions.AccessTokenException;
+import com.capstone.realmen.controller.handler.exceptions.LoginException;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 
 import lombok.Builder;
@@ -25,6 +26,14 @@ public record AppError(
 
     public static AppError notFoundException(NotFoundException exc) {
         String message = message(exc, EAppError.NOT_FOUND.getMessage());
+        return AppError.builder()
+                .code("")
+                .message(message)
+                .build();
+    }
+
+    public static AppError loginException(LoginException exc) {
+        String message = message(exc, EAppError.AUTH_EXCEPTION.getMessage());
         return AppError.builder()
                 .code("")
                 .message(message)
