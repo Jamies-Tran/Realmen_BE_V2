@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import com.capstone.realmen.common.enums.ERole;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.account.Account;
-import com.capstone.realmen.usecase.account.admin.IAccountAdminService;
+import com.capstone.realmen.service.account.data.SearchByField;
+import com.capstone.realmen.service.account.usecase.admin.IAccountAdminService;
 
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -25,7 +26,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String phoneOrStaffCode) throws UsernameNotFoundException {
-        Account account = accountAdminService.findByPhoneOrStaffCode(phoneOrStaffCode);
+        Account account = accountAdminService.adminFindByPhoneOrStaffCode(SearchByField.of(phoneOrStaffCode));
         ERole role = ERole.findByCode(account.roleCode())
                 .orElseThrow(NotFoundException::new);
         return User.builder().username(phoneOrStaffCode).password(account.password())

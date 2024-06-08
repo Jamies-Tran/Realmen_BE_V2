@@ -14,6 +14,10 @@ public record CreateRequire(
                 return init().withStaffCode(staffCode).withPassword(password).withPhone(phone);
         }
 
+        public static CreateRequire ofAdmin(String staffCode, String password) {
+                return init().withStaffCode(staffCode).withPassword(password);
+        }
+
         private static CreateRequire init() {
                 return CreateRequire.builder().build();
         }

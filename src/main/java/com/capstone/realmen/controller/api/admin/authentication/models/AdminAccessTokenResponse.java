@@ -7,7 +7,7 @@ import lombok.With;
 
 @With
 @Builder
-public record AccessTokenResponse(
+public record AdminAccessTokenResponse(
     Long accountId,
         Long branchId,
         String staffCode,

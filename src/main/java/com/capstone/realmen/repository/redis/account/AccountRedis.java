@@ -1,8 +1,7 @@
 package com.capstone.realmen.repository.redis.account;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
-
-import jakarta.persistence.Id;
 import lombok.Builder;
 
 @Builder

@@ -4,7 +4,8 @@ import org.springframework.stereotype.Service;
 
 import com.capstone.realmen.data.dto.access.token.AccessToken;
 import com.capstone.realmen.service.authentication.data.CreateRequire;
-import com.capstone.realmen.usecase.authentication.admin.IAuthenticationAdminService;
+import com.capstone.realmen.service.authentication.usecase.admin.IAdminAuthenticationService;
+import com.capstone.realmen.service.authentication.usecase.app.IAppAuthenticationService;
 
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -14,14 +15,18 @@ import lombok.experimental.FieldDefaults;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AuthenticationUseCaseService implements IAuthenticationAdminService{
+public class AuthenticationUseCaseService implements IAdminAuthenticationService, IAppAuthenticationService {
     @NonNull
     AuthenticationCommandService authenticationCommandService;
-    
+
     @Override
-    public AccessToken createAccessToken(String staffCode, String password) {
-        CreateRequire createRequire = CreateRequire.of(staffCode, staffCode, password);
-        return authenticationCommandService.create(createRequire);
+    public AccessToken adminCreateAccessToken(CreateRequire createRequire) {
+        return authenticationCommandService.adminCreate(createRequire);
     }
-    
+
+    @Override
+    public AccessToken appCreateAccessToken(CreateRequire createRequire) {
+        return authenticationCommandService.appCreate(createRequire);
+    }
+
 }

@@ -6,7 +6,7 @@ import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.account.AccountMapper;
 import com.capstone.realmen.repository.database.account.AccountRepository;
-import com.capstone.realmen.service.account.data.SearchByFieldPhoneOrStaffCode;
+import com.capstone.realmen.service.account.data.SearchByField;
 
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -22,7 +22,7 @@ public class AccountQueryService {
     @NonNull
     AccountMapper accountMapper;
 
-    public Account find(SearchByFieldPhoneOrStaffCode searchByField) {
+    public Account find(SearchByField searchByField) {
         return accountMapper.toDto(
             accountRepository.findByPhoneOrStaffCode(searchByField.search())
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy tài khoản"))

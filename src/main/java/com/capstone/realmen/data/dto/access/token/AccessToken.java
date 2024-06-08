@@ -21,7 +21,8 @@ public record AccessToken(
     public static AccessToken of(Long accountId, String lastName, String firstName, String accessToken,
             String roleCode, String roleName) {
 
-                return init().withAccountId(accountId).withLastName(lastName).withFirstName(firstName)
+                return init().withAccountId(accountId)
+                    .withLastName(lastName).withFirstName(firstName)
                     .withLastName(lastName).withAccessToken(accessToken)
                     .withRoleCode(roleCode).withRoleName(roleName)
                     .withIssueAt(LocalDateTime.now());
