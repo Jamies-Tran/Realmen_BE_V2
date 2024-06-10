@@ -2,6 +2,8 @@ package com.capstone.realmen.repository.database.account;
 
 import java.time.LocalDate;
 
+import com.capstone.realmen.repository.database.audit.Auditable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +26,7 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Table(name = "account")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountEntity {
+public class AccountEntity extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long accountId;
@@ -60,4 +62,12 @@ public class AccountEntity {
     String accountStatusCode;
     @Column(name = "account_status_name")
     String accountStatusName;
+
+    public AccountEntity withAudit(Auditable auditable) {
+        return this.withAudit(auditable);
+    }
+
+    public AccountEntity withStatus(String statusCode, String statusName) {
+        return this.withAccountStatusCode(statusCode).withAccountStatusName(statusName);
+    }
 }

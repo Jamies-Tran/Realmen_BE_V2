@@ -10,7 +10,7 @@ import com.capstone.realmen.common.enums.ERole;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.service.account.data.SearchByField;
-import com.capstone.realmen.service.account.usecase.admin.IAccountAdminService;
+import com.capstone.realmen.service.account.usecase.admin.IAdminAccountService;
 
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -22,7 +22,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomUserDetailService implements UserDetailsService {
     @NonNull
-    IAccountAdminService accountAdminService;
+    IAdminAccountService accountAdminService;
 
     @Override
     public UserDetails loadUserByUsername(String phoneOrStaffCode) throws UsernameNotFoundException {

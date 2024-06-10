@@ -9,7 +9,9 @@ import lombok.With;
 @Builder
 public record CreateRequire(
         Account account,
-        Boolean isForStaff) {
+        Boolean isForStaff,
+        // receptionist create customer account
+        Boolean isCreatedByRecept) {
 
     public static CreateRequire ofStaff(Account account) {
         return CreateRequire.init()
@@ -20,7 +22,15 @@ public record CreateRequire(
     public static CreateRequire ofCustomer(Account account) {
         return CreateRequire.init()
                 .withAccount(account)
-                .withIsForStaff(false);
+                .withIsForStaff(false)
+                .withIsCreatedByRecept(false);
+    }
+
+    public static CreateRequire ofReceptionist(Account account) {
+        return CreateRequire.init()
+                .withAccount(account)
+                .withIsForStaff(false)
+                .withIsCreatedByRecept(true);
     }
 
     private static CreateRequire init() {
