@@ -1,6 +1,7 @@
 package com.capstone.realmen.repository.database.account;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import com.capstone.realmen.repository.database.audit.Auditable;
 
@@ -64,7 +65,19 @@ public class AccountEntity extends Auditable {
     String accountStatusName;
 
     public AccountEntity withAudit(Auditable auditable) {
-        return this.withAudit(auditable);
+        this.setCreatedBy(Objects.nonNull(auditable.getCreatedBy())
+                ? auditable.getCreatedBy()
+                : this.getCreatedBy());
+        this.setCreatedAt(Objects.nonNull(auditable.getCreatedAt())
+                ? auditable.getCreatedAt()
+                : this.getCreatedAt());
+        this.setUpdatedBy(Objects.nonNull(auditable.getUpdatedBy())
+                ? auditable.getUpdatedBy()
+                : this.getUpdatedBy());
+        this.setUpdatedAt(Objects.nonNull(auditable.getUpdatedAt())
+                ? auditable.getUpdatedAt()
+                : this.getUpdatedAt());
+        return this;
     }
 
     public AccountEntity withStatus(String statusCode, String statusName) {

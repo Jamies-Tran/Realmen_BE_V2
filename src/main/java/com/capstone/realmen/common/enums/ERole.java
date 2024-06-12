@@ -31,6 +31,6 @@ public enum ERole {
     }
 
     public SimpleGrantedAuthority authority() {
-        return new SimpleGrantedAuthority(String.format("ROLE_%s", this.name()));
+        return new SimpleGrantedAuthority(String.format("ROLE_%s", this.getCode()));
     }
 }

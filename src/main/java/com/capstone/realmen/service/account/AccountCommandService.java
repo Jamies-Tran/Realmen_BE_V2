@@ -1,14 +1,20 @@
 package com.capstone.realmen.service.account;
 
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import com.capstone.realmen.common.enums.EAccountStatus;
 import com.capstone.realmen.common.enums.ERole;
 import com.capstone.realmen.common.request.RequestContext;
+import com.capstone.realmen.controller.handler.exceptions.InvalidRequest;
+import com.capstone.realmen.controller.security.encoder.AppPasswordEncoder;
 import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.account.AccountCreated;
-import com.capstone.realmen.data.dto.account.AccountMapper;
+import com.capstone.realmen.data.dto.account.IAccountMapper;
 import com.capstone.realmen.repository.database.account.AccountEntity;
 import com.capstone.realmen.repository.database.account.AccountRepository;
 import com.capstone.realmen.repository.database.audit.Auditable;
@@ -20,16 +26,16 @@ import lombok.experimental.FieldDefaults;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountCommandService {
     @NonNull
-    AccountRepository accountRepository;
+    final AccountRepository accountRepository;
     @NonNull
-    AccountMapper accountMapper;
+    final IAccountMapper accountMapper;
     @NonNull
-    RequestContext requestContext;
+    final RequestContext requestContext;
     @NonNull
-    PasswordEncoder passwordEncoder;
+    final AppPasswordEncoder appPasswordEncoder;
 
     @Value("${app.default.password}")
     String appDefaultPassword;
@@ -37,10 +43,10 @@ public class AccountCommandService {
     String appMobDefaultPassword;
 
     public AccountCreated createAccount(CreateRequire createRequire) {
-        if(createRequire.isForStaff()) {
+        if (createRequire.isForStaff()) {
             return this.createStaff(createRequire.account());
         } else {
-            if(createRequire.isCreatedByRecept()) {
+            if (createRequire.isCreatedByRecept()) {
                 return this.createCustomerByReceptionist(createRequire.account());
             } else {
                 return this.createCustomer(createRequire.account());
@@ -49,6 +55,11 @@ public class AccountCommandService {
     }
 
     private AccountCreated createStaff(Account account) {
+        if (Objects.equals(account.roleCode(), ERole.OPERATOR_STAFF.getCode())
+                && !StringUtils.hasText(account.professionalTypeCode())) {
+            throw new InvalidRequest("Thông tin nhận viên vận hành không hợp lệ");
+        }
+        PasswordEncoder passwordEncoder = appPasswordEncoder.passwordEncoder();
         Account audit = requestContext.getAccount();
         AccountEntity newAccount = accountMapper.toEntity(account);
 
@@ -56,7 +67,10 @@ public class AccountCommandService {
             case BRANCH_MANAGER:
                 accountRepository.save(
                         newAccount
-                                .withPassword(passwordEncoder.encode(appDefaultPassword))
+                                .withRoleName(ERole
+                                        .findByCode(account.roleCode()).get().getName())
+                                .withPassword(passwordEncoder
+                                        .encode(appDefaultPassword))
                                 .withStatus(EAccountStatus.ACTIVE.getCode(),
                                         EAccountStatus.ACTIVE.getName())
                                 .withAudit(Auditable.ofCreated(audit))
@@ -66,6 +80,8 @@ public class AccountCommandService {
             case SHOP_OWNER:
                 accountRepository.save(
                         newAccount
+                                .withRoleName(ERole
+                                        .findByCode(account.roleCode()).get().getName())
                                 .withPassword(passwordEncoder.encode(appDefaultPassword))
                                 .withStatus(EAccountStatus.PENDING_BRANCH.getCode(),
                                         EAccountStatus.PENDING_BRANCH.getName())
@@ -85,8 +101,7 @@ public class AccountCommandService {
                         .withPassword(appMobDefaultPassword)
                         .withStatus(EAccountStatus.ACTIVE.getCode(),
                                 EAccountStatus.ACTIVE.getName())
-                        .withAudit(Auditable.ofCreated(requestContext.getAccount()))
-        );
+                        .withAudit(Auditable.ofCreated(requestContext.getAccount())));
         return AccountCreated.byDefault(newAccount.getAccountId());
     }
 
@@ -97,8 +112,7 @@ public class AccountCommandService {
                         .withPassword(appMobDefaultPassword)
                         .withStatus(EAccountStatus.PENDING_ACTIVE.getCode(),
                                 EAccountStatus.PENDING_ACTIVE.getName())
-                        .withAudit(Auditable.ofCreated(requestContext.getAccount()))
-        );
+                        .withAudit(Auditable.ofCreated(requestContext.getAccount())));
         return AccountCreated.byReceptionist(newAccount.getAccountId());
     }
 }

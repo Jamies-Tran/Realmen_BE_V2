@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.account.Account;
-import com.capstone.realmen.data.dto.account.AccountMapper;
+import com.capstone.realmen.data.dto.account.IAccountMapper;
 import com.capstone.realmen.repository.database.account.AccountRepository;
 import com.capstone.realmen.service.account.data.SearchByField;
 
@@ -20,7 +20,7 @@ public class AccountQueryService {
     @NonNull
     AccountRepository accountRepository;
     @NonNull
-    AccountMapper accountMapper;
+    IAccountMapper accountMapper;
 
     public Account find(SearchByField searchByField) {
         return accountMapper.toDto(

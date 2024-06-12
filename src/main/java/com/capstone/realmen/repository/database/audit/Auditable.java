@@ -19,7 +19,6 @@ import lombok.experimental.FieldDefaults;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @MappedSuperclass
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Auditable {

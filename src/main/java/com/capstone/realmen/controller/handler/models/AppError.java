@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.capstone.realmen.common.enums.EAppError;
 import com.capstone.realmen.controller.handler.exceptions.AccessTokenException;
+import com.capstone.realmen.controller.handler.exceptions.InvalidRequest;
 import com.capstone.realmen.controller.handler.exceptions.LoginException;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 
@@ -27,7 +28,7 @@ public record AppError(
     public static AppError notFoundException(NotFoundException exc) {
         String message = message(exc, EAppError.NOT_FOUND.getMessage());
         return AppError.builder()
-                .code("")
+                .code(EAppError.NOT_FOUND.getCode())
                 .message(message)
                 .build();
     }
@@ -35,12 +36,20 @@ public record AppError(
     public static AppError loginException(LoginException exc) {
         String message = message(exc, EAppError.AUTH_EXCEPTION.getMessage());
         return AppError.builder()
-                .code("")
+                .code(EAppError.AUTH_EXCEPTION.getMessage())
+                .message(message)
+                .build();
+    }
+
+    public static AppError invalidRequest(InvalidRequest exc) {
+        String message = message(exc, EAppError.INVALID_REQUEST.getMessage());
+        return AppError.builder()
+                .code(EAppError.INVALID_REQUEST.getCode())
                 .message(message)
                 .build();
     }
 
     private static String message(RuntimeException exc, String alternativeMessage) {
-        return Objects.requireNonNullElse(exc.getMessage(), EAppError.NOT_FOUND.getMessage());
+        return Objects.requireNonNullElse(exc.getMessage(), alternativeMessage);
     }
 }

@@ -26,10 +26,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccessTokenService {
     @Value("${jwt.secret.key}")
-    private String secretKey;
+    String secretKey;
     @Value("${jwt.expired.time}")
-    private Long expiredTime;
-    private Date now = new Date();
+    Long expiredTime;
+    Date now = new Date();
 
     public String generateJwtToken(String identify) {
 
@@ -66,11 +66,11 @@ public class AccessTokenService {
                     .parse(jwt);
             return true;
         } catch (MalformedJwtException exc) {
-            throw new AccessTokenException();
+            throw new AccessTokenException(exc.getMessage());
         } catch (SignatureException exc) {
-            throw new AccessTokenException();
+            throw new AccessTokenException(exc.getMessage());
         } catch (ExpiredJwtException exc) {
-            throw new AccessTokenException();
+            throw new AccessTokenException(exc.getMessage());
         }
     }
 

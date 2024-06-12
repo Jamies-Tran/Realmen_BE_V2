@@ -14,11 +14,11 @@ import jakarta.validation.Payload;
 @Documented
 @Constraint(validatedBy = PhoneValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.TYPE})
+@Target({ ElementType.FIELD, ElementType.TYPE })
 public @interface Phone {
     String message() default "Số điện thoại không hợp lệ";
 
-    Class<?>[] group() default {};
+    Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 }

@@ -6,7 +6,7 @@ import org.mapstruct.ReportingPolicy;
 import com.capstone.realmen.repository.database.account.AccountEntity;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface AccountMapper {
+public interface IAccountMapper {
     Account toDto(AccountEntity entity);
 
     AccountEntity toEntity(Account dto);

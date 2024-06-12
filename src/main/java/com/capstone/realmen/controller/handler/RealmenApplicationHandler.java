@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.capstone.realmen.controller.handler.exceptions.AccessTokenException;
+import com.capstone.realmen.controller.handler.exceptions.InvalidRequest;
 import com.capstone.realmen.controller.handler.exceptions.LoginException;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.controller.handler.models.AppError;
@@ -77,6 +78,18 @@ public class RealmenApplicationHandler {
     @ExceptionHandler(LoginException.class)
     public ErrorResponse loginExceptionHandler(LoginException exc) {
         AppError appError = AppError.loginException(exc);
+        return ErrorResponse.builder()
+                .errorCode(appError.code())
+                .errorMsg(appError.message())
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .issueAt(LocalDateTime.now())
+                .build();
+    }
+
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidRequest.class)
+    public ErrorResponse invalidRequest(InvalidRequest exc) {
+        AppError appError = AppError.invalidRequest(exc);
         return ErrorResponse.builder()
                 .errorCode(appError.code())
                 .errorMsg(appError.message())

@@ -14,7 +14,8 @@ import lombok.experimental.FieldDefaults;
 public enum EAppError {
     TOKEN_EXCEPTION("RM001", "Yêu cầu đăng nhập không hợp lệ"),
     AUTH_EXCEPTION("RM002", "Thông tin đăng nhập không đúng"),
-    NOT_FOUND("RM002", "Không tìm thấy dữ liệu");
+    NOT_FOUND("RM002", "Không tìm thấy dữ liệu"),
+    INVALID_REQUEST("RM003", "Request không hợp lệ");
 
     String code;
     String message;
