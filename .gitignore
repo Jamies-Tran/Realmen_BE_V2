@@ -31,4 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
-.src/main/java/com/capstone/realmen/common/util/data/TwilioData.java
+src/main/java/com/capstone/realmen/common/util/data/TwilioData.java
