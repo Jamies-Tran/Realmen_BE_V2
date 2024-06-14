@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.capstone.realmen.controller.handler.exceptions.AccessTokenException;
+import com.capstone.realmen.controller.handler.exceptions.ConflicException;
 import com.capstone.realmen.controller.handler.exceptions.InvalidRequest;
 import com.capstone.realmen.controller.handler.exceptions.LoginException;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
@@ -58,6 +59,7 @@ public class RealmenApplicationHandler {
                 .errorCode(appError.code())
                 .errorMsg(appError.message())
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
                 .issueAt(LocalDateTime.now())
                 .build();
     }
@@ -70,6 +72,7 @@ public class RealmenApplicationHandler {
                 .errorCode(appError.code())
                 .errorMsg(appError.message())
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
                 .issueAt(LocalDateTime.now())
                 .build();
     }
@@ -82,6 +85,7 @@ public class RealmenApplicationHandler {
                 .errorCode(appError.code())
                 .errorMsg(appError.message())
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
                 .issueAt(LocalDateTime.now())
                 .build();
     }
@@ -94,6 +98,20 @@ public class RealmenApplicationHandler {
                 .errorCode(appError.code())
                 .errorMsg(appError.message())
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                .issueAt(LocalDateTime.now())
+                .build();
+    }
+
+    @ResponseStatus(code = HttpStatus.CONFLICT)
+    @ExceptionHandler(ConflicException.class)
+    public ErrorResponse conflicException(ConflicException exc) {
+        AppError appError = AppError.conflicException(exc);
+        return ErrorResponse.builder()
+                .errorCode(appError.code())
+                .errorMsg(appError.message())
+                .statusCode(HttpStatus.CONFLICT.value())
+                .status(HttpStatus.CONFLICT.getReasonPhrase())
                 .issueAt(LocalDateTime.now())
                 .build();
     }

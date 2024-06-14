@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import com.capstone.realmen.common.enums.EAccountStatus;
 import com.capstone.realmen.common.enums.ERole;
 import com.capstone.realmen.common.request.RequestContext;
+import com.capstone.realmen.controller.handler.exceptions.ConflicException;
 import com.capstone.realmen.controller.handler.exceptions.InvalidRequest;
 import com.capstone.realmen.controller.security.encoder.AppPasswordEncoder;
 import com.capstone.realmen.data.dto.account.Account;
@@ -46,6 +47,9 @@ public class AccountCommandService {
         if (createRequire.isForStaff()) {
             return this.createStaff(createRequire.account());
         } else {
+            if (accountRepository.existsByPhone(createRequire.account().phone())) {
+                throw new ConflicException("Thông tin tài khoản đã tồn tại");
+            }
             if (createRequire.isCreatedByRecept()) {
                 return this.createCustomerByReceptionist(createRequire.account());
             } else {
@@ -57,7 +61,11 @@ public class AccountCommandService {
     private AccountCreated createStaff(Account account) {
         if (Objects.equals(account.roleCode(), ERole.OPERATOR_STAFF.getCode())
                 && !StringUtils.hasText(account.professionalTypeCode())) {
-            throw new InvalidRequest("Thông tin nhận viên vận hành không hợp lệ");
+            throw new InvalidRequest("Thông tin nhân viên vận hành không hợp lệ");
+        }
+        if (accountRepository
+                .existsByStaffCodeOrPhone(account.staffCode(), account.phone())) {
+            throw new ConflicException("Thông tin tài khoản đã tồn tại");
         }
         PasswordEncoder passwordEncoder = appPasswordEncoder.passwordEncoder();
         Account audit = requestContext.getAccount();
@@ -65,7 +73,7 @@ public class AccountCommandService {
 
         switch (ERole.findByCode(audit.roleCode()).get()) {
             case BRANCH_MANAGER:
-                accountRepository.save(
+                newAccount = accountRepository.save(
                         newAccount
                                 .withRoleName(ERole
                                         .findByCode(account.roleCode()).get().getName())
@@ -78,7 +86,7 @@ public class AccountCommandService {
                 );
                 return AccountCreated.byManager(newAccount.getAccountId());
             case SHOP_OWNER:
-                accountRepository.save(
+                newAccount = accountRepository.save(
                         newAccount
                                 .withRoleName(ERole
                                         .findByCode(account.roleCode()).get().getName())

@@ -14,4 +14,8 @@ public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
             WHERE a.phone = :search OR a.staffCode = :search
             """)
     Optional<AccountEntity> findByPhoneOrStaffCode(String search);
+
+    Boolean existsByStaffCodeOrPhone(String staffCode, String phone);
+
+    Boolean existsByPhone(String phone);
 }

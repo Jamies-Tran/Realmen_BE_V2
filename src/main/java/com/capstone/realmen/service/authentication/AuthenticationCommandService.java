@@ -7,6 +7,7 @@ import com.capstone.realmen.controller.handler.exceptions.LoginException;
 import com.capstone.realmen.controller.security.token.AccessTokenService;
 import com.capstone.realmen.data.dto.access.token.AccessToken;
 import com.capstone.realmen.data.dto.account.Account;
+import com.capstone.realmen.repository.redis.token.TokenCache;
 import com.capstone.realmen.service.account.AccountQueryService;
 import com.capstone.realmen.service.account.data.SearchByField;
 import com.capstone.realmen.service.authentication.data.CreateRequire;
@@ -47,6 +48,7 @@ public class AuthenticationCommandService {
     public AccessToken appCreate(CreateRequire createRequire) {
         Account foundAccount = accountQueryService.find(
                 SearchByField.of(createRequire.phone()));
+        
         if (!passwordEncoder.matches(createRequire.password(), foundAccount.password())) {
             throw new LoginException();
         }
@@ -59,4 +61,6 @@ public class AuthenticationCommandService {
             foundAccount.roleCode(),
             foundAccount.roleName());
     }
+
+    
 }

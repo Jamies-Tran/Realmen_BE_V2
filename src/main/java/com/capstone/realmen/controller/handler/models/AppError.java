@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.capstone.realmen.common.enums.EAppError;
 import com.capstone.realmen.controller.handler.exceptions.AccessTokenException;
+import com.capstone.realmen.controller.handler.exceptions.ConflicException;
 import com.capstone.realmen.controller.handler.exceptions.InvalidRequest;
 import com.capstone.realmen.controller.handler.exceptions.LoginException;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
@@ -45,6 +46,14 @@ public record AppError(
         String message = message(exc, EAppError.INVALID_REQUEST.getMessage());
         return AppError.builder()
                 .code(EAppError.INVALID_REQUEST.getCode())
+                .message(message)
+                .build();
+    }
+
+    public static AppError conflicException(ConflicException exc) {
+        String message = message(exc, EAppError.CONFLICT_EXCEPTION.getMessage());
+        return AppError.builder()
+                .code(EAppError.CONFLICT_EXCEPTION.getCode())
                 .message(message)
                 .build();
     }
