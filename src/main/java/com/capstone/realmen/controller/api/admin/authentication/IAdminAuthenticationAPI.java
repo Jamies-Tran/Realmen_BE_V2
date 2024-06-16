@@ -11,7 +11,7 @@ import com.capstone.realmen.controller.api.admin.authentication.models.AdminAcce
 import jakarta.validation.Valid;
 
 @RequestMapping("/web/auth")
-public interface IAuthenticationAPI {
+public interface IAdminAuthenticationAPI {
 
     @PostMapping
     public ValueResponse<AdminAccessTokenResponse> getAccessToken(@RequestBody @Valid AdminAccessTokenRequest accessTokenRequest);

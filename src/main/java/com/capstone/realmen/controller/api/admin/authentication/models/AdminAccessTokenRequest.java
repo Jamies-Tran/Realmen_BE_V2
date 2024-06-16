@@ -1,7 +1,6 @@
 package com.capstone.realmen.controller.api.admin.authentication.models;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.With;
 
@@ -12,9 +11,6 @@ public record AdminAccessTokenRequest(
             message = "Vui lòng nhập mã nhân viên"
         ) 
         String staffCode,
-        @Size(
-            message = "mật khẩu không được bỏ trống"
-        ) 
         @NotNull(
             message = "Vui lòng nhập mật khẩu"
         ) 

@@ -18,7 +18,7 @@ import lombok.experimental.FieldDefaults;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AuthenticationController implements IAuthenticationAPI{
+public class AdminAuthenticationController implements IAdminAuthenticationAPI{
     @NonNull
     AuthenticationUseCaseService authenticationUseCaseService;
     @NonNull
@@ -29,7 +29,7 @@ public class AuthenticationController implements IAuthenticationAPI{
         AdminAccessTokenResponse response = adminAccessTokenMapper.toModel(
             authenticationUseCaseService
                 .adminCreateAccessToken(CreateRequire
-                    .ofAdmin(accessTokenRequest.staffCode(), accessTokenRequest.password()))
+                    .byStaffCode(accessTokenRequest.staffCode(), accessTokenRequest.password()))
         );
         return new ValueResponse<AdminAccessTokenResponse>(response);
     }

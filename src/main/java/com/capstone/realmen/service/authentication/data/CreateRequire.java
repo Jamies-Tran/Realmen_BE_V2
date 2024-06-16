@@ -10,11 +10,11 @@ public record CreateRequire(
                 String phone,
                 String password) {
 
-        public static CreateRequire of(String staffCode, String phone, String password) {
-                return init().withStaffCode(staffCode).withPassword(password).withPhone(phone);
+        public static CreateRequire byPhone(String phone, String password) {
+                return init().withPassword(password).withPhone(phone);
         }
 
-        public static CreateRequire ofAdmin(String staffCode, String password) {
+        public static CreateRequire byStaffCode(String staffCode, String password) {
                 return init().withStaffCode(staffCode).withPassword(password);
         }
 

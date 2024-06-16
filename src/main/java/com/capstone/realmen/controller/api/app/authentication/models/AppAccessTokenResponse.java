@@ -1,4 +1,4 @@
-package com.capstone.realmen.controller.api.admin.authentication.models;
+package com.capstone.realmen.controller.api.app.authentication.models;
 
 import java.time.LocalDateTime;
 
@@ -7,10 +7,8 @@ import lombok.With;
 
 @With
 @Builder
-public record AdminAccessTokenResponse(
+public record AppAccessTokenResponse(
         Long accountId,
-        Long branchId,
-        String staffCode,
         String lastName,
         String firstName,
         String accessToken,

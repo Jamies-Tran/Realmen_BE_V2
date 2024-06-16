@@ -11,8 +11,8 @@ import lombok.With;
 @Builder
 @RedisHash(value = "token")
 public record TokenRedis(
-                @Id Long accountId,
-                String phone,
-                String accessToken,
-                @TimeToLive Long timeToLive) {
+        @Id Long accountId,
+        String phone,
+        String accessToken,
+        @TimeToLive Long timeToLive) {
 }

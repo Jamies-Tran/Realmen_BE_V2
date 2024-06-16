@@ -83,4 +83,8 @@ public class AccountEntity extends Auditable {
     public AccountEntity withStatus(String statusCode, String statusName) {
         return this.withAccountStatusCode(statusCode).withAccountStatusName(statusName);
     }
+
+    public AccountEntity withRole(String roleCode, String roleName) {
+        return this.withRoleCode(roleCode).withRoleName(roleName);
+    }
 }

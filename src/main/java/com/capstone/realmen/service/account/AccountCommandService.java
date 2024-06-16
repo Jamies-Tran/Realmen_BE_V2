@@ -104,12 +104,13 @@ public class AccountCommandService {
 
     private AccountCreated createCustomer(Account account) {
         AccountEntity newAccount = accountMapper.toEntity(account);
-        accountRepository.save(
+        newAccount = accountRepository.save(
                 newAccount
                         .withPassword(appMobDefaultPassword)
                         .withStatus(EAccountStatus.ACTIVE.getCode(),
                                 EAccountStatus.ACTIVE.getName())
-                        .withAudit(Auditable.ofCreated(requestContext.getAccount())));
+                        .withRole(ERole.CUSTOMER.getCode(), ERole.CUSTOMER.getName())
+                        .withAudit(Auditable.ofDefault()));
         return AccountCreated.byDefault(newAccount.getAccountId());
     }
 
@@ -120,7 +121,7 @@ public class AccountCommandService {
                         .withPassword(appMobDefaultPassword)
                         .withStatus(EAccountStatus.PENDING_ACTIVE.getCode(),
                                 EAccountStatus.PENDING_ACTIVE.getName())
-                        .withAudit(Auditable.ofCreated(requestContext.getAccount())));
+                        .withRole(ERole.CUSTOMER.getCode(), ERole.CUSTOMER.getName()));
         return AccountCreated.byReceptionist(newAccount.getAccountId());
     }
 }

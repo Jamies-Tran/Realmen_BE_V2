@@ -5,11 +5,9 @@ import java.time.LocalDateTime;
 import com.capstone.realmen.data.dto.account.Account;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.With;
@@ -30,6 +28,12 @@ public class Auditable {
     LocalDateTime createdAt;
     @Column(name = "updated_at")
     LocalDateTime updatedAt;
+
+    public static Auditable ofDefault() {
+        return init()
+                .withCreatedBy("-")
+                .withCreatedAt(LocalDateTime.now());
+    }
 
     public static Auditable ofCreated(Account account) {
         return init()
