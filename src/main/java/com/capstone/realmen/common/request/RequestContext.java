@@ -7,7 +7,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.capstone.realmen.controller.security.token.AccessTokenService;
 import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.service.account.AccountQueryService;
-import com.capstone.realmen.service.account.data.SearchByField;
+import com.capstone.realmen.service.account.data.AccountSearchByField;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
@@ -31,6 +31,6 @@ public class RequestContext {
 
     public Account getAccount() {
         String identify = accessTokenService.getIdentifyFromHeader(getRequest());
-        return accountQueryService.find(SearchByField.of(identify));
+        return accountQueryService.find(AccountSearchByField.of(identify));
     }
 }

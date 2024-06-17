@@ -11,4 +11,6 @@ public interface IAppAccountModelMapper {
     Account toDto(AccountRequest model);
 
     AccountCreatedResponse toModel(AccountCreated dto);
+
+    AccountResponse toModel(Account dto);
 }

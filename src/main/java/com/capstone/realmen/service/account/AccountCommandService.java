@@ -19,7 +19,7 @@ import com.capstone.realmen.data.dto.account.IAccountMapper;
 import com.capstone.realmen.repository.database.account.AccountEntity;
 import com.capstone.realmen.repository.database.account.AccountRepository;
 import com.capstone.realmen.repository.database.audit.Auditable;
-import com.capstone.realmen.service.account.data.CreateRequire;
+import com.capstone.realmen.service.account.data.AccountCreateRequire;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public class AccountCommandService {
     @Value("${app.mobile.default.password}")
     String appMobDefaultPassword;
 
-    public AccountCreated createAccount(CreateRequire createRequire) {
+    public AccountCreated createAccount(AccountCreateRequire createRequire) {
         if (createRequire.isForStaff()) {
             return this.createStaff(createRequire.account());
         } else {

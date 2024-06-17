@@ -1,26 +1,20 @@
-package com.capstone.realmen.data.dto.account;
+package com.capstone.realmen.controller.api.app.account.models;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import lombok.Builder;
 import lombok.With;
 
 @With
 @Builder
-public record Account(
+public record AccountResponse(
         Long accountId,
-        Long branchId,
         String firstName,
         String lastName,
         String phone,
         String address,
-        String password,
-        String staffCode,
         String roleCode,
         String roleName,
-        String professionalTypeCode,
-        String professionalTypeName,
         String thumbnail,
         LocalDate dob,
         String genderCode,

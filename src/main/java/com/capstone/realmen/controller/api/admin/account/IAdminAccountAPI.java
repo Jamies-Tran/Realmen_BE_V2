@@ -16,4 +16,5 @@ public interface IAdminAccountAPI {
     @PostMapping
     @PreAuthorize("hasAnyRole({'ROLE_SHOPOWNER', 'ROLE_BRANCHMANAGER'})")
     ValueResponse<AccountCreatedResponse> createStaff(@RequestBody @Valid AccountRequest request);
+
 }

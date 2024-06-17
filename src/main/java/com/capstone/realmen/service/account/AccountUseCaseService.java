@@ -1,12 +1,15 @@
 package com.capstone.realmen.service.account;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.capstone.realmen.common.request.PageRequestCustom;
 import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.account.AccountCreated;
-import com.capstone.realmen.service.account.data.CreateRequire;
-import com.capstone.realmen.service.account.data.SearchByField;
+import com.capstone.realmen.service.account.data.AccountCreateRequire;
+import com.capstone.realmen.service.account.data.AccountSearchByField;
+import com.capstone.realmen.service.account.data.AccountSearchCriteria;
 import com.capstone.realmen.service.account.usecase.admin.IAdminAccountService;
 import com.capstone.realmen.service.account.usecase.app.IAppAccountService;
 
@@ -25,25 +28,37 @@ public class AccountUseCaseService implements IAdminAccountService, IAppAccountS
     AccountCommandService accountCommandService;
 
     @Override
-    public Account adminFindByPhoneOrStaffCode(SearchByField search) {
+    public Account adminFindByPhoneOrStaffCode(AccountSearchByField search) {
         return accountQueryService.find(search);
     }
 
     @Override
     @Transactional
-    public AccountCreated adminCreateAccount(CreateRequire createRequire) {
+    public AccountCreated adminCreate(AccountCreateRequire createRequire) {
         return accountCommandService.createAccount(createRequire);
     }
 
     @Override
-    public AccountCreated adminRecpetionistCreateCustomer(CreateRequire createRequire) {
+    public AccountCreated adminRecpetionistCreateCustomer(AccountCreateRequire createRequire) {
         return accountCommandService.createAccount(createRequire);
     }
 
     @Override
     @Transactional
-    public AccountCreated appCreateAccount(CreateRequire createRequire) {
+    public AccountCreated appCreateAccount(AccountCreateRequire createRequire) {
         return accountCommandService.createAccount(createRequire);
+    }
+
+    @Override
+    public Page<Account> appFindAll(AccountSearchCriteria searchCriteria, PageRequestCustom pageRequestCustom) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'appFindAll'");
+    }
+
+    @Override
+    public Page<Account> adminFindAll(AccountSearchCriteria searchCriteria, PageRequestCustom pageRequestCustom) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'adminFindAll'");
     }
 
 }

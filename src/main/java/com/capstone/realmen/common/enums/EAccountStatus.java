@@ -21,16 +21,16 @@ public enum EAccountStatus {
     String code;
     String name;
 
-    public List<String> defaultStatuses(List<String> statuses) {
+    public static List<String> defaultStatuses(List<String> statuses) {
         List<String> defaultStatuses = Arrays.stream(EAccountStatus.values())
-            .filter(status -> !status.getCode().contains(EAccountStatus.DELETED.getCode()))
-            .map(EAccountStatus::getCode)
-            .toList();
-        if(Objects.isNull(statuses) || statuses.isEmpty()) {
+                .filter(status -> !status.getCode().contains(EAccountStatus.DELETED.getCode()))
+                .map(EAccountStatus::getCode)
+                .toList();
+        if (Objects.isNull(statuses) || statuses.isEmpty()) {
             return defaultStatuses;
         }
         return statuses.stream()
-            .filter(status -> defaultStatuses.contains(status))
-            .toList();
+                .filter(status -> defaultStatuses.contains(status))
+                .toList();
     }
 }

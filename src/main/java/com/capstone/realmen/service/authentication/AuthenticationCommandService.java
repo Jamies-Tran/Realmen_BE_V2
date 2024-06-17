@@ -12,7 +12,7 @@ import com.capstone.realmen.data.dto.access.token.AccessToken;
 import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.repository.redis.token.TokenRedis;
 import com.capstone.realmen.service.account.AccountQueryService;
-import com.capstone.realmen.service.account.data.SearchByField;
+import com.capstone.realmen.service.account.data.AccountSearchByField;
 import com.capstone.realmen.service.authentication.data.CreateRequire;
 import com.capstone.realmen.service.authentication.data.SendOtpRequire;
 import com.capstone.realmen.service.authentication.helper.cache.TokenCacheCommandService;
@@ -46,7 +46,7 @@ public class AuthenticationCommandService {
 
         public AccessToken adminCreate(CreateRequire createRequire) {
                 Account foundAccount = accountQueryService.find(
-                                SearchByField.of(createRequire.staffCode()));
+                                AccountSearchByField.of(createRequire.staffCode()));
                 if (!passwordEncoder.matches(createRequire.password(), foundAccount.password())) {
                         throw new LoginException();
                 }
@@ -63,7 +63,7 @@ public class AuthenticationCommandService {
 
         public AccessToken appCreate(CreateRequire createRequire) {
                 Account foundAccount = accountQueryService.find(
-                                SearchByField.of(createRequire.phone()));
+                                AccountSearchByField.of(createRequire.phone()));
                 TokenRedis token = tokenCacheQueryService.findById(
                                 OtpSearchByField.of(foundAccount.accountId()));
                 String password = Objects.requireNonNullElse(token.accessToken(),
@@ -85,7 +85,7 @@ public class AuthenticationCommandService {
                 String otp = AppStorage.otpData().otp();
                 String encodeOtp = passwordEncoder.encode(otp);
                 Account account = accountQueryService
-                                .find(SearchByField.of(sendOtpRequire.phone()));
+                                .find(AccountSearchByField.of(sendOtpRequire.phone()));
                 TokenRedis token = TokenRedis.builder()
                                 .accountId(account.accountId())
                                 .accessToken(encodeOtp)

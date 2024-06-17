@@ -1,12 +1,15 @@
 package com.capstone.realmen.service.account;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import com.capstone.realmen.common.request.PageRequestCustom;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.account.IAccountMapper;
 import com.capstone.realmen.repository.database.account.AccountRepository;
-import com.capstone.realmen.service.account.data.SearchByField;
+import com.capstone.realmen.service.account.data.AccountSearchByField;
+import com.capstone.realmen.service.account.data.AccountSearchCriteria;
 
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -22,10 +25,14 @@ public class AccountQueryService {
     @NonNull
     IAccountMapper accountMapper;
 
-    public Account find(SearchByField searchByField) {
+    public Account find(AccountSearchByField searchByField) {
         return accountMapper.toDto(
-            accountRepository.findByPhoneOrStaffCode(searchByField.search())
-                .orElseThrow(() -> new NotFoundException("Không tìm thấy tài khoản"))
-        );
-    } 
+                accountRepository.findByPhoneOrStaffCode(searchByField.search())
+                        .orElseThrow(() -> new NotFoundException("Không tìm thấy tài khoản")));
+    }
+
+    public Page<Account> findAll(AccountSearchCriteria searchCriteria, PageRequestCustom pageRequestCustom) {
+        return accountRepository.findAll(searchCriteria, pageRequestCustom.pageRequest())
+                .map(accountMapper::toDto);
+    }
 }

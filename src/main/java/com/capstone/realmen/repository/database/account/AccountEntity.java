@@ -37,6 +37,7 @@ public class AccountEntity extends Auditable {
     String lastName;
     @Column(name = "phone")
     String phone;
+    @Column(name = "address")
     String address;
     @Column(name = "password")
     String password;

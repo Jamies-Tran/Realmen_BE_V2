@@ -7,33 +7,33 @@ import lombok.With;
 
 @With
 @Builder
-public record CreateRequire(
+public record AccountCreateRequire(
         Account account,
         Boolean isForStaff,
         // receptionist create customer account
         Boolean isCreatedByRecept) {
 
-    public static CreateRequire ofStaff(Account account) {
-        return CreateRequire.init()
+    public static AccountCreateRequire ofStaff(Account account) {
+        return AccountCreateRequire.init()
                 .withAccount(account)
                 .withIsForStaff(true);
     }
 
-    public static CreateRequire ofCustomer(Account account) {
-        return CreateRequire.init()
+    public static AccountCreateRequire ofCustomer(Account account) {
+        return AccountCreateRequire.init()
                 .withAccount(account)
                 .withIsForStaff(false)
                 .withIsCreatedByRecept(false);
     }
 
-    public static CreateRequire ofReceptionist(Account account) {
-        return CreateRequire.init()
+    public static AccountCreateRequire ofReceptionist(Account account) {
+        return AccountCreateRequire.init()
                 .withAccount(account)
                 .withIsForStaff(false)
                 .withIsCreatedByRecept(true);
     }
 
-    private static CreateRequire init() {
-        return CreateRequire.builder().build();
+    private static AccountCreateRequire init() {
+        return AccountCreateRequire.builder().build();
     }
 }
