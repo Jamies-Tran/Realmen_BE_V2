@@ -15,9 +15,8 @@ public record AccountSearchCriteria(
         Long branchId,
         List<String> roles,
         List<String> professionalTypeCodes,
-        List<String> accountStatusCodes
-) {
-    List<String> defaultStatusCodes() {
+        List<String> accountStatusCodes) {
+    public List<String> defaultStatusCodes() {
         return EAccountStatus.defaultStatuses(accountStatusCodes);
     }
 

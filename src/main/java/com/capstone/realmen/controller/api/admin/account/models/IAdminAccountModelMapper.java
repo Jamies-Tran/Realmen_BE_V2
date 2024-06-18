@@ -11,4 +11,6 @@ public interface IAdminAccountModelMapper {
     Account toDto(AccountRequest model);
 
     AccountCreatedResponse toModel(AccountCreated model);
+
+    AccountResponse toModel(Account dto);
 }

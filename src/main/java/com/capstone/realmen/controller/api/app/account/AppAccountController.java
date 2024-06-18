@@ -29,35 +29,36 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AppAccountController implements IAppAccountAPI {
 
-    @NonNull
-    AccountUseCaseService accountUseCaseService;
-    @NonNull
-    IAppAccountModelMapper modelMapper;
+        @NonNull
+        AccountUseCaseService accountUseCaseService;
+        @NonNull
+        IAppAccountModelMapper modelMapper;
 
-    @Override
-    public ValueResponse<AccountCreatedResponse> createCustomer(@Valid AccountRequest request) {
-        Account account = modelMapper.toDto(request);
-        return new ValueResponse<AccountCreatedResponse>(
-                modelMapper.toModel(accountUseCaseService
-                        .appCreateAccount(AccountCreateRequire.ofCustomer(account))));
-    }
+        @Override
+        public ValueResponse<AccountCreatedResponse> createCustomer(@Valid AccountRequest request) {
+                Account account = modelMapper.toDto(request);
+                return new ValueResponse<AccountCreatedResponse>(
+                                modelMapper.toModel(accountUseCaseService
+                                                .appCreateAccount(AccountCreateRequire.ofCustomer(account))));
+        }
 
-    @Override
-    public PageImplResponse<AccountResponse> findAll(String search, List<String> roles, List<String> accountStatusCodes,
-            @Min(1) Integer current, Integer pageSize) {
-        AccountSearchCriteria searchCriteria = AccountSearchCriteria.builder()
-                .search(search)
-                .roles(roles)
-                .build();
-        PageRequestCustom pageRequestCustom = PageRequestCustom.of(current, pageSize);
-        Page<AccountResponse> responses = accountUseCaseService.appFindAll(searchCriteria, pageRequestCustom)
-                .map(modelMapper::toModel);
-        return new PageImplResponse<>(
-                responses.getContent(),
-                responses.getTotalElements(),
-                responses.getTotalPages(),
-                pageRequestCustom.current(),
-                pageSize);
-    }
+        @Override
+        public PageImplResponse<AccountResponse> findAll(String search, Long branchId, List<String> roles,
+                        List<String> accountStatusCodes, @Min(1) Integer current, Integer pageSize) {
+                AccountSearchCriteria searchCriteria = AccountSearchCriteria.builder()
+                                .search(search)
+                                .branchId(branchId)
+                                .roles(roles)
+                                .build();
+                PageRequestCustom pageRequestCustom = PageRequestCustom.of(current, pageSize);
+                Page<AccountResponse> responses = accountUseCaseService.appFindAll(searchCriteria, pageRequestCustom)
+                                .map(modelMapper::toModel);
+                return new PageImplResponse<>(
+                                responses.getContent(),
+                                responses.getTotalElements(),
+                                responses.getTotalPages(),
+                                pageRequestCustom.current(),
+                                pageSize);
+        }
 
 }

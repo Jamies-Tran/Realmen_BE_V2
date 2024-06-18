@@ -32,7 +32,11 @@ public class AccountQueryService {
     }
 
     public Page<Account> findAll(AccountSearchCriteria searchCriteria, PageRequestCustom pageRequestCustom) {
-        return accountRepository.findAll(searchCriteria, pageRequestCustom.pageRequest())
+        return accountRepository
+                .findAll(
+                        searchCriteria.toLowerCase(),
+                        searchCriteria.defaultStatusCodes(),
+                        pageRequestCustom.pageRequest())
                 .map(accountMapper::toDto);
     }
 }

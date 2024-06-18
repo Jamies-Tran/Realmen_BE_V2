@@ -51,14 +51,12 @@ public class AccountUseCaseService implements IAdminAccountService, IAppAccountS
 
     @Override
     public Page<Account> appFindAll(AccountSearchCriteria searchCriteria, PageRequestCustom pageRequestCustom) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'appFindAll'");
+        return accountQueryService.findAll(searchCriteria, pageRequestCustom);
     }
 
     @Override
     public Page<Account> adminFindAll(AccountSearchCriteria searchCriteria, PageRequestCustom pageRequestCustom) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'adminFindAll'");
+        return accountQueryService.findAll(searchCriteria, pageRequestCustom);
     }
 
 }

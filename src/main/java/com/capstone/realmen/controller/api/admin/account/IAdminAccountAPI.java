@@ -1,15 +1,22 @@
 package com.capstone.realmen.controller.api.admin.account;
 
+import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.capstone.realmen.common.response.PageImplResponse;
 import com.capstone.realmen.common.response.ValueResponse;
 import com.capstone.realmen.controller.api.admin.account.models.AccountCreatedResponse;
 import com.capstone.realmen.controller.api.admin.account.models.AccountRequest;
+import com.capstone.realmen.controller.api.admin.account.models.AccountResponse;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 
 @RequestMapping("/web/accounts")
 public interface IAdminAccountAPI {
@@ -17,4 +24,14 @@ public interface IAdminAccountAPI {
     @PreAuthorize("hasAnyRole({'ROLE_SHOPOWNER', 'ROLE_BRANCHMANAGER'})")
     ValueResponse<AccountCreatedResponse> createStaff(@RequestBody @Valid AccountRequest request);
 
+    @GetMapping
+    @PreAuthorize("hasAnyRole({'ROLE_SHOPOWNER', 'ROLE_BRANCHMANAGER'})")
+    PageImplResponse<AccountResponse> findAll(
+            @RequestParam(required = false, value = "search", defaultValue = "") String search,
+            @RequestParam(required = false, value = "branchId", defaultValue = "") Long branchId,
+            @RequestParam(required = false, value = "roles", defaultValue = "") List<String> roles,
+            @RequestParam(required = false, value = "professionalTypeCodes", defaultValue = "") List<String> professionalTypeCodes,
+            @RequestParam(required = false, value = "accountStatusCodes", defaultValue = "") List<String> accountStatusCodes,
+            @RequestParam(required = false, value = "current", defaultValue = "1") @Min(1) Integer current,
+            @RequestParam(required = false, value = "pageSize", defaultValue = "20") Integer pageSize);
 }
