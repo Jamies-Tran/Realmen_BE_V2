@@ -23,6 +23,13 @@ public enum EProfessional {
     String code;
     String name;
 
+    public Professional toDto() {
+        return Professional.builder()
+            .code(this.getCode())
+            .name(this.getName())
+            .build();
+    }
+
     public static List<Professional> findAll(String search) {
         return Arrays.stream(EProfessional.values())
                 .filter(professional -> !StringUtils.hasText(search) || professional.getCode().equalsIgnoreCase(search))

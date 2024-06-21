@@ -1,7 +1,6 @@
 package com.capstone.realmen.data.dto.account;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import lombok.Builder;
 import lombok.With;

@@ -41,17 +41,14 @@ public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
                             a.accountStatusName AS accountStatusName
                         FROM AccountEntity a
                         WHERE :#{#searchCriteria.hasSearchEmpty()} = TRUE
-                            OR LOWER(CONCAT(a.firstName, '', a.lastName)) LIKE %:#{#searchCriteria.search()}%
+                            OR LOWER(CONCAT(a.firstName, ' ', a.lastName)) LIKE %:#{#searchCriteria.search()}%
                             OR a.phone LIKE %:#{#searchCriteria.search()}%
                             OR LOWER(a.staffCode) LIKE %:#{#searchCriteria.search()}%
-                        AND ((:#{#searchCriteria.hasBranchIdEmpty()} = TRUE
-                                OR ab.branchId = :#{#searchCriteria.branchId}))
                         AND (:#{#searchCriteria.hasStatusEmpty()} = TRUE
                                 OR a.accountStatusCode IN (:defaultStatusCodes))
                         AND (:#{#searchCriteria.hasProfessionalTypeCodeEmpty()} = TRUE
                                 OR a.professionalTypeCode IN (:#{#searchCriteria.professionalTypeCodes()}))
-                        AND a.roleCodes IN :#{#searchCriteria.roles()}
-
+                        AND a.roleCode IN :#{#searchCriteria.roles()}
                         """)
         Page<AccountDAO> findAll(AccountSearchCriteria searchCriteria,
                         List<String> defaultStatusCodes, Pageable pageable);

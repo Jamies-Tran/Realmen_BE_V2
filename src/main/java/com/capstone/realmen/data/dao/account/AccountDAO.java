@@ -1,6 +1,6 @@
 package com.capstone.realmen.data.dao.account;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public interface AccountDAO {
     void setAccountId(Long accountId);
@@ -36,8 +36,8 @@ public interface AccountDAO {
     void setThumbnail(String thumbnail);
     String getThumbnail();
 
-    void setDob(LocalDateTime dob);
-    LocalDateTime getDob();
+    void setDob(LocalDate dob);
+    LocalDate getDob();
 
     void setGenderCode(String genderCode);
     String getGenderCode();
