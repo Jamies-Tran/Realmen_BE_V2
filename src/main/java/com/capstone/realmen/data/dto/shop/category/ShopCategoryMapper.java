@@ -8,4 +8,6 @@ import com.capstone.realmen.repository.database.shop.category.ShopCategoryEntity
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ShopCategoryMapper {
     ShopCategoryEntity toEntity(ShopCategory dto);
+
+    ShopCategory toDto(ShopCategoryEntity entity);
 }

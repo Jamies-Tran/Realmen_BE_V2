@@ -1,5 +1,9 @@
 package com.capstone.realmen.controller.api.admin.shop.category.models;
 
+import java.util.List;
+
+import com.capstone.realmen.controller.api.admin.shop.service.models.AdminShopServiceResponse;
+
 import lombok.Builder;
 import lombok.With;
 
@@ -10,6 +14,7 @@ public record AdminShopCategoryResponse(
         String shopCategoryCode,
         String shopCategoryName,
         String serviceAssignmentCode,
-        String serviceAssignmentName) {
+        String serviceAssignmentName,
+        List<AdminShopServiceResponse> shopServices) {
 
 }

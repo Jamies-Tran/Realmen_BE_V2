@@ -20,7 +20,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "shop_service")
+@Table(name = "shop_service_display")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ServiceDisplayEntity extends Auditable {
     @Id
