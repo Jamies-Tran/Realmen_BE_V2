@@ -10,6 +10,7 @@ import lombok.With;
 @Builder
 public record ShopServiceSearchCriteria(
         String search,
+        Long shopCategoryId,
         List<Long> shopServicePriceRange) {
     public List<Long> shopServicePriceRange() {
         return shopServicePriceRange.stream().sorted().toList();
@@ -27,7 +28,7 @@ public record ShopServiceSearchCriteria(
     }
 
     public Boolean hasSearchEmpty() {
-        return Objects.isNull(search) || search.isBlank();
+        return Objects.isNull(search) || search.isEmpty();
     }
 
     public Boolean hasShopServicePriceRangeEmpty() {
@@ -35,10 +36,17 @@ public record ShopServiceSearchCriteria(
     }
 
     public Long priceFrom() {
-        return this.shopServicePriceRange().get(0);
+        return Objects.isNull(shopServicePriceRange) || shopServicePriceRange.isEmpty() 
+            ? 0L
+            : this.shopServicePriceRange().get(0);
     }
 
     public Long priceTo() {
+        if(Objects.isNull(shopServicePriceRange) || shopServicePriceRange.isEmpty()) {
+            return 0L;
+        } else if(shopServicePriceRange.size() < 2) {
+            return this.shopServicePriceRange().get(0);
+        }
         return this.shopServicePriceRange().get(1);
     }
 }

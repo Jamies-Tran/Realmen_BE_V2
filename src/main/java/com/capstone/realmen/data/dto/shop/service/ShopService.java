@@ -12,6 +12,8 @@ import lombok.With;
 public record ShopService(
     Long shopServiceId,
     Long shopCategoryId,
+    String shopCategoryCode,
+    String shopCategoryName,
     String shopServiceName,
     Long shopServicePrice,
     String shopServiceThumbnail,

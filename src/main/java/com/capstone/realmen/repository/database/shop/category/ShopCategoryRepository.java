@@ -14,9 +14,9 @@ public interface ShopCategoryRepository extends JpaRepository<ShopCategoryEntity
     @Query("""
         SELECT sc
         FROM ShopCategoryEntity sc
-        WHERE :#{#searchCategory.hasSearchEmpty()} = TRUE
-            OR sc.shopCategoryCode LIKE %:#{#searchCategory.search()}%
-            OR sc.shopCategoryName LIKE %:#{#searchCategory.search()}%
+        WHERE :#{#searchCriteria.hasSearchEmpty()} = TRUE
+            OR sc.shopCategoryCode LIKE %:#{#searchCriteria.search()}%
+            OR LOWER(sc.shopCategoryName) LIKE %:#{#searchCriteria.search()}%
 
     """)
     Page<ShopCategoryEntity> findAll(ShopCategorySearchCriteria searchCriteria, Pageable pageable);

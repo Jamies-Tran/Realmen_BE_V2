@@ -8,4 +8,6 @@ import com.capstone.realmen.repository.database.shop.service.display.ServiceDisp
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ServiceDisplayMapper {
     ServiceDisplayEntity toEntity(ServiceDisplay dto);
+
+    ServiceDisplay toDto(ServiceDisplayEntity entity);
 }

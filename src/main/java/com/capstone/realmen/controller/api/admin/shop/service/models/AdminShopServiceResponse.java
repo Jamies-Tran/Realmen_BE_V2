@@ -11,10 +11,12 @@ import lombok.With;
 @Builder
 public record AdminShopServiceResponse(
     Long shopServiceId,
-    Long shopCategoryId,
     String shopServiceName,
     Long shopServicePrice,
     String shopServiceThumbnail,
+    Long shopCategoryId,
+    String shopCategoryCode,
+    String shopCategoryName,
     List<ServiceDisplayResponse> serviceDisplays
 ) {
     

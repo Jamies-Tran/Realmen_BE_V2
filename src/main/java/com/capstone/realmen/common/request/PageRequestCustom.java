@@ -5,7 +5,7 @@ import org.springframework.data.domain.Sort;
 
 public record PageRequestCustom(PageRequest pageRequest) {
     public static PageRequestCustom of(Integer current, Integer pageSize) {
-        PageRequest pageRequest = PageRequest.of(current - 1, pageSize);
+        PageRequest pageRequest = PageRequest.of(current - 1, pageSize, Sort.by("updatedAt").descending());
         return new PageRequestCustom(pageRequest);
     }
 

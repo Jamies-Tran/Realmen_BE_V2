@@ -1,6 +1,8 @@
 package com.capstone.realmen.service.shop.category;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -40,12 +42,14 @@ public class ShopCategoryQueryService {
 
     public Page<ShopCategory> findAll(ShopCategorySearchCriteria searchCriteria,
             PageRequestCustom pageRequestCustom) {
-        List<ShopService> shopServices = shopServiceQueryService
+        Map<Long, List<ShopService>> shopServices = shopServiceQueryService
                 .findAll(ShopServiceSearchCriteria.ofDefault(),
                         PageRequestCustom.of(1, searchCriteria.serviceNumber()))
-                .getContent();
-        return shopCategoryRepository.findAll(searchCriteria, pageRequestCustom.pageRequest())
+                .getContent().stream()
+                .collect(Collectors.groupingBy(ShopService::shopCategoryId));        
+        return shopCategoryRepository
+                .findAll(searchCriteria.toLowerCase(), pageRequestCustom.pageRequest())
                 .map(category -> shopCategoryMapper.toDto(category)
-                        .withShopServices(shopServices));
+                        .withShopServices(shopServices.computeIfAbsent(category.getShopCategoryId(), s -> List.of())));
     }
 }

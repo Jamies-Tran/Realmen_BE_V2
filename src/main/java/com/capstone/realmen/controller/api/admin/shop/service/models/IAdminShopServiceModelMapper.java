@@ -7,7 +7,9 @@ import org.mapstruct.ReportingPolicy;
 import com.capstone.realmen.data.dto.shop.service.ShopService;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface AdminShopServiceModelMapper {
+public interface IAdminShopServiceModelMapper {
     @Mapping(target = "serviceDisplays", ignore = true)
     ShopService toDto(AdminShopServiceRequest model);
+
+    AdminShopServiceResponse toModel(ShopService dto);
 }
