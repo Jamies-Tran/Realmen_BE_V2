@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.capstone.realmen.service.shop.category.data.ShopCategorySearchCriteria;
 
 @Repository
-public interface ShopCategoryRepository extends JpaRepository<ShopCategoryEntity, Long> {
+public interface IShopCategoryRepository extends JpaRepository<ShopCategoryEntity, Long> {
 
     @Query("""
         SELECT sc

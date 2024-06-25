@@ -12,7 +12,7 @@ import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.shop.category.ShopCategory;
 import com.capstone.realmen.data.dto.shop.category.ShopCategoryMapper;
 import com.capstone.realmen.data.dto.shop.service.ShopService;
-import com.capstone.realmen.repository.database.shop.category.ShopCategoryRepository;
+import com.capstone.realmen.repository.database.shop.category.IShopCategoryRepository;
 import com.capstone.realmen.service.shop.category.data.ShopCategorySearchByField;
 import com.capstone.realmen.service.shop.category.data.ShopCategorySearchCriteria;
 import com.capstone.realmen.service.shop.service.ShopServiceQueryService;
@@ -28,7 +28,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ShopCategoryQueryService {
     @NonNull
-    ShopCategoryRepository shopCategoryRepository;
+    IShopCategoryRepository shopCategoryRepository;
     @NonNull
     ShopServiceQueryService shopServiceQueryService;
     @NonNull

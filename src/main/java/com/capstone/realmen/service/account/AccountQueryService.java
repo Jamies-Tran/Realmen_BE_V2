@@ -7,7 +7,7 @@ import com.capstone.realmen.common.request.PageRequestCustom;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.account.IAccountMapper;
-import com.capstone.realmen.repository.database.account.AccountRepository;
+import com.capstone.realmen.repository.database.account.IAccountRepository;
 import com.capstone.realmen.service.account.data.AccountSearchByField;
 import com.capstone.realmen.service.account.data.AccountSearchCriteria;
 
@@ -21,7 +21,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountQueryService {
     @NonNull
-    AccountRepository accountRepository;
+    IAccountRepository accountRepository;
     @NonNull
     IAccountMapper accountMapper;
 

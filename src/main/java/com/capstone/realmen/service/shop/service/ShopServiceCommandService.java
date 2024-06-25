@@ -6,7 +6,7 @@ import com.capstone.realmen.common.request.RequestContext;
 import com.capstone.realmen.data.dto.shop.service.ShopServiceMapper;
 import com.capstone.realmen.repository.database.audit.Auditable;
 import com.capstone.realmen.repository.database.shop.service.ShopServiceEntity;
-import com.capstone.realmen.repository.database.shop.service.ShopServiceRepository;
+import com.capstone.realmen.repository.database.shop.service.IShopServiceRepository;
 import com.capstone.realmen.service.shop.service.data.ShopServiceCreateRequire;
 import com.capstone.realmen.service.shop.service.others.display.ServiceDisplayCommandService;
 import com.capstone.realmen.service.shop.service.others.display.data.ServiceDisplayCreateRequire;
@@ -21,7 +21,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = false)
 public class ShopServiceCommandService {
     @NonNull
-    ShopServiceRepository shopServiceRepository;
+    IShopServiceRepository shopServiceRepository;
     @NonNull
     ServiceDisplayCommandService serviceDisplayCommandService;
     @NonNull

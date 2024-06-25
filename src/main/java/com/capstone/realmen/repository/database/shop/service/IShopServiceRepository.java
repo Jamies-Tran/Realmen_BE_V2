@@ -12,7 +12,7 @@ import com.capstone.realmen.data.dao.shop.service.ShopServiceDAO;
 import com.capstone.realmen.service.shop.service.data.ShopServiceSearchCriteria;
 
 @Repository
-public interface ShopServiceRepository extends JpaRepository<ShopServiceEntity, Long> {
+public interface IShopServiceRepository extends JpaRepository<ShopServiceEntity, Long> {
     @Query("""
         SELECT 
             ss.shopServiceId AS shopServiceId,

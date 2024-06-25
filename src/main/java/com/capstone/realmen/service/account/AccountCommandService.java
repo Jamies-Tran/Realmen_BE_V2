@@ -17,7 +17,7 @@ import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.account.AccountCreated;
 import com.capstone.realmen.data.dto.account.IAccountMapper;
 import com.capstone.realmen.repository.database.account.AccountEntity;
-import com.capstone.realmen.repository.database.account.AccountRepository;
+import com.capstone.realmen.repository.database.account.IAccountRepository;
 import com.capstone.realmen.repository.database.audit.Auditable;
 import com.capstone.realmen.service.account.data.AccountCreateRequire;
 import lombok.AccessLevel;
@@ -30,7 +30,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountCommandService {
     @NonNull
-    final AccountRepository accountRepository;
+    final IAccountRepository accountRepository;
     @NonNull
     final IAccountMapper accountMapper;
     @NonNull

@@ -13,7 +13,7 @@ import com.capstone.realmen.data.dao.account.AccountDAO;
 import com.capstone.realmen.service.account.data.AccountSearchCriteria;
 
 @Repository
-public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
+public interface IAccountRepository extends JpaRepository<AccountEntity, Long> {
         @Query("""
                         SELECT a
                         FROM AccountEntity a

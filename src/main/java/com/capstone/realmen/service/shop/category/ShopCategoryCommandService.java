@@ -7,7 +7,7 @@ import com.capstone.realmen.common.util.AppStorage;
 import com.capstone.realmen.data.dto.shop.category.ShopCategoryMapper;
 import com.capstone.realmen.repository.database.audit.Auditable;
 import com.capstone.realmen.repository.database.shop.category.ShopCategoryEntity;
-import com.capstone.realmen.repository.database.shop.category.ShopCategoryRepository;
+import com.capstone.realmen.repository.database.shop.category.IShopCategoryRepository;
 import com.capstone.realmen.service.shop.category.data.ShopCategoryCreateRequire;
 
 import lombok.AccessLevel;
@@ -20,7 +20,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ShopCategoryCommandService {
     @NonNull
-    ShopCategoryRepository shopCategoryRepository;
+    IShopCategoryRepository shopCategoryRepository;
     @NonNull
     RequestContext requestContext;
     @NonNull

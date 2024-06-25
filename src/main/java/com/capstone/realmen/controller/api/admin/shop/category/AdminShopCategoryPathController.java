@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capstone.realmen.common.response.ValueResponse;
 import com.capstone.realmen.controller.api.admin.shop.category.models.AdminShopCategoryResponse;
 import com.capstone.realmen.controller.api.admin.shop.category.models.IAdminShopCategoryModelMapper;
-import com.capstone.realmen.data.dto.shop.category.ShopCategory;
 import com.capstone.realmen.service.shop.category.ShopCategoryUseCaseService;
 import com.capstone.realmen.service.shop.category.data.ShopCategorySearchByField;
 

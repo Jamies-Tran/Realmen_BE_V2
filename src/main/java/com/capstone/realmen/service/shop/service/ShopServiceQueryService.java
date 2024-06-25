@@ -1,7 +1,5 @@
 package com.capstone.realmen.service.shop.service;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +7,7 @@ import com.capstone.realmen.common.request.PageRequestCustom;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.shop.service.ShopService;
 import com.capstone.realmen.data.dto.shop.service.ShopServiceMapper;
-import com.capstone.realmen.repository.database.shop.service.ShopServiceRepository;
+import com.capstone.realmen.repository.database.shop.service.IShopServiceRepository;
 import com.capstone.realmen.service.shop.service.data.ShopServiceSearchByField;
 import com.capstone.realmen.service.shop.service.data.ShopServiceSearchCriteria;
 import com.capstone.realmen.service.shop.service.others.display.ServiceDisplayQueryService;
@@ -25,7 +23,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ShopServiceQueryService {
     @NonNull
-    ShopServiceRepository shopServiceRepository;
+    IShopServiceRepository shopServiceRepository;
     @NonNull
     ServiceDisplayQueryService serviceDisplayQueryService;
     @NonNull
