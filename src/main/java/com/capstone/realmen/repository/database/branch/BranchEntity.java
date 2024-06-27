@@ -1,7 +1,9 @@
 package com.capstone.realmen.repository.database.branch;
 
 import java.time.LocalTime;
+import java.util.Objects;
 
+import com.capstone.realmen.data.dto.branch.address.Address;
 import com.capstone.realmen.repository.database.audit.Auditable;
 
 import jakarta.persistence.Column;
@@ -62,4 +64,30 @@ public class BranchEntity extends Auditable {
     String branchStatusCode;
     @Column(name = "branch_status_name")
     String branchStatusName;
+
+    public BranchEntity withAudit(Auditable auditable) {
+        this.setCreatedBy(Objects.nonNull(auditable.getCreatedBy())
+                ? auditable.getCreatedBy()
+                : this.getCreatedBy());
+        this.setCreatedAt(Objects.nonNull(auditable.getCreatedAt())
+                ? auditable.getCreatedAt()
+                : this.getCreatedAt());
+        this.setUpdatedBy(Objects.nonNull(auditable.getUpdatedBy())
+                ? auditable.getUpdatedBy()
+                : this.getUpdatedBy());
+        this.setUpdatedAt(Objects.nonNull(auditable.getUpdatedAt())
+                ? auditable.getUpdatedAt()
+                : this.getUpdatedAt());
+        return this;
+    }
+
+    public BranchEntity withAddress(Address address) {
+        return this
+            .withBranchStreet(address.branchStreet())
+            .withBranchDistrict(address.branchDistrict())
+            .withBranchWard(address.branchWard())
+            .withBranchProvince(address.branchProvince())
+            .withLatitude(address.latitude())
+            .withLongitude(address.longitude());
+    }
 }
