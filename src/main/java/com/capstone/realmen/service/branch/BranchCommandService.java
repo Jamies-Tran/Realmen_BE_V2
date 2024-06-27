@@ -2,6 +2,7 @@ package com.capstone.realmen.service.branch;
 
 import org.springframework.stereotype.Service;
 
+import com.capstone.realmen.common.enums.EBranchStatus;
 import com.capstone.realmen.common.request.RequestContext;
 import com.capstone.realmen.data.dto.branch.IBranchMapper;
 import com.capstone.realmen.data.dto.branch.address.Address;
@@ -49,6 +50,8 @@ public class BranchCommandService {
             newBranch
                 .withAddress(branchAddress)
                 .withAudit(Auditable.ofCreated(requestContext.getAccount()))
+                .withBranchStatusCode(EBranchStatus.INACTIVE.getCode())
+                .withBranchStatusName(EBranchStatus.INACTIVE.getName())
         );
         branchDisplayCommandService.create(
             BranchDisplayCreateRequire.builder()

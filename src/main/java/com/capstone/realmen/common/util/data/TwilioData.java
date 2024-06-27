@@ -6,15 +6,14 @@ import lombok.With;
 @With
 @Builder
 public record TwilioData(
-    String accountSID,
-    String authToken,
-    String twilioPhoneNumber
-) {
-    private static TwilioData ofDefault() {
+        String accountSID,
+        String authToken,
+        String twilioPhoneNumber) {
+    public static TwilioData ofDefault() {
         return init()
-            .withAccountSID("")
-            .withAuthToken("")
-            .withTwilioPhoneNumber("");
+                .withAccountSID("")
+                .withAuthToken("")
+                .withTwilioPhoneNumber("");
     }
 
     private static TwilioData init() {

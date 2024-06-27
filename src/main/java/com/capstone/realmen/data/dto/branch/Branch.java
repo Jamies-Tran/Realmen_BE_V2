@@ -7,6 +7,11 @@ import java.util.List;
 import com.capstone.realmen.data.dto.branch.display.BranchDisplay;
 import com.capstone.realmen.data.dto.shop.service.ShopService;
 
+import lombok.Builder;
+import lombok.With;
+
+@With
+@Builder
 public record Branch(
         Long branchId,
         String branchName,

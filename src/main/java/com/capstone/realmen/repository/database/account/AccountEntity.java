@@ -15,15 +15,15 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.With;
 import lombok.experimental.FieldDefaults;
 
 @With
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -66,6 +66,7 @@ public class AccountEntity extends Auditable {
     String accountStatusCode;
     @Column(name = "account_status_name")
     String accountStatusName;
+
 
     public AccountEntity withAudit(Auditable auditable) {
         this.setCreatedBy(Objects.nonNull(auditable.getCreatedBy())
