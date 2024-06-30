@@ -2,6 +2,7 @@ package com.capstone.realmen.service.branch;
 
 import org.springframework.stereotype.Service;
 
+import com.capstone.realmen.service.branch.data.BranchActiveRequire;
 import com.capstone.realmen.service.branch.data.BranchCreateRequire;
 import com.capstone.realmen.service.branch.usecase.admin.IAdminBranchService;
 
@@ -20,6 +21,11 @@ public class BranchUseCaseService implements IAdminBranchService {
     @Override
     public void adminCreate(BranchCreateRequire createRequire) {
         branchCommandService.create(createRequire);
+    }
+
+    @Override
+    public void adminActive(BranchActiveRequire branchActiveRequire) {
+        branchCommandService.active(branchActiveRequire);
     }
 
 }

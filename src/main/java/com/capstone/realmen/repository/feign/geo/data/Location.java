@@ -7,7 +7,7 @@ import lombok.Builder;
 @Builder
 public record Location(
     @JsonProperty("lat") Double latitude,
-    @JsonProperty("long") Double longitude
+    @JsonProperty("lng") Double longitude
 ) {
     
 }

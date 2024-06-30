@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import org.springframework.util.StringUtils;
 
+import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.account.professional.Professional;
 
 import lombok.AccessLevel;
@@ -28,6 +29,15 @@ public enum EProfessional {
             .code(this.getCode())
             .name(this.getName())
             .build();
+    }
+
+    public static List<EProfessional> of(List<Account> accountList) {
+        List<String> professionalCodes = accountList.stream()
+            .map(Account::professionalTypeCode)
+            .toList();
+        return Arrays.stream(EProfessional.values())
+            .filter(professional -> professionalCodes.contains(professional.getCode()))
+            .toList();
     }
 
     public static List<Professional> findAll(String search) {

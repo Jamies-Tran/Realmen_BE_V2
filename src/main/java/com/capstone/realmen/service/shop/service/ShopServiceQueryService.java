@@ -1,5 +1,7 @@
 package com.capstone.realmen.service.shop.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +45,12 @@ public class ShopServiceQueryService {
         return shopServiceRepository
                 .findAll(searchCriteria.toLowerCase(), pageRequestCustom.pageRequest())
                 .map(shopServiceMapper::toDto);
+    }
+
+    public List<ShopService> findAllByIds(ShopServiceSearchByField searchByField) {
+        return shopServiceRepository.findAllByIds(searchByField.shopServiceIds())
+                .stream()
+                .map(shopServiceMapper::toDto)
+                .toList();
     }
 }

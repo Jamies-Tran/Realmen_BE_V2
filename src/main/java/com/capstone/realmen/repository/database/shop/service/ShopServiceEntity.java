@@ -38,7 +38,7 @@ public class ShopServiceEntity extends Auditable {
     @Column(name = "shop_service_thumbnail", nullable = false)
     String shopServiceThumbnail;
 
-    public ShopServiceEntity withAudit(Auditable auditable) {
+    public ShopServiceEntity setAudit(Auditable auditable) {
         this.setCreatedBy(Objects.nonNull(auditable.getCreatedBy())
                 ? auditable.getCreatedBy()
                 : this.getCreatedBy());

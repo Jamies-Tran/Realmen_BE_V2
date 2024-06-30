@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone.realmen.controller.api.admin.branch.models.AdminBranchRequest;
 import com.capstone.realmen.controller.api.admin.branch.models.IAdminBranchModelMapper;
+import com.capstone.realmen.controller.api.admin.branch.models.display.IAdminBranchDisplayModelMapper;
 import com.capstone.realmen.service.branch.BranchUseCaseService;
 import com.capstone.realmen.service.branch.data.BranchCreateRequire;
 
@@ -21,16 +22,20 @@ public class AdminBranchController implements IAdminBranchAPI {
     BranchUseCaseService branchUseCaseService;
     @NonNull
     IAdminBranchModelMapper modelMapper;
+    @NonNull
+    IAdminBranchDisplayModelMapper branchDisplayModelMapper;
 
     @Override
     public void save(@Valid AdminBranchRequest adminBranchRequest) {
         branchUseCaseService.adminCreate(
                 BranchCreateRequire.builder()
                         .branch(
-                            modelMapper.toDto(adminBranchRequest)
-                                .withOpen(adminBranchRequest.open().toLocalTime())
-                                .withClose(adminBranchRequest.close().toLocalTime())
-                        )
+                                modelMapper.toDto(adminBranchRequest)
+                                        .withOpen(adminBranchRequest.open().toLocalTime())
+                                        .withClose(adminBranchRequest.close().toLocalTime()))
+                        .branchDisplays(adminBranchRequest.branchDisplays().stream()
+                                .map(branchDisplayModelMapper::toDto)
+                                .toList())
                         .build());
     }
 

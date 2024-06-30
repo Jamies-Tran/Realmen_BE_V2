@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import com.capstone.realmen.data.dto.shop.category.assignment.ServiceAssignment;
+import com.capstone.realmen.data.dto.shop.service.ShopService;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,21 +16,20 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum EServiceAssignment {
     STYLIST(EProfessional.STYLIST.getCode(), "Dịch vụ của thợ cắt tóc", EProfessional.STYLIST),
-    MASSEUR(EProfessional.MASSEUR.getCode(), "Dịch vụ của thợ massage", EProfessional.STYLIST);
+    MASSEUR(EProfessional.MASSEUR.getCode(), "Dịch vụ của thợ massage", EProfessional.MASSEUR);
 
     String code;
     String name;
     EProfessional professional;
 
-    public List<ServiceAssignment> findAll() {
+    public static List<EServiceAssignment> of(List<ShopService> serviceList) {
+        List<String> assignmentCodes = serviceList.stream()
+            .map(ShopService::serviceAssignmentCode)
+            .toList();
         return Arrays.stream(EServiceAssignment.values())
-                .map(serviceAssignment -> ServiceAssignment.builder()
-                        .code(this.getCode())
-                        .professional(this.getProfessional().toDto())
-                        .build())
-                .toList();
+            .filter(assignment -> assignmentCodes.contains(assignment.getCode()))
+            .toList();
     }
-
 
     public static EServiceAssignment findByCode(String code) {
         return Arrays.stream(EServiceAssignment.values())

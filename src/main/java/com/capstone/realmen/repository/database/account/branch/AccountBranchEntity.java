@@ -1,4 +1,4 @@
-package com.capstone.realmen.repository.database.branch.display;
+package com.capstone.realmen.repository.database.account.branch;
 
 import com.capstone.realmen.repository.database.audit.Auditable;
 
@@ -22,14 +22,20 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "branch_display")
+@Table(name = "account_branch")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BranchDisplayEntity extends Auditable {
+public class AccountBranchEntity extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long branchDisplayId;
+    Long accountBranchId;
+    @Column(name = "account_id")
+    Long accountId;
     @Column(name = "branch_id")
     Long branchId;
-    @Column(name = "branch_display_content")
-    String branchDisplayContent;
+    @Column(name = "working_status_code")
+    String workingStatusCode;
+    @Column(name = "workingStatusName")
+    String workingStatusName;
+    @Column(name = "is_manager")
+    Boolean isManager;
 }

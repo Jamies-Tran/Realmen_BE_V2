@@ -81,7 +81,7 @@ public class AccountCommandService {
                                         .encode(appDefaultPassword))
                                 .withStatus(EAccountStatus.ACTIVE.getCode(),
                                         EAccountStatus.ACTIVE.getName())
-                                .withAudit(Auditable.ofCreated(audit))
+                                .setAudit(Auditable.ofCreated(audit))
 
                 );
                 return AccountCreated.byManager(newAccount.getAccountId());
@@ -93,7 +93,7 @@ public class AccountCommandService {
                                 .withPassword(passwordEncoder.encode(appDefaultPassword))
                                 .withStatus(EAccountStatus.PENDING_BRANCH.getCode(),
                                         EAccountStatus.PENDING_BRANCH.getName())
-                                .withAudit(Auditable.ofCreated(audit))
+                                .setAudit(Auditable.ofCreated(audit))
 
                 );
                 return AccountCreated.byShopOwner(newAccount.getAccountId());
@@ -110,7 +110,7 @@ public class AccountCommandService {
                         .withStatus(EAccountStatus.ACTIVE.getCode(),
                                 EAccountStatus.ACTIVE.getName())
                         .withRole(ERole.CUSTOMER.getCode(), ERole.CUSTOMER.getName())
-                        .withAudit(Auditable.ofDefault()));
+                        .setAudit(Auditable.ofDefault()));
         return AccountCreated.byDefault(newAccount.getAccountId());
     }
 

@@ -53,6 +53,13 @@ public interface IAccountRepository extends JpaRepository<AccountEntity, Long> {
         Page<AccountDAO> findAll(AccountSearchCriteria searchCriteria,
                         List<String> defaultStatusCodes, Pageable pageable);
 
+        @Query("""
+                SELECT a
+                FROM AccountEntity a
+                WHERE a.accountId IN :accountIds               
+        """)                
+        List<AccountEntity> findAllByIds(List<Long> accountIds);
+
         Boolean existsByStaffCodeOrPhone(String staffCode, String phone);
 
         Boolean existsByPhone(String phone);

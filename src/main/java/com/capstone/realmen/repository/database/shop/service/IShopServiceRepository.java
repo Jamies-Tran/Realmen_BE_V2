@@ -1,5 +1,6 @@
 package com.capstone.realmen.repository.database.shop.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -13,6 +14,22 @@ import com.capstone.realmen.service.shop.service.data.ShopServiceSearchCriteria;
 
 @Repository
 public interface IShopServiceRepository extends JpaRepository<ShopServiceEntity, Long> {
+    
+    @Query("""
+        SELECT 
+            ss.shopServiceId AS shopServiceId,
+            ss.shopServiceName AS shopServiceName,
+            ss.shopServicePrice AS shopServicePrice,
+            ss.shopServiceThumbnail AS shopServiceThumbnail,
+            sc.shopCategoryId AS shopCategoryId,
+            sc.shopCategoryCode AS shopCategoryCode,
+            sc.shopCategoryName AS shopCategoryName
+        FROM ShopServiceEntity ss
+        INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
+        WHERE ss.shopServiceId = :shopServiceId
+    """)
+    Optional<ShopServiceDAO> findByShopServiceId(Long shopServiceId);
+    
     @Query("""
         SELECT 
             ss.shopServiceId AS shopServiceId,
@@ -39,10 +56,11 @@ public interface IShopServiceRepository extends JpaRepository<ShopServiceEntity,
             ss.shopServiceThumbnail AS shopServiceThumbnail,
             sc.shopCategoryId AS shopCategoryId,
             sc.shopCategoryCode AS shopCategoryCode,
-            sc.shopCategoryName AS shopCategoryName
+            sc.shopCategoryName AS shopCategoryName,
+            sc.serviceAssignmentCode AS serviceAssignmentCode
         FROM ShopServiceEntity ss
         INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
-        WHERE ss.shopServiceId = :shopServiceId
+        WHERE ss.shopServiceId IN :shopServiceIds 
     """)
-    Optional<ShopServiceDAO> findByShopServiceId(Long shopServiceId);
+    List<ShopServiceDAO> findAllByIds(List<Long> shopServiceIds);
 }

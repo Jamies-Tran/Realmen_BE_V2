@@ -32,7 +32,7 @@ public class ShopServiceCommandService {
     public void create(ShopServiceCreateRequire createRequire) {
         ShopServiceEntity saveShopService = shopServiceRepository.save(
             shopServiceMapper.toEntity(createRequire.shopService())
-                .withAudit(Auditable.ofCreated(requestContext.getAccount()))
+                .setAudit(Auditable.ofCreated(requestContext.getAccount()))
         );
         serviceDisplayCommandService.create(
             ServiceDisplayCreateRequire.builder()

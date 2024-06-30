@@ -66,7 +66,7 @@ public class BranchEntity extends Auditable {
         @Column(name = "branch_status_name")
         String branchStatusName;
 
-        public BranchEntity withAudit(Auditable auditable) {
+        public BranchEntity setAudit(Auditable auditable) {
                 this.setCreatedBy(Objects.nonNull(auditable.getCreatedBy())
                                 ? auditable.getCreatedBy()
                                 : this.getCreatedBy());

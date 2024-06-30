@@ -10,14 +10,14 @@ import lombok.With;
 @With
 @Builder
 public record ShopService(
-    Long shopServiceId,
-    Long shopCategoryId,
-    String shopCategoryCode,
-    String shopCategoryName,
-    String shopServiceName,
-    Long shopServicePrice,
-    String shopServiceThumbnail,
-    List<ServiceDisplay> serviceDisplays
-) {
-    
+                Long shopServiceId,
+                Long shopCategoryId,
+                String shopCategoryCode,
+                String shopCategoryName,
+                String shopServiceName,
+                String serviceAssignmentCode,
+                Long shopServicePrice,
+                String shopServiceThumbnail,
+                List<ServiceDisplay> serviceDisplays) {
+
 }

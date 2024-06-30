@@ -19,26 +19,27 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ShopCategoryCommandService {
-    @NonNull
-    IShopCategoryRepository shopCategoryRepository;
-    @NonNull
-    RequestContext requestContext;
-    @NonNull
-    ShopCategoryMapper shopCategoryMapper;
+        @NonNull
+        IShopCategoryRepository shopCategoryRepository;
+        @NonNull
+        RequestContext requestContext;
+        @NonNull
+        ShopCategoryMapper shopCategoryMapper;
 
-    public void create(ShopCategoryCreateRequire createRequire) {
-        String shopCategoryCode = createRequire
-                .shopCategoryCode(AppStorage.generaterandomCode().random());
-        while (shopCategoryRepository.existsByShopCategoryCode(shopCategoryCode)) {
-            shopCategoryCode = createRequire
-                    .shopCategoryCode(AppStorage.generaterandomCode().random());
+        public void create(ShopCategoryCreateRequire createRequire) {
+                String shopCategoryCode = createRequire
+                                .shopCategoryCode(AppStorage.generaterandomCode().random());
+                while (shopCategoryRepository.existsByShopCategoryCode(shopCategoryCode)) {
+                        shopCategoryCode = createRequire
+                                        .shopCategoryCode(AppStorage.generaterandomCode().random());
+                }
+                ShopCategoryEntity newCategory = shopCategoryMapper.toEntity(
+                                createRequire.of(shopCategoryCode));
+                shopCategoryRepository.save(
+                                newCategory
+                                        .withShopCategoryCode(shopCategoryCode)
+                                        .setAudit(Auditable.ofCreated(requestContext.getAccount()))
+
+                );
         }
-        ShopCategoryEntity newCategory = shopCategoryMapper.toEntity(
-                createRequire.of(shopCategoryCode));
-        shopCategoryRepository.save(
-                newCategory
-                        .withAudit(Auditable.ofCreated(requestContext.getAccount()))
-                        .withShopCategoryCode(shopCategoryCode)
-        );
-    }
 }

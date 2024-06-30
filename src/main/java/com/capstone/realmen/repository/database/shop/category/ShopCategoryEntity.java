@@ -38,7 +38,7 @@ public class ShopCategoryEntity extends Auditable{
     @Column(name = "service_assignment_name")
     String serviceAssignmentName;
 
-    public ShopCategoryEntity withAudit(Auditable auditable) {
+    public ShopCategoryEntity setAudit(Auditable auditable) {
         this.setCreatedBy(Objects.nonNull(auditable.getCreatedBy())
                 ? auditable.getCreatedBy()
                 : this.getCreatedBy());

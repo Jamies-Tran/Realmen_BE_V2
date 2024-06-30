@@ -1,5 +1,7 @@
 package com.capstone.realmen.service.account;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +40,12 @@ public class AccountQueryService {
                         searchCriteria.defaultStatusCodes(),
                         pageRequestCustom.pageRequest())
                 .map(accountMapper::toDto);
+    }
+
+    public List<Account> findAllByIds(AccountSearchByField searchByField) {
+        return accountRepository.findAllByIds(searchByField.accountIds())
+                .stream()
+                .map(accountMapper::toDto)
+                .toList();
     }
 }

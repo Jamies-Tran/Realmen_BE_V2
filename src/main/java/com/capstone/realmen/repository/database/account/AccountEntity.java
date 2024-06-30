@@ -68,7 +68,7 @@ public class AccountEntity extends Auditable {
     String accountStatusName;
 
 
-    public AccountEntity withAudit(Auditable auditable) {
+    public AccountEntity setAudit(Auditable auditable) {
         this.setCreatedBy(Objects.nonNull(auditable.getCreatedBy())
                 ? auditable.getCreatedBy()
                 : this.getCreatedBy());

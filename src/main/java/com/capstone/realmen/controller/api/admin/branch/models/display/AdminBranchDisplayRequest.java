@@ -5,7 +5,7 @@ import lombok.With;
 
 @With
 @Builder
-public record BranchDisplayRequest(
+public record AdminBranchDisplayRequest(
         String branchDisplayContent) {
 
 }
