@@ -103,10 +103,11 @@ public class AccountCommandService {
     }
 
     private AccountCreated createCustomer(Account account) {
+        PasswordEncoder passwordEncoder = appPasswordEncoder.passwordEncoder();
         AccountEntity newAccount = accountMapper.toEntity(account);
         newAccount = accountRepository.save(
                 newAccount
-                        .withPassword(appPasswordEncoder.passwordEncoder().encode(appMobDefaultPassword))
+                        .withPassword(passwordEncoder.encode(appMobDefaultPassword))
                         .withStatus(EAccountStatus.ACTIVE.getCode(),
                                 EAccountStatus.ACTIVE.getName())
                         .withRole(ERole.CUSTOMER.getCode(), ERole.CUSTOMER.getName())
