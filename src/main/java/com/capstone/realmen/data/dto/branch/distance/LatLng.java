@@ -4,7 +4,14 @@ import lombok.Builder;
 
 @Builder
 public record LatLng(
-        Double latitude,
-        Double longitude) {
+                Double latitude,
+                Double longitude) {
+        public Double rLatitude() {
+                return Math.toRadians(latitude);
+        }
+
+        public Double rLongitude() {
+                return Math.toRadians(longitude);
+        }
 
 }
