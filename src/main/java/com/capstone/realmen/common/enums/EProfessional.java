@@ -26,23 +26,24 @@ public enum EProfessional {
 
     public Professional toDto() {
         return Professional.builder()
-            .code(this.getCode())
-            .name(this.getName())
-            .build();
+                .code(this.getCode())
+                .name(this.getName())
+                .build();
     }
 
     public static List<EProfessional> of(List<Account> accountList) {
         List<String> professionalCodes = accountList.stream()
-            .map(Account::professionalTypeCode)
-            .toList();
+                .map(Account::professionalTypeCode)
+                .toList();
         return Arrays.stream(EProfessional.values())
-            .filter(professional -> professionalCodes.contains(professional.getCode()))
-            .toList();
+                .filter(professional -> professionalCodes.contains(professional.getCode()))
+                .toList();
     }
 
-    public static List<Professional> findAll(String search) {
+    public static List<Professional> findAll(String name) {
         return Arrays.stream(EProfessional.values())
-                .filter(professional -> !StringUtils.hasText(search) || professional.getCode().equalsIgnoreCase(search))
+                .filter(professional -> !StringUtils.hasText(name)
+                        || professional.getName().toLowerCase().contains(name))
                 .map(professional -> Professional.builder()
                         .code(professional.getCode()).name(professional.getName()).build())
                 .toList();

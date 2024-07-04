@@ -45,10 +45,16 @@ public class ShopServiceController implements IShopServiceAPI {
         }
 
         @Override
-        public PageImplResponse<AdminShopServiceResponse> findAll(String search, Long shopCategoryId,
-                        List<Long> shopServicePriceRange, Integer current, Integer pageSize) {
+        public PageImplResponse<AdminShopServiceResponse> findAll(
+                        String search, 
+                        Long branchId, 
+                        Long shopCategoryId,
+                        List<Long> shopServicePriceRange, 
+                        Integer current, 
+                        Integer pageSize) {
                 ShopServiceSearchCriteria searchCriteria = ShopServiceSearchCriteria.builder()
                                 .search(search)
+                                .branchId(branchId)
                                 .shopCategoryId(shopCategoryId)
                                 .shopServicePriceRange(shopServicePriceRange)
                                 .build();
@@ -57,10 +63,10 @@ public class ShopServiceController implements IShopServiceAPI {
                                 .adminFindAll(searchCriteria, pageRequestCustom)
                                 .map(shopServiceModelMapper::toModel);
                 return new PageImplResponse<>(
-                        responses.getContent(), 
-                        responses.getTotalElements(), 
-                        responses.getTotalPages(), 
-                        pageRequestCustom.current(), 
-                        pageSize);
+                                responses.getContent(),
+                                responses.getTotalElements(),
+                                responses.getTotalPages(),
+                                pageRequestCustom.current(),
+                                pageSize);
         }
 }

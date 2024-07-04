@@ -18,20 +18,22 @@ import lombok.experimental.FieldDefaults;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AdminAuthenticationController implements IAdminAuthenticationAPI{
+public class AdminAuthenticationController implements IAdminAuthenticationAPI {
     @NonNull
     AuthenticationUseCaseService authenticationUseCaseService;
     @NonNull
     AdminAccessTokenMapper adminAccessTokenMapper;
-    
+
     @Override
     public ValueResponse<AdminAccessTokenResponse> getAccessToken(@Valid AdminAccessTokenRequest accessTokenRequest) {
         AdminAccessTokenResponse response = adminAccessTokenMapper.toModel(
-            authenticationUseCaseService
-                .adminCreateAccessToken(CreateRequire
-                    .byStaffCode(accessTokenRequest.staffCode(), accessTokenRequest.password()))
-        );
+                authenticationUseCaseService
+                        .adminCreateAccessToken(CreateRequire
+                                .builder()
+                                .identify(accessTokenRequest.staffCode())
+                                .password(accessTokenRequest.password())
+                                .build()));
         return new ValueResponse<AdminAccessTokenResponse>(response);
     }
-    
+
 }

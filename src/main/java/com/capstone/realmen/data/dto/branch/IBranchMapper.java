@@ -8,4 +8,6 @@ import com.capstone.realmen.repository.database.branch.BranchEntity;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IBranchMapper {
     BranchEntity toEntity(Branch dto);
+
+    Branch toDto(BranchEntity entity);
 }

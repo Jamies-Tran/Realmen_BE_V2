@@ -118,5 +118,10 @@ public class BranchCommandService extends BranchHelpers {
                                 AccountBranchCreateRequire.of(foundBranch.getBranchId(), staffList));
                 branchServiceCommandService.createList(
                         BranchServiceCreateRequire.of(foundBranch.getBranchId(), activeRequire.serviceList()));
+                branchRepository.save(
+                        foundBranch
+                                .withBranchStatusCode(EBranchStatus.ACTIVE.getCode())
+                                .withBranchStatusName(EBranchStatus.ACTIVE.getName())
+                );
         }
 }

@@ -23,23 +23,10 @@ public enum EBranchStatus {
     String name;
 
     public static List<BranchStatus> defaultStatuses(List<String> statuses) {
-        List<BranchStatus> defaultStatuses = Arrays.stream(EBranchStatus.values())
-                .filter(status -> !status.getCode().startsWith(EBranchStatus.DELETED.getCode()))
-                .map(status -> BranchStatus.builder().code(status.getCode()).name(status.getName()).build())
-                .toList();
-        if (Objects.isNull(statuses) || statuses.isEmpty()) {
-            return defaultStatuses;
-        }
-        return statuses.stream()
-                .filter(status -> defaultStatuses.stream().map(BranchStatus::code).toList().contains(status))
-                .map(status -> BranchStatus.builder()
-                        .code(status)
-                        .name(defaultStatuses.stream()
-                                .filter(defaultStatus -> Objects.equals(status, defaultStatus.code()))
-                                .findAny()
-                                .get()
-                                .name())
-                        .build())
+        return Arrays.stream(EBranchStatus.values())
+                .filter(bStatus -> (Objects.isNull(statuses) || statuses.isEmpty())
+                        || statuses.contains(bStatus.getCode()))
+                .map(BranchStatus::of)
                 .toList();
     }
 }

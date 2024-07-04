@@ -32,4 +32,5 @@ public interface IAppAccountAPI {
             @RequestParam(required = false, value = "accountStatusCodes", defaultValue = "") List<String> accountStatusCodes,
             @RequestParam(required = false, value = "current", defaultValue = "1") @Min(1) Integer current,
             @RequestParam(required = false, value = "pageSize", defaultValue = "20") Integer pageSize);
+
 }

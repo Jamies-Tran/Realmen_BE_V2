@@ -2,7 +2,6 @@ package com.capstone.realmen.service.authentication.helper.cache;
 
 import org.springframework.stereotype.Service;
 
-import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.repository.redis.token.TokenCache;
 import com.capstone.realmen.repository.redis.token.TokenRedis;
 import com.capstone.realmen.service.authentication.helper.cache.data.OtpSearchByField;
@@ -21,6 +20,6 @@ public class TokenCacheQueryService {
 
     public TokenRedis findById(OtpSearchByField searchByField) {
         return tokenCache.findById(searchByField.accountId())
-            .orElseThrow(() -> new NotFoundException("Không tìm thấy thông tin đang nhập"));
+            .orElse(TokenRedis.builder().accessToken(null).build());
     }
 }

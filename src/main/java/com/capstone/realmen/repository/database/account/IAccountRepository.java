@@ -24,6 +24,7 @@ public interface IAccountRepository extends JpaRepository<AccountEntity, Long> {
         @Query("""
                         SELECT
                             a.accountId AS accountId,
+                            ab.branchId AS branchId,
                             a.firstName AS firstName,
                             a.lastName AS lastName,
                             a.phone AS phone,
@@ -40,24 +41,29 @@ public interface IAccountRepository extends JpaRepository<AccountEntity, Long> {
                             a.accountStatusCode AS accountStatusCode,
                             a.accountStatusName AS accountStatusName
                         FROM AccountEntity a
-                        WHERE :#{#searchCriteria.hasSearchEmpty()} = TRUE
-                            OR LOWER(CONCAT(a.firstName, ' ', a.lastName)) LIKE %:#{#searchCriteria.search()}%
-                            OR a.phone LIKE %:#{#searchCriteria.search()}%
-                            OR LOWER(a.staffCode) LIKE %:#{#searchCriteria.search()}%
+                        LEFT JOIN AccountBranchEntity ab ON a.accountId = ab.accountId
+                        WHERE (:#{#searchCriteria.hasSearchEmpty()} = TRUE
+                            OR LOWER(CONCAT(a.firstName, ' ', a.lastName)) LIKE '%'||:#{#searchCriteria.search()}||'%'
+                            OR a.phone LIKE '%'||:#{#searchCriteria.search()}||'%'
+                            OR LOWER(a.staffCode) LIKE '%'||:#{#searchCriteria.search()}||'%')
                         AND (:#{#searchCriteria.hasStatusEmpty()} = TRUE
                                 OR a.accountStatusCode IN (:defaultStatusCodes))
                         AND (:#{#searchCriteria.hasProfessionalTypeCodeEmpty()} = TRUE
                                 OR a.professionalTypeCode IN (:#{#searchCriteria.professionalTypeCodes()}))
-                        AND a.roleCode IN :#{#searchCriteria.roles()}
+                        AND (a.roleCode IN :#{#searchCriteria.roles()})
+                        AND (:#{#searchCriteria.hasBranchIdEmpty()} = TRUE
+                                OR ab.branchId = :#{#searchCriteria.branchId()})
                         """)
-        Page<AccountDAO> findAll(AccountSearchCriteria searchCriteria,
-                        List<String> defaultStatusCodes, Pageable pageable);
+        Page<AccountDAO> findAll(
+                        AccountSearchCriteria searchCriteria,
+                        List<String> defaultStatusCodes,
+                        Pageable pageable);
 
         @Query("""
-                SELECT a
-                FROM AccountEntity a
-                WHERE a.accountId IN :accountIds               
-        """)                
+                                SELECT a
+                                FROM AccountEntity a
+                                WHERE a.accountId IN :accountIds
+                        """)
         List<AccountEntity> findAllByIds(List<Long> accountIds);
 
         Boolean existsByStaffCodeOrPhone(String staffCode, String phone);

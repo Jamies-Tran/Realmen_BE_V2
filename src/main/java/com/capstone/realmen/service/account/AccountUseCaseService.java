@@ -24,6 +24,7 @@ import lombok.experimental.FieldDefaults;
 public class AccountUseCaseService implements IAdminAccountService, IAppAccountService {
     @NonNull
     AccountQueryService accountQueryService;
+    
     @NonNull
     AccountCommandService accountCommandService;
 

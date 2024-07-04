@@ -15,4 +15,6 @@ public interface IAdminBranchModelMapper {
     Branch toDto(AdminBranchRequest model);
 
     BranchActiveRequire toDto(AdminBranchActiveBranchRequest model);
+
+    AdminBranchResponse toModel(Branch dto);
 }

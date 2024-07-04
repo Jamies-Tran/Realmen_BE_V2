@@ -11,7 +11,9 @@ import lombok.With;
 public record ShopServiceSearchCriteria(
         String search,
         Long shopCategoryId,
+        Long branchId,
         List<Long> shopServicePriceRange) {
+            
     public List<Long> shopServicePriceRange() {
         return shopServicePriceRange.stream().sorted().toList();
     }
@@ -48,5 +50,9 @@ public record ShopServiceSearchCriteria(
             return this.shopServicePriceRange().get(0);
         }
         return this.shopServicePriceRange().get(1);
+    }
+
+    public Boolean hasBranchIdEmpty() {
+        return Objects.isNull(branchId);
     }
 }

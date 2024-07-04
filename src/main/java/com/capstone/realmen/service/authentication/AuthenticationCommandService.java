@@ -46,11 +46,11 @@ public class AuthenticationCommandService {
 
         public AccessToken adminCreate(CreateRequire createRequire) {
                 Account foundAccount = accountQueryService.find(
-                                AccountSearchByField.of(createRequire.staffCode()));
+                                AccountSearchByField.of(createRequire.identify()));
                 if (!passwordEncoder.matches(createRequire.password(), foundAccount.password())) {
                         throw new LoginException();
                 }
-                String accessToken = accessTokenService.generateJwtToken(createRequire.staffCode());
+                String accessToken = accessTokenService.generateJwtToken(createRequire.identify());
                 return AccessToken.of(foundAccount.accountId(),
                                 foundAccount.branchId(),
                                 foundAccount.staffCode(),
@@ -63,15 +63,15 @@ public class AuthenticationCommandService {
 
         public AccessToken appCreate(CreateRequire createRequire) {
                 Account foundAccount = accountQueryService.find(
-                                AccountSearchByField.of(createRequire.phone()));
+                                AccountSearchByField.of(createRequire.identify()));
                 TokenRedis token = tokenCacheQueryService.findById(
                                 OtpSearchByField.of(foundAccount.accountId()));
                 String password = Objects.requireNonNullElse(token.accessToken(),
-                        foundAccount.password());
+                                foundAccount.password());
                 if (!passwordEncoder.matches(createRequire.password(), password)) {
                         throw new LoginException();
                 }
-                String accessToken = accessTokenService.generateJwtToken(createRequire.staffCode());
+                String accessToken = accessTokenService.generateJwtToken(createRequire.identify());
                 return AccessToken.of(
                                 foundAccount.accountId(),
                                 foundAccount.lastName(),
