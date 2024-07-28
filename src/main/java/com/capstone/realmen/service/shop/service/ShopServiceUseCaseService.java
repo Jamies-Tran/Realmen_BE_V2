@@ -10,6 +10,7 @@ import com.capstone.realmen.service.shop.service.data.ShopServiceCreateRequire;
 import com.capstone.realmen.service.shop.service.data.ShopServiceSearchByField;
 import com.capstone.realmen.service.shop.service.data.ShopServiceSearchCriteria;
 import com.capstone.realmen.service.shop.service.usecase.IAdminShopServiceService;
+import com.capstone.realmen.service.shop.service.usecase.IAppShopServiceService;
 
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -19,7 +20,7 @@ import lombok.experimental.FieldDefaults;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ShopServiceUseCaseService implements IAdminShopServiceService{
+public class ShopServiceUseCaseService implements IAdminShopServiceService, IAppShopServiceService {
     @NonNull
     ShopServiceCommandService shopServiceCommandService;
     @NonNull
@@ -40,6 +41,16 @@ public class ShopServiceUseCaseService implements IAdminShopServiceService{
     @Override
     public ShopService adminFindById(ShopServiceSearchByField searchByField) {
         return shopServiceQueryService.findById(searchByField);
+    }
+
+    @Override
+    public ShopService appFindById(ShopServiceSearchByField searchByField) {
+        return shopServiceQueryService.findById(searchByField);
+    }
+
+    @Override
+    public Page<ShopService> appFindAll(ShopServiceSearchCriteria searchCriteria, PageRequestCustom pageRequestCustom) {
+        return shopServiceQueryService.findAll(searchCriteria, pageRequestCustom);
     }
     
 }

@@ -15,11 +15,30 @@ import com.capstone.realmen.service.account.data.AccountSearchCriteria;
 @Repository
 public interface IAccountRepository extends JpaRepository<AccountEntity, Long> {
         @Query("""
-                        SELECT a
+                        SELECT
+                            a.accountId AS accountId,
+                            a.password AS password,
+                            ab.branchId AS branchId,
+                            a.firstName AS firstName,
+                            a.lastName AS lastName,
+                            a.phone AS phone,
+                            a.address AS address,
+                            a.staffCode AS staffCode,
+                            a.professionalTypeCode AS professionalTypeCode,
+                            a.professionalTypeName AS professionalTypeName,
+                            a.roleCode AS roleCode,
+                            a.roleName AS roleName,
+                            a.thumbnail AS thumbnail,
+                            a.dob AS dob,
+                            a.genderCode AS genderCode,
+                            a.genderName AS genderName,
+                            a.accountStatusCode AS accountStatusCode,
+                            a.accountStatusName AS accountStatusName
                         FROM AccountEntity a
+                        LEFT JOIN AccountBranchEntity ab ON a.accountId = ab.accountId
                         WHERE a.phone = :search OR a.staffCode = :search
                         """)
-        Optional<AccountEntity> findByPhoneOrStaffCode(String search);
+        Optional<AccountDAO> findByPhoneOrStaffCode(String search);
 
         @Query("""
                         SELECT
@@ -43,14 +62,15 @@ public interface IAccountRepository extends JpaRepository<AccountEntity, Long> {
                         FROM AccountEntity a
                         LEFT JOIN AccountBranchEntity ab ON a.accountId = ab.accountId
                         WHERE (:#{#searchCriteria.hasSearchEmpty()} = TRUE
-                            OR LOWER(CONCAT(a.firstName, ' ', a.lastName)) LIKE '%'||:#{#searchCriteria.search()}||'%'
+                            OR (LOWER(CONCAT(a.firstName, ' ', a.lastName)) LIKE '%'||:#{#searchCriteria.search()}||'%'
                             OR a.phone LIKE '%'||:#{#searchCriteria.search()}||'%'
-                            OR LOWER(a.staffCode) LIKE '%'||:#{#searchCriteria.search()}||'%')
+                            OR LOWER(a.staffCode) LIKE '%'||:#{#searchCriteria.search()}||'%'))
                         AND (:#{#searchCriteria.hasStatusEmpty()} = TRUE
                                 OR a.accountStatusCode IN (:defaultStatusCodes))
                         AND (:#{#searchCriteria.hasProfessionalTypeCodeEmpty()} = TRUE
                                 OR a.professionalTypeCode IN (:#{#searchCriteria.professionalTypeCodes()}))
-                        AND (a.roleCode IN :#{#searchCriteria.roles()})
+                        AND (:#{#searchCriteria.hasRoleEmpty()} = TRUE
+                                OR a.roleCode IN :#{#searchCriteria.roles()})
                         AND (:#{#searchCriteria.hasBranchIdEmpty()} = TRUE
                                 OR ab.branchId = :#{#searchCriteria.branchId()})
                         """)

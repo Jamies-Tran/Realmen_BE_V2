@@ -25,7 +25,8 @@ import lombok.experimental.FieldDefaults;
 public class DailyPlanAccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long dailyplanAccountId;
+    @Column(name = "daily_plan_accoun_id")
+    Long dailyPlanAccountId;
 
     @Column(name = "daily_plan_id")
     Long dailyPlanId;

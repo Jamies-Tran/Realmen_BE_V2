@@ -8,5 +8,7 @@ import com.capstone.realmen.repository.database.plans.daily.DailyPlanEntity;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IDailyPlanMapper {
     DailyPlanEntity toEntity(DailyPlan dto);
-    
+
+    DailyPlan toDto(DailyPlanEntity entity);
+
 }

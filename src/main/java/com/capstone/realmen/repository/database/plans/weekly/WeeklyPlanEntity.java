@@ -1,6 +1,5 @@
 package com.capstone.realmen.repository.database.plans.weekly;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 import com.capstone.realmen.repository.database.audit.Auditable;
@@ -10,8 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,14 +32,6 @@ public class WeeklyPlanEntity extends Auditable {
 
     @Column(name = "branch_id")
     Long branchId;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "begin_at")
-    LocalDateTime beginAt;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "complete_at")
-    LocalDateTime completeAt;
 
     @Column(name = "weekly_plan_status_code")
     String weeklyPlanStatusCode;

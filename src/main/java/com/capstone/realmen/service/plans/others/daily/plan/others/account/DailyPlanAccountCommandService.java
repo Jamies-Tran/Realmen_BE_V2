@@ -1,6 +1,7 @@
 package com.capstone.realmen.service.plans.others.daily.plan.others.account;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
@@ -26,11 +27,20 @@ public class DailyPlanAccountCommandService {
     IDailyPlanAccountMapper dailyPlanAccountMapper;
 
     public void createList(DailyPlanAccountCreateRequire createRequire) {
-        List<DailyPlanAccountEntity> newDailyPlanAccount = DailyPlanAccount
-            .of(createRequire.dailyPlanIds(), createRequire.accountIds())
-            .stream()
-            .map(dailyPlanAccountMapper::toEntity)
-            .toList();
-        dailyPlanAccountRepository.saveAll(newDailyPlanAccount);
+        if (Objects.nonNull(createRequire.dailyPlanAccounts())) {
+            dailyPlanAccountRepository.saveAll(
+                    createRequire.dailyPlanAccounts()
+                            .stream()
+                            .map(dailyPlanAccountMapper::toEntity)
+                            .toList());
+        } else {
+            List<DailyPlanAccountEntity> newDailyPlanAccount = DailyPlanAccount
+                    .of(createRequire.dailyPlanIds(), createRequire.accountIds())
+                    .stream()
+                    .map(dailyPlanAccountMapper::toEntity)
+                    .toList();
+            dailyPlanAccountRepository.saveAll(newDailyPlanAccount);
+        }
+
     }
 }

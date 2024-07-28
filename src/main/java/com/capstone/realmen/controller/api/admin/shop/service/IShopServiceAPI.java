@@ -22,7 +22,7 @@ public interface IShopServiceAPI {
     @GetMapping
     PageImplResponse<AdminShopServiceResponse> findAll(
             @RequestParam(required = false, value = "search", defaultValue = "") String search,
-            @RequestParam(required = false, value = "branchId", defaultValue = "branchId") Long branchId,
+            @RequestParam(required = false, value = "branchId", defaultValue = "") Long branchId,
             @RequestParam(required = false, value = "shopCategoryId", defaultValue = "") Long shopCategoryId,
             @RequestParam(required = false, value = "shopServicePriceRange", defaultValue = "") List<Long> shopServicePriceRange,
             @RequestParam(required = false, value = "current", defaultValue = "1") Integer current,

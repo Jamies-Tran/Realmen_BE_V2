@@ -13,9 +13,18 @@ public record ShopServiceSearchCriteria(
         Long shopCategoryId,
         Long branchId,
         List<Long> shopServicePriceRange) {
-            
+
     public List<Long> shopServicePriceRange() {
         return shopServicePriceRange.stream().sorted().toList();
+    }
+
+    public static ShopServiceSearchCriteria filterBranch(Long branchId) {
+        return ShopServiceSearchCriteria.builder()
+                .branchId(branchId)
+                .search("")
+                .shopCategoryId(null)
+                .shopServicePriceRange(List.of())
+                .build();
     }
 
     public static ShopServiceSearchCriteria ofDefault() {
@@ -37,22 +46,22 @@ public record ShopServiceSearchCriteria(
         return Objects.isNull(shopServicePriceRange) || shopServicePriceRange.isEmpty();
     }
 
+    public Boolean hasBranchIdEmpty() {
+        return Objects.isNull(branchId);
+    }
+
     public Long priceFrom() {
-        return Objects.isNull(shopServicePriceRange) || shopServicePriceRange.isEmpty() 
-            ? 0L
-            : this.shopServicePriceRange().get(0);
+        return Objects.isNull(shopServicePriceRange) || shopServicePriceRange.isEmpty()
+                ? 0L
+                : this.shopServicePriceRange().get(0);
     }
 
     public Long priceTo() {
-        if(Objects.isNull(shopServicePriceRange) || shopServicePriceRange.isEmpty()) {
+        if (Objects.isNull(shopServicePriceRange) || shopServicePriceRange.isEmpty()) {
             return 0L;
-        } else if(shopServicePriceRange.size() < 2) {
+        } else if (shopServicePriceRange.size() < 2) {
             return this.shopServicePriceRange().get(0);
         }
         return this.shopServicePriceRange().get(1);
-    }
-
-    public Boolean hasBranchIdEmpty() {
-        return Objects.isNull(branchId);
     }
 }

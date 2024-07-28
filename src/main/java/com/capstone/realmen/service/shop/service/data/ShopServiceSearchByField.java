@@ -11,5 +11,7 @@ public record ShopServiceSearchByField(
     Long shopServiceId,
     List<Long> shopServiceIds
 ) {
-    
+    public static ShopServiceSearchByField of(Long shopServiceId) {
+        return ShopServiceSearchByField.builder().shopServiceId(shopServiceId).build();
+    }
 }

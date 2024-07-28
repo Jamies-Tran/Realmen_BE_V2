@@ -5,6 +5,10 @@ public interface ShopServiceDAO {
 
     Long getShopServiceId();
 
+    void setBranchId(Long branchId);
+
+    Long getBranchId();
+
     void setShopServiceName(String shopServiceName);
 
     String getShopServiceName();

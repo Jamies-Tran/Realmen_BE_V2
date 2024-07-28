@@ -8,10 +8,11 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public enum EDailyPlanCreateType {
-    WEEKLY("WEEKLY"),
-    MONTHLY("MONTHLY");
+public enum EWeeklyPlanStatus {
+    DRAFT("DRAFT", "Bản nháp"),
+    ENABLED("ENABLED", "Kích hoạt"),
+    DISABLED("DISABLED", "Vô hiệu hóa");
 
     String code;
-
+    String name;
 }

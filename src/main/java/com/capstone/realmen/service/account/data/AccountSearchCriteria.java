@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.capstone.realmen.common.enums.EAccountStatus;
+import com.capstone.realmen.common.enums.ERole;
 
 import lombok.Builder;
 import lombok.With;
@@ -20,6 +21,16 @@ public record AccountSearchCriteria(
         return EAccountStatus.defaultStatuses(accountStatusCodes);
     }
 
+    public static AccountSearchCriteria filterStaffOnBranch(Long branchId) {
+        return AccountSearchCriteria.builder()
+                .branchId(branchId)
+                .search("")
+                .roles(List.of(ERole.OPERATOR_STAFF.getCode()))
+                .professionalTypeCodes(List.of())
+                .accountStatusCodes(List.of())
+                .build();
+    }
+
     public AccountSearchCriteria toLowerCase() {
         return AccountSearchCriteria.builder()
                 .search(search.toLowerCase())
@@ -28,6 +39,10 @@ public record AccountSearchCriteria(
                 .accountStatusCodes(accountStatusCodes)
                 .professionalTypeCodes(professionalTypeCodes)
                 .build();
+    }
+
+    public Boolean hasRoleEmpty() {
+        return Objects.isNull(roles) || roles.isEmpty();
     }
 
     public Boolean hasSearchEmpty() {

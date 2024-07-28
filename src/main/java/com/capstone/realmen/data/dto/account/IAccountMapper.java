@@ -8,9 +8,10 @@ import com.capstone.realmen.repository.database.account.AccountEntity;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IAccountMapper {
-    Account toDto(AccountEntity entity);
+    AccountEntity toEntity(Account dto);
 
     Account toDto(AccountDAO dao);
 
-    AccountEntity toEntity(Account dto);
+    Account toDto(AccountEntity entity);
+
 }

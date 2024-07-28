@@ -6,6 +6,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.capstone.realmen.controller.security.token.AccessTokenService;
 import com.capstone.realmen.data.dto.account.Account;
+import com.capstone.realmen.repository.database.audit.Auditable;
 import com.capstone.realmen.service.account.AccountQueryService;
 import com.capstone.realmen.service.account.data.AccountSearchByField;
 
@@ -32,5 +33,13 @@ public class RequestContext {
     public Account getAccount() {
         String identify = accessTokenService.getIdentifyFromHeader(getRequest());
         return accountQueryService.find(AccountSearchByField.of(identify));
+    }
+
+    public Auditable auditCreate() {
+        return Auditable.ofCreated(getAccount());
+    }
+
+    public Auditable auditUpdate() {
+        return Auditable.ofUpdated(getAccount());
     }
 }

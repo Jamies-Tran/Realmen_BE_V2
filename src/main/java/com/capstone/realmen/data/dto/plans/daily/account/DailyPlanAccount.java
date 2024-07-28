@@ -9,7 +9,16 @@ import lombok.Builder;
 public record DailyPlanAccount(
         Long dailyPlanAccoutId,
         Long dailyPlanId,
-        Long accountId) {
+        Long accountId,
+        String fullName,
+        String phone,
+        String genderCode,
+        String genderName,
+        String professionalTypeCode,
+        String professionalTypeName,
+        String thumbnail,
+        String accountStatusCode,
+        String accountStatusName) {
     public static List<DailyPlanAccount> of(List<Long> accountIds) {
         return accountIds.stream()
                 .map(accountId -> DailyPlanAccount.builder()
@@ -29,5 +38,14 @@ public record DailyPlanAccount(
             }
         }
         return dailyPlanAccounts;
+    }
+
+    public static List<DailyPlanAccount> duplicate(List<DailyPlanAccount> dailyPlanAccounts, Long newDailyPlanId) {
+        return dailyPlanAccounts.stream()
+                .map(dailyPlanAcc -> DailyPlanAccount.builder()
+                        .accountId(dailyPlanAcc.accountId())
+                        .dailyPlanId(newDailyPlanId)
+                        .build())
+                .toList();
     }
 }
