@@ -39,5 +39,6 @@ public class BranchUseCaseService implements IAdminBranchService {
     public Page<Branch> adminFindAll(BranchSearchCriteria searchCriteria, PageRequestCustom pageRequestCustom) {
         return branchQueryService.findAll(searchCriteria, pageRequestCustom);
     }
+    
 
 }

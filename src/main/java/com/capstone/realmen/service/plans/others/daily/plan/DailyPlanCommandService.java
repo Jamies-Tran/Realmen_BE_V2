@@ -87,7 +87,7 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
 
         public void duplicateByWeeklyPlan(DailyPlanDuplicateRequire duplicateRequire) {
                 List<DailyPlanEntity> foundDailyPlans = dailyPlanRepository
-                                .findAllByWeeklyPlanId(duplicateRequire.weeklyPlanId());
+                                .findAllByWeeklyPlanId(duplicateRequire.oldWeeklyPlanId());
 
                 switch (duplicateRequire.duplicateType()) {
                         case TO_NEXT_WEEK -> {
@@ -99,14 +99,14 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
 
                                 foundDailyPlans.forEach(dailyPlan -> {
                                         duplicateDailyPlan(dailyPlan, lastWeeklyPlanDate.plusDays(1),
-                                                        duplicateRequire.weeklyPlanId());
+                                                        duplicateRequire.newWeeklyPlanId());
                                 });
 
                         }
                         case TO_PRESENT -> {
                                 foundDailyPlans.forEach(dailyPlan -> {
                                         duplicateDailyPlan(dailyPlan, LocalDateTime.now(),
-                                                        duplicateRequire.weeklyPlanId());
+                                                        duplicateRequire.newWeeklyPlanId());
                                 });
                         }
                 }
@@ -120,16 +120,13 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
                 LocalDateTime equivalentWeeklyDate = getEquivalentWeeklyDate(oldDailyPlan.getDate(), nextWeeklyDate);
                 DailyPlan newDailyPlan = DailyPlan
                                 .duplicate(
-                                                dailyPlanMapper.toDto(oldDailyPlan)
-                                                                .withDate(equivalentWeeklyDate)
-                                                                .withWeeklyPlanId(newWeeklyPlanId)
-                                                                .withDailyPlanStatusCode(
-                                                                                EDailyPlanStatus.verify(
-                                                                                                equivalentWeeklyDate)
-                                                                                                .getCode())
+                                        dailyPlanMapper.toDto(oldDailyPlan)
+                                                .withDate(equivalentWeeklyDate)
+                                                .withWeeklyPlanId(newWeeklyPlanId)
+                                                .withDailyPlanStatusCode(
+                                                        EDailyPlanStatus.verify(equivalentWeeklyDate).getCode())
                                                                 .withDailyPlanStatusName(
-                                                                                EDailyPlanStatus.verify(
-                                                                                                equivalentWeeklyDate)
+                                                                                EDailyPlanStatus.verify(equivalentWeeklyDate)
                                                                                                 .getName()));
                 DailyPlanEntity saveDailyPlan = dailyPlanRepository.save(
                                 dailyPlanMapper.toEntity(newDailyPlan)

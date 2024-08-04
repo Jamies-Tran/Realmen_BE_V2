@@ -6,11 +6,13 @@ import lombok.Builder;
 
 @Builder
 public record DailyPlanDuplicateRequire(
-        Long weeklyPlanId,
+        Long newWeeklyPlanId,
+        Long oldWeeklyPlanId,
         EDuplicateType duplicateType) {
-     public static DailyPlanDuplicateRequire of(Long weeklyPlanId, EDuplicateType duplicateType) {
+     public static DailyPlanDuplicateRequire of(Long oldWeeklyPlanId, Long newWeeklyPlan, EDuplicateType duplicateType) {
         return DailyPlanDuplicateRequire.builder()
-                .weeklyPlanId(weeklyPlanId)
+                .oldWeeklyPlanId(oldWeeklyPlanId)
+                .newWeeklyPlanId(newWeeklyPlan)
                 .duplicateType(duplicateType)
                 .build();
      }           

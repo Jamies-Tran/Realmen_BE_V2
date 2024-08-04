@@ -33,62 +33,63 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class WeeklyPlanCommandService {
-    @NonNull
-    IWeeklyPlanRepository weeklyPlanRepository;
+        @NonNull
+        IWeeklyPlanRepository weeklyPlanRepository;
 
-    @NonNull
-    IWeeklyPlanMapper weeklyPlanMapper;
+        @NonNull
+        IWeeklyPlanMapper weeklyPlanMapper;
 
-    @NonNull
-    AccountQueryService accountQueryService;
+        @NonNull
+        AccountQueryService accountQueryService;
 
-    @NonNull
-    ShopServiceQueryService shopServiceQueryService;
+        @NonNull
+        ShopServiceQueryService shopServiceQueryService;
 
-    @NonNull
-    DailyPlanCommandService dailyPlanCommandService;
+        @NonNull
+        DailyPlanCommandService dailyPlanCommandService;
 
-    @NonNull
-    RequestContext requestContext;
+        @NonNull
+        RequestContext requestContext;
 
-    public void create(WeeklyPlanCreateRequire createRequire) {
-        Long branchId = requestContext.getAccount().branchId();
-        WeeklyPlan newWeeklyPlan = WeeklyPlan.builder()
-                .branchId(branchId)
-                .weeklyPlanStatusCode(EWeeklyPlanStatus.DRAFT.getCode())
-                .weeklyPlanStatusName(EWeeklyPlanStatus.DRAFT.getName())
-                .build();
-        WeeklyPlanEntity saveWeeklyPlan = weeklyPlanRepository.save(
-                weeklyPlanMapper.toEntity(newWeeklyPlan)
-                    .setAudit(requestContext.auditCreate()));
-        List<Long> accountIds = accountQueryService
-                .findAll(AccountSearchCriteria.filterStaffOnBranch(branchId), PageRequestCustom.unPaged())
-                .map(Account::accountId)
-                .toList();
-        List<Long> serviceIds = shopServiceQueryService
-            .findAll(ShopServiceSearchCriteria.filterBranch(branchId), PageRequestCustom.unPaged())
-            .map(ShopService::shopServiceId)
-            .toList();
-        dailyPlanCommandService.create(
-            DailyPlanCreateRequire.builder()
-                .weeklyPlanId(saveWeeklyPlan.getWeeklyPlanId())
-                .accountIds(accountIds)
-                .serviceIds(serviceIds)
-                .pickUpDate(createRequire.pickUpDate())
-                .build()
-        );
-    }
+        public void create(WeeklyPlanCreateRequire createRequire) {
+                Long branchId = requestContext.getAccount().branchId();
+                WeeklyPlan newWeeklyPlan = WeeklyPlan.builder()
+                                .branchId(branchId)
+                                .weeklyPlanStatusCode(EWeeklyPlanStatus.DRAFT.getCode())
+                                .weeklyPlanStatusName(EWeeklyPlanStatus.DRAFT.getName())
+                                .build();
+                WeeklyPlanEntity saveWeeklyPlan = weeklyPlanRepository.save(
+                                weeklyPlanMapper.toEntity(newWeeklyPlan)
+                                                .setAudit(requestContext.auditCreate()));
+                List<Long> accountIds = accountQueryService
+                                .findAll(AccountSearchCriteria.filterStaffOnBranch(branchId),
+                                                PageRequestCustom.unPaged())
+                                .map(Account::accountId)
+                                .toList();
+                List<Long> serviceIds = shopServiceQueryService
+                                .findAll(ShopServiceSearchCriteria.filterBranch(branchId), PageRequestCustom.unPaged())
+                                .map(ShopService::shopServiceId)
+                                .toList();
+                dailyPlanCommandService.create(
+                                DailyPlanCreateRequire.builder()
+                                                .weeklyPlanId(saveWeeklyPlan.getWeeklyPlanId())
+                                                .accountIds(accountIds)
+                                                .serviceIds(serviceIds)
+                                                .pickUpDate(createRequire.pickUpDate())
+                                                .build());
+        }
 
-
-    public void duplicate(WeeklyPlanDuplicateRequire duplicateRequire) {
-        WeeklyPlanEntity foundWeeklyPlan = weeklyPlanRepository
-            .findById(duplicateRequire.weeklyPlanId())
-            .orElseThrow(() -> new NotFoundException("Không tìm thấy kế hoạch tuần"));
-        WeeklyPlan newWeeklyPlan = WeeklyPlan.duplicate(weeklyPlanMapper.toDto(foundWeeklyPlan));
-        weeklyPlanRepository.save(weeklyPlanMapper.toEntity(newWeeklyPlan)
-            .setAudit(requestContext.auditCreate()));
-        dailyPlanCommandService
-            .duplicateByWeeklyPlan(DailyPlanDuplicateRequire
-                .of(foundWeeklyPlan.getWeeklyPlanId(), duplicateRequire.duplicateType()));
-    }
+        public void duplicate(WeeklyPlanDuplicateRequire duplicateRequire) {
+                WeeklyPlanEntity foundWeeklyPlan = weeklyPlanRepository
+                                .findById(duplicateRequire.weeklyPlanId())
+                                .orElseThrow(() -> new NotFoundException("Không tìm thấy kế hoạch tuần"));
+                WeeklyPlan newWeeklyPlan = WeeklyPlan.duplicate(weeklyPlanMapper.toDto(foundWeeklyPlan));
+                WeeklyPlanEntity savedWeeklyPlan = weeklyPlanRepository.save(weeklyPlanMapper.toEntity(newWeeklyPlan)
+                                .setAudit(requestContext.auditCreate()))
+                                .setAudit(requestContext.auditCreate());
+                dailyPlanCommandService
+                                .duplicateByWeeklyPlan(DailyPlanDuplicateRequire.of(foundWeeklyPlan.getWeeklyPlanId(),
+                                                savedWeeklyPlan.getWeeklyPlanId(),
+                                                duplicateRequire.duplicateType()));
+        }
 }

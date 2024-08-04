@@ -20,7 +20,7 @@ public enum EDailyPlanStatus {
     String name;
 
     public static EDailyPlanStatus verify(LocalDateTime dateTime) {
-        return LocalDateTime.now().compareTo(dateTime) >= 0 ? EDailyPlanStatus.DRAFT
+        return LocalDateTime.now().toLocalDate().compareTo(dateTime.toLocalDate()) <= 0 ? EDailyPlanStatus.DRAFT
                 : EDailyPlanStatus.OVERDUE;
     }
 }

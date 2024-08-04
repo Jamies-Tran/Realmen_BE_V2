@@ -10,7 +10,6 @@ import com.capstone.realmen.data.dto.plans.daily.account.IDailyPlanAccountMapper
 import com.capstone.realmen.repository.database.account.plans.DailyPlanAccountEntity;
 import com.capstone.realmen.repository.database.account.plans.IDailyPlanAccountRepository;
 import com.capstone.realmen.service.plans.others.daily.plan.others.account.data.DailyPlanAccountCreateRequire;
-
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -34,11 +33,12 @@ public class DailyPlanAccountCommandService {
                             .map(dailyPlanAccountMapper::toEntity)
                             .toList());
         } else {
-            List<DailyPlanAccountEntity> newDailyPlanAccount = DailyPlanAccount
-                    .of(createRequire.dailyPlanIds(), createRequire.accountIds())
-                    .stream()
-                    .map(dailyPlanAccountMapper::toEntity)
-                    .toList();
+            List<DailyPlanAccount> dailyPlanAccounts = DailyPlanAccount
+                    .of(createRequire.dailyPlanIds(), createRequire.accountIds());
+            List<DailyPlanAccountEntity> newDailyPlanAccount = dailyPlanAccounts
+                .stream()
+                .map(dailyPlanAccountMapper::toEntity)
+                .toList();
             dailyPlanAccountRepository.saveAll(newDailyPlanAccount);
         }
 

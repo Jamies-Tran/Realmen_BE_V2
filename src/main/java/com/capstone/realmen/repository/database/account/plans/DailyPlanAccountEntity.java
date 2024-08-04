@@ -33,4 +33,10 @@ public class DailyPlanAccountEntity {
 
     @Column(name = "account_id")
     Long accountId;
+
+    @Column(name = "shift_code")
+    String shiftCode;
+
+    @Column(name = "shift_name")
+    String shiftName;
 }

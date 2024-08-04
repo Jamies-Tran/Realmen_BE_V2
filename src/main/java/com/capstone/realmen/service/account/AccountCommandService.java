@@ -1,5 +1,6 @@
 package com.capstone.realmen.service.account;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +17,14 @@ import com.capstone.realmen.controller.security.encoder.AppPasswordEncoder;
 import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.account.AccountCreated;
 import com.capstone.realmen.data.dto.account.IAccountMapper;
+import com.capstone.realmen.data.dto.account.branch.AccountBranch;
 import com.capstone.realmen.repository.database.account.AccountEntity;
 import com.capstone.realmen.repository.database.account.IAccountRepository;
 import com.capstone.realmen.repository.database.audit.Auditable;
 import com.capstone.realmen.service.account.data.AccountCreateRequire;
+import com.capstone.realmen.service.account.others.branch.AccountBranchCommandService;
+import com.capstone.realmen.service.account.others.branch.data.AccountBranchCreateRequire;
+
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +40,8 @@ public class AccountCommandService {
     final IAccountMapper accountMapper;
     @NonNull
     final RequestContext requestContext;
+    @NonNull
+    final AccountBranchCommandService accountBranchCommandService;
     @NonNull
     final AppPasswordEncoder appPasswordEncoder;
 
@@ -84,6 +91,10 @@ public class AccountCommandService {
                                 .setAudit(Auditable.ofCreated(audit))
 
                 );
+                Long branchId = requestContext.getAccount().branchId();
+                AccountBranchCreateRequire createRequire = AccountBranchCreateRequire
+                        .of(branchId, List.of(accountMapper.toDto(newAccount)));
+                accountBranchCommandService.createList(createRequire);
                 return AccountCreated.byManager(newAccount.getAccountId());
             case SHOP_OWNER:
                 newAccount = accountRepository.save(

@@ -35,6 +35,8 @@ public record DailyPlan(
         return DailyPlan.builder()
             .weeklyPlanId(dailyPlan.weeklyPlanId())
             .date(dailyPlan.date())
+            .dailyPlanStatusCode(dailyPlan.dailyPlanStatusCode())
+            .dailyPlanStatusName(dailyPlan.dailyPlanStatusName())
             .build();
     }
 }
