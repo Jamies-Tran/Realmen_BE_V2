@@ -6,6 +6,7 @@ import org.mapstruct.ReportingPolicy;
 
 import com.capstone.realmen.data.dto.branch.Branch;
 import com.capstone.realmen.service.branch.data.BranchActiveRequire;
+import com.capstone.realmen.service.branch.data.BranchServiceRequire;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IAdminBranchModelMapper {
@@ -17,4 +18,6 @@ public interface IAdminBranchModelMapper {
     BranchActiveRequire toDto(AdminBranchActiveBranchRequest model);
 
     AdminBranchResponse toModel(Branch dto);
+
+    BranchServiceRequire toDto(BranchServiceRequest model);
 }

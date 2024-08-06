@@ -1,6 +1,7 @@
 package com.capstone.realmen.service.branch;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import com.capstone.realmen.service.account.data.AccountSearchByField;
 import com.capstone.realmen.service.account.others.branch.AccountBranchCommandService;
 import com.capstone.realmen.service.account.others.branch.data.AccountBranchCreateRequire;
 import com.capstone.realmen.service.branch.data.BranchActiveRequire;
+import com.capstone.realmen.service.branch.data.BranchAddServiceRequire;
 import com.capstone.realmen.service.branch.data.BranchCreateRequire;
 import com.capstone.realmen.service.branch.data.BranchServiceRequire;
 import com.capstone.realmen.service.branch.helpers.BranchHelpers;
@@ -61,7 +63,7 @@ public class BranchCommandService extends BranchHelpers {
 
         @NonNull
         AccountBranchCommandService accountBranchCommandService;
-        
+
         @NonNull
         BranchDisplayCommandService branchDisplayCommandService;
 
@@ -117,11 +119,21 @@ public class BranchCommandService extends BranchHelpers {
                 accountBranchCommandService.createList(
                                 AccountBranchCreateRequire.of(foundBranch.getBranchId(), staffList));
                 branchServiceCommandService.createList(
-                        BranchServiceCreateRequire.of(foundBranch.getBranchId(), activeRequire.serviceList()));
+                                BranchServiceCreateRequire.of(foundBranch.getBranchId(), activeRequire.serviceList()));
                 branchRepository.save(
-                        foundBranch
-                                .withBranchStatusCode(EBranchStatus.ACTIVE.getCode())
-                                .withBranchStatusName(EBranchStatus.ACTIVE.getName())
-                );
+                                foundBranch
+                                                .withBranchStatusCode(EBranchStatus.ACTIVE.getCode())
+                                                .withBranchStatusName(EBranchStatus.ACTIVE.getName()));
+        }
+
+        public void addService(BranchAddServiceRequire addServiceRequire) {
+                Long branchId = addServiceRequire.branchId();
+                if(Objects.isNull(branchId)) {
+                        Long managerBranchId = requestContext.getAccount().branchId();
+                        addServiceRequire = addServiceRequire.withBranchId(managerBranchId);
+                }
+                BranchServiceCreateRequire createRequire = BranchServiceCreateRequire
+                                .of(addServiceRequire.branchId(), addServiceRequire.services());
+                branchServiceCommandService.createList(createRequire);
         }
 }

@@ -69,7 +69,7 @@ public class AppBranchController implements IAppBranchAPI {
                                 .build();
                 PageRequestCustom pageRequestCustom = PageRequestCustom.of(current, pageSize);
                 Page<AppBranchResponse> responses = branchUseCaseService
-                                .adminFindAll(searchCriteria, pageRequestCustom)
+                                .appFindAll(searchCriteria, pageRequestCustom)
                                 .map(modelMapper::toModel);
                 return new PageImplResponse<>(
                         AppBranchProvinceGroupResponse.of(responses.getContent()), 

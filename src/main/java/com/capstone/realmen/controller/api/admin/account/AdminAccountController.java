@@ -44,22 +44,24 @@ public class AdminAccountController implements IAdminAccountAPI {
 
     @Override
     public PageImplResponse<AccountResponse> findAll(String search, Long branchId, List<String> roles,
-            List<String> professionalTypeCodes, List<String> accountStatusCodes, @Min(1) Integer current, Integer pageSize) {
+            List<String> professionalTypeCodes, List<String> accountStatusCodes, @Min(1) Integer current,
+            Integer pageSize) {
         AccountSearchCriteria searchCriteria = AccountSearchCriteria.builder()
-                                .search(search)
-                                .branchId(branchId)
-                                .roles(roles)
-                                .professionalTypeCodes(professionalTypeCodes)
-                                .build();
-                PageRequestCustom pageRequestCustom = PageRequestCustom.of(current, pageSize);
-                Page<AccountResponse> responses = accountUseCaseService.adminFindAll(searchCriteria, pageRequestCustom)
-                                .map(modelMapper::toModel);
-                return new PageImplResponse<>(
-                                responses.getContent(),
-                                responses.getTotalElements(),
-                                responses.getTotalPages(),
-                                pageRequestCustom.current(),
-                                pageSize);
+                .search(search)
+                .branchId(branchId)
+                .roles(roles)
+                .accountStatusCodes(accountStatusCodes)
+                .professionalTypeCodes(professionalTypeCodes)
+                .build();
+        PageRequestCustom pageRequestCustom = PageRequestCustom.of(current, pageSize);
+        Page<AccountResponse> responses = accountUseCaseService.adminFindAll(searchCriteria, pageRequestCustom)
+                .map(modelMapper::toModel);
+        return new PageImplResponse<>(
+                responses.getContent(),
+                responses.getTotalElements(),
+                responses.getTotalPages(),
+                pageRequestCustom.current(),
+                pageSize);
     }
 
 }
