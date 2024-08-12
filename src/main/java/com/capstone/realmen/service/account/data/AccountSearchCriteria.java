@@ -27,7 +27,7 @@ public record AccountSearchCriteria(
                 .search("")
                 .roles(List.of(ERole.OPERATOR_STAFF.getCode()))
                 .professionalTypeCodes(List.of())
-                .accountStatusCodes(List.of())
+                .accountStatusCodes(List.of(EAccountStatus.ACTIVE.getCode()))
                 .build();
     }
 

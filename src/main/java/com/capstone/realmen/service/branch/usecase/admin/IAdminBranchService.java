@@ -1,7 +1,5 @@
 package com.capstone.realmen.service.branch.usecase.admin;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 
 import com.capstone.realmen.common.request.PageRequestCustom;

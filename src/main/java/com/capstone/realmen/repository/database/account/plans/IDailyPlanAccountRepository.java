@@ -30,4 +30,6 @@ public interface IDailyPlanAccountRepository extends JpaRepository<DailyPlanAcco
                 WHERE dpa.dailyPlanId = :dailyPlanId
             """)
     List<DailyPlanAccountDAO> findAllByDailyPlanId(Long dailyPlanId);
+
+    void deleteAllByDailyPlanId(Long dailyPlanId);
 }

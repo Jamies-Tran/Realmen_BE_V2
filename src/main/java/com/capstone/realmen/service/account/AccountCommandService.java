@@ -17,7 +17,6 @@ import com.capstone.realmen.controller.security.encoder.AppPasswordEncoder;
 import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.account.AccountCreated;
 import com.capstone.realmen.data.dto.account.IAccountMapper;
-import com.capstone.realmen.data.dto.account.branch.AccountBranch;
 import com.capstone.realmen.repository.database.account.AccountEntity;
 import com.capstone.realmen.repository.database.account.IAccountRepository;
 import com.capstone.realmen.repository.database.audit.Auditable;
@@ -63,6 +62,16 @@ public class AccountCommandService {
                 return this.createCustomer(createRequire.account());
             }
         }
+    }
+
+    public void active(List<Long> accountIds) {
+        List<AccountEntity> accounts = accountRepository.findAllByIds(accountIds);
+        List<AccountEntity> newAccounts = accounts.stream()
+                .map(account -> account
+                        .withAccountStatusCode(EAccountStatus.ACTIVE.getCode())
+                        .withAccountStatusName(EAccountStatus.ACTIVE.getName()))
+                .toList();
+        accountRepository.saveAll(newAccounts);
     }
 
     private AccountCreated createStaff(Account account) {

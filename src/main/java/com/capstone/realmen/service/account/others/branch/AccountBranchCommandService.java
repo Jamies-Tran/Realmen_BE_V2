@@ -1,9 +1,12 @@
 package com.capstone.realmen.service.account.others.branch;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.capstone.realmen.common.enums.EWorkingStatus;
 import com.capstone.realmen.data.dto.account.branch.IAccountBranchMapper;
+import com.capstone.realmen.repository.database.account.branch.AccountBranchEntity;
 import com.capstone.realmen.repository.database.account.branch.IAccountBranchRepository;
 import com.capstone.realmen.service.account.others.branch.data.AccountBranchCreateRequire;
 
@@ -21,8 +24,8 @@ public class AccountBranchCommandService {
     @NonNull
     IAccountBranchMapper accountBranchMapper;
 
-    public void createList(AccountBranchCreateRequire createRequire) {
-        accountBranchRepository.saveAll(
+    public List<Long> createList(AccountBranchCreateRequire createRequire) {
+        List<AccountBranchEntity> accountBranches = accountBranchRepository.saveAll(
                 createRequire.accountBranches()
                         .stream()
                         .map(accountBranch -> accountBranch
@@ -32,5 +35,7 @@ public class AccountBranchCommandService {
                         .toList()
 
         );
+
+        return accountBranches.stream().map(AccountBranchEntity::getAccountId).toList();
     }
 }

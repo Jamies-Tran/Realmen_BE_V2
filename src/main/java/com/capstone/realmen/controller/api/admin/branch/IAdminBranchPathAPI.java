@@ -18,18 +18,18 @@ import jakarta.validation.Valid;
 
 @RequestMapping("/web/branch/{branchId}")
 public interface IAdminBranchPathAPI {
-    @PutMapping("/active")
-    @PreAuthorize("hasRole('ROLE_SHOPOWNER')")
-    void active(@PathVariable Long branchId,
-            @RequestBody @Valid AdminBranchActiveBranchRequest activeBranchRequest);
+        @PutMapping("/active")
+        @PreAuthorize("hasRole('ROLE_SHOPOWNER')")
+        void active(@PathVariable Long branchId,
+                        @RequestBody @Valid AdminBranchActiveBranchRequest activeBranchRequest);
 
-    @GetMapping
-    @PreAuthorize("hasAnyRole({'ROLE_SHOPOWNER', 'ROLE_BRANCHMANAGER', 'ROLE_RECEPTIONIST'})")
-    ValueResponse<AdminBranchResponse> findById(@PathVariable Long branchId);
+        @GetMapping
+        @PreAuthorize("hasAnyRole({'ROLE_SHOPOWNER', 'ROLE_BRANCHMANAGER', 'ROLE_RECEPTIONIST'})")
+        ValueResponse<AdminBranchResponse> findById(@PathVariable Long branchId);
 
-    @PutMapping("/add-service")
-    @PreAuthorize("hasRole('ROLE_SHOPOWNER')")
-    void addService(
-            @PathVariable Long branchId,
-            @RequestBody @Valid List<BranchServiceRequest> branchServiceRequests);
+        @PutMapping("/add-service")
+        @PreAuthorize("hasAnyRole({'ROLE_SHOPOWNER', 'ROLE_BRANCHMANAGER'})")
+        void addService(
+                        @PathVariable Long branchId,
+                        @RequestBody @Valid List<BranchServiceRequest> branchServiceRequests);
 }

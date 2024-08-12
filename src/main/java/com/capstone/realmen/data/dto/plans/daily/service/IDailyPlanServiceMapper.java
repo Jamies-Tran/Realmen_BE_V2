@@ -11,4 +11,6 @@ public interface IDailyPlanServiceMapper {
     DailyPlanServiceEntity toEntity(DailyPlanService dto);
 
     DailyPlanService toDto(DailyPlanServiceDAO dao);
+
+    DailyPlanService toDto(DailyPlanServiceEntity entity);
 }

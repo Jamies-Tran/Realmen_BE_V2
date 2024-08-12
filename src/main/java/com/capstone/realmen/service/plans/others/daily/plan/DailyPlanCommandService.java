@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.capstone.realmen.common.enums.EDailyPlanStatus;
 import com.capstone.realmen.common.request.RequestContext;
+import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.plans.daily.DailyPlan;
 import com.capstone.realmen.data.dto.plans.daily.IDailyPlanMapper;
 import com.capstone.realmen.data.dto.plans.daily.account.DailyPlanAccount;
@@ -16,15 +17,18 @@ import com.capstone.realmen.repository.database.plans.daily.DailyPlanEntity;
 import com.capstone.realmen.repository.database.plans.daily.IDailyPlanRepository;
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanCreateRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanDuplicateRequire;
+import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanUpdateRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.helpers.DailyPlanHelpers;
 import com.capstone.realmen.service.plans.others.daily.plan.others.account.DailyPlanAccountCommandService;
 import com.capstone.realmen.service.plans.others.daily.plan.others.account.DailyPlanAccountQueryService;
 import com.capstone.realmen.service.plans.others.daily.plan.others.account.data.DailyPlanAccountCreateRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.others.account.data.DailyPlanAccountSearchByField;
+import com.capstone.realmen.service.plans.others.daily.plan.others.account.data.DailyPlanAccountUpdateRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.DailyPlanServiceCommandService;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.DailyPlanServiceQueryService;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.data.DailyPlanServiceCreateRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.data.DailyPlanServiceSearchByField;
+import com.capstone.realmen.service.plans.others.daily.plan.others.service.data.DailyPlanServiceUpdateRequire;
 
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -152,5 +156,22 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
                                 newDailyPlanId);
                 dailyPlanServiceCommandService.createList(
                                 DailyPlanServiceCreateRequire.builder().dailyPlanServices(newDailyPlanService).build());
+        }
+
+        public DailyPlan update(DailyPlanUpdateRequire updateRequire) {
+                DailyPlanEntity foundDailyPlan = dailyPlanRepository.findById(updateRequire.dailyPlanId())
+                        .orElseThrow(NotFoundException::new)
+                        .setAudit(requestContext.auditUpdate());
+                DailyPlanAccountUpdateRequire staffUpdateRequire = DailyPlanAccountUpdateRequire
+                        .of(updateRequire.dailyPlanId(), updateRequire.dailyPlanStaffUpdates());
+                DailyPlanServiceUpdateRequire serviceUpdateRequire = DailyPlanServiceUpdateRequire
+                        .of(updateRequire.dailyPlanId(), updateRequire.serviceIds());
+                List<DailyPlanAccount> dailyPlanAccounts = dailyPlanAccountCommandService.update(staffUpdateRequire);
+                List<DailyPlanService> dailyPlanServices = dailyPlanServiceCommandService.update(serviceUpdateRequire);
+                DailyPlanEntity newDailyPlan = dailyPlanRepository.save(foundDailyPlan);
+
+                return dailyPlanMapper.toDto(newDailyPlan)
+                        .withDailyPlanAccounts(dailyPlanAccounts)
+                        .withDailyPlanServices(dailyPlanServices);
         }
 }

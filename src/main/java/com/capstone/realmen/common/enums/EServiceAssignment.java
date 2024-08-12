@@ -22,13 +22,20 @@ public enum EServiceAssignment {
     String name;
     EProfessional professional;
 
+    public static EServiceAssignment of(ShopService service) {
+        return Arrays.stream(EServiceAssignment.values())
+                .filter(assignment -> assignment.getCode().equals(service.serviceAssignmentCode()))
+                .findAny()
+                .orElse(null);
+    }
+
     public static List<EServiceAssignment> of(List<ShopService> serviceList) {
         List<String> assignmentCodes = serviceList.stream()
-            .map(ShopService::serviceAssignmentCode)
-            .toList();
+                .map(ShopService::serviceAssignmentCode)
+                .toList();
         return Arrays.stream(EServiceAssignment.values())
-            .filter(assignment -> assignmentCodes.contains(assignment.getCode()))
-            .toList();
+                .filter(assignment -> assignmentCodes.contains(assignment.getCode()))
+                .toList();
     }
 
     public static EServiceAssignment findByCode(String code) {

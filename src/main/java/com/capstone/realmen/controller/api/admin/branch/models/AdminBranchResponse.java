@@ -22,6 +22,6 @@ public record AdminBranchResponse(
         String branchStatusCode,
         String branchStatusName,
         List<AccountResponse> staffs,
-        List<AdminShopServiceResponse> services) {
+        List<AdminShopServiceResponse> shopServices) {
 
 }

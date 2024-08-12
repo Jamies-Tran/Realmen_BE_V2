@@ -10,6 +10,8 @@ import com.capstone.realmen.data.dto.plans.daily.service.IDailyPlanServiceMapper
 import com.capstone.realmen.repository.database.shop.service.plans.DailyPlanServiceEntity;
 import com.capstone.realmen.repository.database.shop.service.plans.IDailyPlanServiceRepository;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.data.DailyPlanServiceCreateRequire;
+import com.capstone.realmen.service.plans.others.daily.plan.others.service.data.DailyPlanServiceDeleteRequire;
+import com.capstone.realmen.service.plans.others.daily.plan.others.service.data.DailyPlanServiceUpdateRequire;
 
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -39,5 +41,28 @@ public class DailyPlanServiceCommandService {
             dailyPlanServiceRepository.saveAll(newDailyPlanServices);
         }
 
+    }
+
+    public List<DailyPlanService> update(DailyPlanServiceUpdateRequire updateRequire) {
+        DailyPlanServiceDeleteRequire deleteRequire = DailyPlanServiceDeleteRequire
+            .of(updateRequire.dailyPlanId());
+        deleteAll(deleteRequire);
+        Long dailyPlanId = updateRequire.dailyPlanId();
+        List<DailyPlanServiceEntity> dailyPlanServices = updateRequire.serviceIds()
+                .stream()
+                .map(serviceId -> DailyPlanService.builder()
+                        .dailyPlanId(dailyPlanId)
+                        .shopServiceId(serviceId)
+                        .build())
+                .map(dailyPlanServiceMapper::toEntity)
+                .toList();
+        List<DailyPlanServiceEntity> newDailyPlanServices = dailyPlanServiceRepository.saveAll(dailyPlanServices);
+        return newDailyPlanServices.stream()
+                .map(dailyPlanServiceMapper::toDto)
+                .toList();
+    }
+
+    public void deleteAll(DailyPlanServiceDeleteRequire deleteRequire) {
+        dailyPlanServiceRepository.deleteAllByDailyPlanId(deleteRequire.dailyPlanId());
     }
 }

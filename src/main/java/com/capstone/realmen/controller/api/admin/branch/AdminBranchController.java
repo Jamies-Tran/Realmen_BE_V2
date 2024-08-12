@@ -9,15 +9,11 @@ import com.capstone.realmen.common.request.PageRequestCustom;
 import com.capstone.realmen.common.response.PageImplResponse;
 import com.capstone.realmen.controller.api.admin.branch.models.AdminBranchRequest;
 import com.capstone.realmen.controller.api.admin.branch.models.AdminBranchResponse;
-import com.capstone.realmen.controller.api.admin.branch.models.BranchServiceRequest;
 import com.capstone.realmen.controller.api.admin.branch.models.IAdminBranchModelMapper;
 import com.capstone.realmen.controller.api.admin.branch.models.display.IAdminBranchDisplayModelMapper;
 import com.capstone.realmen.service.branch.BranchUseCaseService;
-import com.capstone.realmen.service.branch.data.BranchAddServiceRequire;
 import com.capstone.realmen.service.branch.data.BranchCreateRequire;
 import com.capstone.realmen.service.branch.data.BranchSearchCriteria;
-import com.capstone.realmen.service.branch.data.BranchServiceRequire;
-
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -73,16 +69,6 @@ public class AdminBranchController implements IAdminBranchAPI {
                                 responses.getTotalPages(),
                                 pageRequestCustom.current(),
                                 pageSize);
-        }
-
-        @Override
-        public void addService(List<BranchServiceRequest> serviceRequests) {
-                List<BranchServiceRequire> services = serviceRequests.stream()
-                        .map(modelMapper::toDto)
-                        .toList();
-                BranchAddServiceRequire addServiceRequire = BranchAddServiceRequire
-                        .of(services);
-                branchUseCaseService.adminAddService(addServiceRequire);
         }
 
 }

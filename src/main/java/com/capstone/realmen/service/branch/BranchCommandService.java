@@ -7,24 +7,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.capstone.realmen.common.enums.EBranchStatus;
+import com.capstone.realmen.common.enums.ERole;
+import com.capstone.realmen.common.request.PageRequestCustom;
 import com.capstone.realmen.common.request.RequestContext;
 import com.capstone.realmen.controller.handler.exceptions.InvalidRequest;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.branch.IBranchMapper;
 import com.capstone.realmen.data.dto.branch.address.Address;
-import com.capstone.realmen.data.dto.shop.service.ShopService;
 import com.capstone.realmen.repository.database.audit.Auditable;
 import com.capstone.realmen.repository.database.branch.BranchEntity;
 import com.capstone.realmen.repository.database.branch.IBranchRepository;
+import com.capstone.realmen.service.account.AccountCommandService;
 import com.capstone.realmen.service.account.AccountQueryService;
 import com.capstone.realmen.service.account.data.AccountSearchByField;
+import com.capstone.realmen.service.account.data.AccountSearchCriteria;
 import com.capstone.realmen.service.account.others.branch.AccountBranchCommandService;
 import com.capstone.realmen.service.account.others.branch.data.AccountBranchCreateRequire;
 import com.capstone.realmen.service.branch.data.BranchActiveRequire;
 import com.capstone.realmen.service.branch.data.BranchAddServiceRequire;
 import com.capstone.realmen.service.branch.data.BranchCreateRequire;
-import com.capstone.realmen.service.branch.data.BranchServiceRequire;
 import com.capstone.realmen.service.branch.helpers.BranchHelpers;
 import com.capstone.realmen.service.branch.others.address.AddressQueryService;
 import com.capstone.realmen.service.branch.others.address.data.AddressSearchByField;
@@ -33,8 +35,6 @@ import com.capstone.realmen.service.branch.others.displays.data.BranchDisplayCre
 import com.capstone.realmen.service.branch.others.services.BranchServiceCommandService;
 import com.capstone.realmen.service.branch.others.services.data.BranchServiceCreateRequire;
 import com.capstone.realmen.service.shop.service.ShopServiceQueryService;
-import com.capstone.realmen.service.shop.service.data.ShopServiceSearchByField;
-
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +54,9 @@ public class BranchCommandService extends BranchHelpers {
 
         @NonNull
         AddressQueryService addressQueryService;
+
+        @NonNull
+        AccountCommandService accountCommandService;
 
         @NonNull
         ShopServiceQueryService shopServiceQueryService;
@@ -97,43 +100,44 @@ public class BranchCommandService extends BranchHelpers {
         }
 
         public void active(BranchActiveRequire activeRequire) {
-                List<Account> staffList = accountQueryService
-                                .findAllByIds(
-                                                AccountSearchByField.builder()
-                                                                .accountIds(activeRequire.staffIdList())
-                                                                .build());
-                List<ShopService> serviceList = shopServiceQueryService
-                                .findAllByIds(
-                                                ShopServiceSearchByField.builder()
-                                                                .shopServiceIds(
-                                                                                activeRequire.serviceList()
-                                                                                                .stream()
-                                                                                                .map(BranchServiceRequire::shopServiceId)
-                                                                                                .toList())
-                                                                .build());
-                if (!verifyActive(serviceList, staffList)) {
-                        throw new InvalidRequest("Không đủ nhân sự để kích hoạt chi nhánh");
-                }
+                AccountSearchByField accountSearch = AccountSearchByField
+                                .builder()
+                                .accountIds(activeRequire.staffIdList())
+                                .build();
+                List<Account> staffList = accountQueryService.findAllByIds(accountSearch);
+                staffList.stream()
+                                .filter(staff -> Objects.equals(staff.roleCode(), ERole.BRANCH_MANAGER.getCode()))
+                                .findAny()
+                                .orElseThrow(() -> new InvalidRequest("Chi nhánh cần quản lý"));
+
                 BranchEntity foundBranch = branchRepository.findById(activeRequire.branchId())
                                 .orElseThrow(NotFoundException::new);
-                accountBranchCommandService.createList(
-                                AccountBranchCreateRequire.of(foundBranch.getBranchId(), staffList));
-                branchServiceCommandService.createList(
-                                BranchServiceCreateRequire.of(foundBranch.getBranchId(), activeRequire.serviceList()));
-                branchRepository.save(
-                                foundBranch
-                                                .withBranchStatusCode(EBranchStatus.ACTIVE.getCode())
-                                                .withBranchStatusName(EBranchStatus.ACTIVE.getName()));
+                AccountBranchCreateRequire accountBranchCreate = AccountBranchCreateRequire
+                                .of(foundBranch.getBranchId(), staffList);
+                List<Long> staffIds = accountBranchCommandService.createList(accountBranchCreate);
+                BranchServiceCreateRequire branchServiceCreate = BranchServiceCreateRequire
+                                .of(foundBranch.getBranchId(), activeRequire.serviceList(), staffList);
+                branchServiceCommandService.createList(branchServiceCreate);
+                BranchEntity newBranchService = foundBranch
+                                .withBranchStatusCode(EBranchStatus.ACTIVE.getCode())
+                                .withBranchStatusName(EBranchStatus.ACTIVE.getName());
+
+                accountCommandService.active(staffIds);
+                branchRepository.save(newBranchService);
         }
 
         public void addService(BranchAddServiceRequire addServiceRequire) {
                 Long branchId = addServiceRequire.branchId();
-                if(Objects.isNull(branchId)) {
+                if (Objects.isNull(branchId)) {
                         Long managerBranchId = requestContext.getAccount().branchId();
                         addServiceRequire = addServiceRequire.withBranchId(managerBranchId);
                 }
+                AccountSearchCriteria searchCriteria = AccountSearchCriteria.filterStaffOnBranch(branchId);
+                List<Account> branchStaffs = accountQueryService
+                                .findAll(searchCriteria, PageRequestCustom.unPaged())
+                                .getContent();
                 BranchServiceCreateRequire createRequire = BranchServiceCreateRequire
-                                .of(addServiceRequire.branchId(), addServiceRequire.services());
+                                .of(branchId, addServiceRequire.services(), branchStaffs);
                 branchServiceCommandService.createList(createRequire);
         }
 }

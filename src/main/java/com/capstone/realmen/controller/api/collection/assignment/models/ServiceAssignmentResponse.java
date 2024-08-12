@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record ServiceAssignmentResponse(
+    Long Id,
     String code,
     String name
 ) {
