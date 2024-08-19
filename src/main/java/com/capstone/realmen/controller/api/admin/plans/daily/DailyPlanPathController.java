@@ -11,7 +11,6 @@ import com.capstone.realmen.service.plans.others.daily.plan.DailyPlanUseCaseServ
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanUpdateRequire;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

@@ -9,6 +9,7 @@ import com.capstone.realmen.common.request.PageRequestCustom;
 import com.capstone.realmen.common.request.RequestContext;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.account.Account;
+import com.capstone.realmen.data.dto.plans.daily.DailyPlan;
 import com.capstone.realmen.data.dto.plans.weekly.IWeeklyPlanMapper;
 import com.capstone.realmen.data.dto.plans.weekly.WeeklyPlan;
 import com.capstone.realmen.data.dto.shop.service.ShopService;
@@ -16,9 +17,12 @@ import com.capstone.realmen.repository.database.plans.weekly.IWeeklyPlanReposito
 import com.capstone.realmen.repository.database.plans.weekly.WeeklyPlanEntity;
 import com.capstone.realmen.service.account.AccountQueryService;
 import com.capstone.realmen.service.account.data.AccountSearchCriteria;
+import com.capstone.realmen.service.plans.data.WeeklyPlanActiveRequire;
 import com.capstone.realmen.service.plans.data.WeeklyPlanCreateRequire;
 import com.capstone.realmen.service.plans.data.WeeklyPlanDuplicateRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.DailyPlanCommandService;
+import com.capstone.realmen.service.plans.others.daily.plan.DailyPlanQueryService;
+import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanActiveRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanCreateRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanDuplicateRequire;
 import com.capstone.realmen.service.shop.service.ShopServiceQueryService;
@@ -47,6 +51,9 @@ public class WeeklyPlanCommandService {
 
         @NonNull
         DailyPlanCommandService dailyPlanCommandService;
+
+        @NonNull
+        DailyPlanQueryService dailyPlanQueryService;
 
         @NonNull
         RequestContext requestContext;
@@ -80,16 +87,32 @@ public class WeeklyPlanCommandService {
         }
 
         public void duplicate(WeeklyPlanDuplicateRequire duplicateRequire) {
-                WeeklyPlanEntity foundWeeklyPlan = weeklyPlanRepository
-                                .findById(duplicateRequire.weeklyPlanId())
-                                .orElseThrow(() -> new NotFoundException("Không tìm thấy kế hoạch tuần"));
+                WeeklyPlanEntity foundWeeklyPlan = getWeeklyPlanById(duplicateRequire.weeklyPlanId());
                 WeeklyPlan newWeeklyPlan = WeeklyPlan.duplicate(weeklyPlanMapper.toDto(foundWeeklyPlan));
                 WeeklyPlanEntity savedWeeklyPlan = weeklyPlanRepository.save(weeklyPlanMapper.toEntity(newWeeklyPlan)
                                 .setAudit(requestContext.auditCreate()))
                                 .setAudit(requestContext.auditCreate());
-                dailyPlanCommandService
-                                .duplicateByWeeklyPlan(DailyPlanDuplicateRequire.of(foundWeeklyPlan.getWeeklyPlanId(),
-                                                savedWeeklyPlan.getWeeklyPlanId(),
-                                                duplicateRequire.duplicateType()));
+
+                DailyPlanDuplicateRequire dPlanDuplicateRequire = DailyPlanDuplicateRequire
+                                .of(foundWeeklyPlan.getWeeklyPlanId(), savedWeeklyPlan.getWeeklyPlanId());
+                dailyPlanCommandService.duplicateByWeeklyPlan(dPlanDuplicateRequire);
+        }
+
+        public WeeklyPlan active(WeeklyPlanActiveRequire activeRequire) {
+                WeeklyPlanEntity foundWeeklyPlan = getWeeklyPlanById(activeRequire.weeklyPlanId());
+                DailyPlanActiveRequire dActiveRequire = DailyPlanActiveRequire.of(foundWeeklyPlan.getWeeklyPlanId());
+                List<DailyPlan> dailyPlans = dailyPlanCommandService.active(dActiveRequire);
+                WeeklyPlanEntity activateWeeklyPlan = foundWeeklyPlan
+                        .withWeeklyPlanStatusCode(EWeeklyPlanStatus.PROCESSING.getCode())
+                        .withWeeklyPlanStatusName(EWeeklyPlanStatus.PROCESSING.getName());
+                WeeklyPlanEntity updateWeeklyPlan = weeklyPlanRepository.save(activateWeeklyPlan);
+                return weeklyPlanMapper.toDto(updateWeeklyPlan)
+                        .withDailyPlans(dailyPlans); 
+        }
+
+        private WeeklyPlanEntity getWeeklyPlanById(Long weeklyPlanId) {
+                return weeklyPlanRepository
+                                .findById(weeklyPlanId)
+                                .orElseThrow(() -> new NotFoundException("Không tìm thấy kế hoạch tuần"));
         }
 }

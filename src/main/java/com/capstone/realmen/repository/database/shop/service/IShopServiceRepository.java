@@ -51,6 +51,8 @@ public interface IShopServiceRepository extends JpaRepository<ShopServiceEntity,
                     OR ss.shopServicePrice BETWEEN :#{#searchCriteria.priceFrom()} AND :#{#searchCriteria.priceTo()})
                 AND (:#{#searchCriteria.hasBranchIdEmpty()} = TRUE
                     OR bs.branchId = :#{#searchCriteria.branchId()})
+                AND (:#{#searchCriteria.hasBranchServiceStatusEmpty()} = TRUE
+                    OR bs.branchServiceStatusCode IN :#{#searchCriteria.branchServiceCodes()})
 
             """)
     Page<ShopServiceDAO> findAll(ShopServiceSearchCriteria searchCriteria, Pageable pageable);

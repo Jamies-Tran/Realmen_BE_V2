@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 public enum EDailyPlanStatus {
     OVERDUE("OVERDUE", "Quá hạn"),
     DRAFT("DRAFT", "Bản nháp"),
-    ENABLED("ENABLED", "Kích hoạt"),
+    PROCESSING("PROCESSING", "Đang hoạt động"),
     DISABLED("DISABLED", "Vô hiệu hóa");
 
     String code;

@@ -22,7 +22,11 @@ import com.capstone.realmen.repository.database.account.IAccountRepository;
 import com.capstone.realmen.repository.database.audit.Auditable;
 import com.capstone.realmen.service.account.data.AccountCreateRequire;
 import com.capstone.realmen.service.account.others.branch.AccountBranchCommandService;
+import com.capstone.realmen.service.account.others.branch.AccountBranchQueryService;
 import com.capstone.realmen.service.account.others.branch.data.AccountBranchCreateRequire;
+import com.capstone.realmen.service.branch.others.services.BranchServiceCommandService;
+import com.capstone.realmen.service.branch.others.services.data.BranchServiceActiveRequire;
+import com.twilio.exception.InvalidRequestException;
 
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -31,16 +35,26 @@ import lombok.experimental.FieldDefaults;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AccountCommandService {
     @NonNull
-    final IAccountRepository accountRepository;
+    IAccountRepository accountRepository;
+
     @NonNull
-    final IAccountMapper accountMapper;
+    IAccountMapper accountMapper;
+
     @NonNull
-    final RequestContext requestContext;
+    RequestContext requestContext;
+
     @NonNull
-    final AccountBranchCommandService accountBranchCommandService;
+    AccountBranchCommandService accountBranchCommandService;
+
+    @NonNull
+    AccountBranchQueryService accountBranchQueryService;
+
+    @NonNull
+    BranchServiceCommandService branchServiceCommandService;
+
     @NonNull
     final AppPasswordEncoder appPasswordEncoder;
 
@@ -75,20 +89,27 @@ public class AccountCommandService {
     }
 
     private AccountCreated createStaff(Account account) {
+        if (!Objects.equals(account.roleCode(), ERole.OPERATOR_STAFF.getCode())) {
+            throw new InvalidRequestException("Không phải là tài khoản của nhân viên vận hành");
+        }
+
         if (Objects.equals(account.roleCode(), ERole.OPERATOR_STAFF.getCode())
                 && !StringUtils.hasText(account.professionalTypeCode())) {
             throw new InvalidRequest("Thông tin nhân viên vận hành không hợp lệ");
         }
+
         if (accountRepository
                 .existsByStaffCodeOrPhone(account.staffCode(), account.phone())) {
             throw new ConflicException("Thông tin tài khoản đã tồn tại");
         }
+
         PasswordEncoder passwordEncoder = appPasswordEncoder.passwordEncoder();
         Account audit = requestContext.getAccount();
         AccountEntity newAccount = accountMapper.toEntity(account);
 
         switch (ERole.findByCode(audit.roleCode()).get()) {
             case BRANCH_MANAGER:
+                Long branchId = requestContext.getAccount().branchId();
                 newAccount = accountRepository.save(
                         newAccount
                                 .withRoleName(ERole
@@ -98,12 +119,16 @@ public class AccountCommandService {
                                 .withStatus(EAccountStatus.ACTIVE.getCode(),
                                         EAccountStatus.ACTIVE.getName())
                                 .setAudit(Auditable.ofCreated(audit))
-
                 );
-                Long branchId = requestContext.getAccount().branchId();
+
                 AccountBranchCreateRequire createRequire = AccountBranchCreateRequire
                         .of(branchId, List.of(accountMapper.toDto(newAccount)));
                 accountBranchCommandService.createList(createRequire);
+
+                BranchServiceActiveRequire bsActiveRequire = BranchServiceActiveRequire
+                    .of(branchId, newAccount);
+                branchServiceCommandService.activeBranchService(bsActiveRequire);
+
                 return AccountCreated.byManager(newAccount.getAccountId());
             case SHOP_OWNER:
                 newAccount = accountRepository.save(

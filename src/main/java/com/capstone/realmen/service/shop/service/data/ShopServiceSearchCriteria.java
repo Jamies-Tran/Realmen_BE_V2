@@ -3,6 +3,8 @@ package com.capstone.realmen.service.shop.service.data;
 import java.util.List;
 import java.util.Objects;
 
+import com.capstone.realmen.common.enums.EBranchServiceStatus;
+
 import lombok.Builder;
 import lombok.With;
 
@@ -12,6 +14,7 @@ public record ShopServiceSearchCriteria(
         String search,
         Long shopCategoryId,
         Long branchId,
+        List<String> branchServiceCodes,
         List<Long> shopServicePriceRange) {
 
     public List<Long> shopServicePriceRange() {
@@ -21,6 +24,7 @@ public record ShopServiceSearchCriteria(
     public static ShopServiceSearchCriteria filterBranch(Long branchId) {
         return ShopServiceSearchCriteria.builder()
                 .branchId(branchId)
+                .branchServiceCodes(List.of(EBranchServiceStatus.ACTIVE.getCode()))
                 .search("")
                 .shopCategoryId(null)
                 .shopServicePriceRange(List.of())
@@ -48,6 +52,10 @@ public record ShopServiceSearchCriteria(
 
     public Boolean hasBranchIdEmpty() {
         return Objects.isNull(branchId);
+    }
+
+    public Boolean hasBranchServiceStatusEmpty() {
+        return Objects.isNull(branchServiceCodes) || branchServiceCodes.isEmpty();
     }
 
     public Long priceFrom() {

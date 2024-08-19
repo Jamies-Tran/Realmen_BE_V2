@@ -1,7 +1,10 @@
 package com.capstone.realmen.service.plans;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.capstone.realmen.data.dto.plans.weekly.WeeklyPlan;
+import com.capstone.realmen.service.plans.data.WeeklyPlanActiveRequire;
 import com.capstone.realmen.service.plans.data.WeeklyPlanCreateRequire;
 import com.capstone.realmen.service.plans.data.WeeklyPlanDuplicateRequire;
 import com.capstone.realmen.service.plans.usecase.IAdminWeeklyPlanService;
@@ -19,19 +22,21 @@ public class WeeklyPlanUseCaseService implements IAdminWeeklyPlanService {
     WeeklyPlanCommandService weeklyPlanCommandService;
 
     @Override
+    @Transactional
     public void adminCreateWeeklyPlanDraft(WeeklyPlanCreateRequire createRequire) {
         weeklyPlanCommandService.create(createRequire);
     }
 
     @Override
-    public void adminDuplicatePlanToNextWeek(WeeklyPlanDuplicateRequire weeklyPlanDuplicateRequire) {
-        weeklyPlanCommandService.duplicate(weeklyPlanDuplicateRequire.nextWeek());
+    @Transactional
+    public void adminDuplicateWeeklyPlan(WeeklyPlanDuplicateRequire weeklyPlanDuplicateRequire) {
+        weeklyPlanCommandService.duplicate(weeklyPlanDuplicateRequire);
     }
 
     @Override
-    public void adminDuplicatePlanToPresent(WeeklyPlanDuplicateRequire weeklyPlanDuplicateRequire) {
-        weeklyPlanCommandService.duplicate(weeklyPlanDuplicateRequire.present());
+    @Transactional
+    public WeeklyPlan adminActive(WeeklyPlanActiveRequire activeRequire) {
+        return weeklyPlanCommandService.active(activeRequire);
     }
 
-    
 }

@@ -6,7 +6,9 @@ import com.capstone.realmen.common.enums.EWeeklyPlanStatus;
 import com.capstone.realmen.data.dto.plans.daily.DailyPlan;
 
 import lombok.Builder;
+import lombok.With;
 
+@With
 @Builder
 public record WeeklyPlan(
     Long weeklyPlanId,

@@ -2,6 +2,7 @@ package com.capstone.realmen.service.branch.others.services;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -12,7 +13,9 @@ import com.capstone.realmen.data.dto.branch.service.IBranchServiceMapper;
 import com.capstone.realmen.data.dto.shop.service.ShopService;
 import com.capstone.realmen.repository.database.branch.service.BranchServiceEntity;
 import com.capstone.realmen.repository.database.branch.service.IBranchServiceRepository;
+import com.capstone.realmen.repository.database.branch.service.dao.BranchServiceDAO;
 import com.capstone.realmen.service.branch.data.BranchServiceRequire;
+import com.capstone.realmen.service.branch.others.services.data.BranchServiceActiveRequire;
 import com.capstone.realmen.service.branch.others.services.data.BranchServiceCreateRequire;
 import com.capstone.realmen.service.branch.others.services.helpers.BranchServiceHelper;
 import com.capstone.realmen.service.shop.service.ShopServiceQueryService;
@@ -62,5 +65,20 @@ public class BranchServiceCommandService extends BranchServiceHelper {
                 }).toList();
 
         branchServiceRepository.saveAll(newBranchServices);
+    }
+
+    public void activeBranchService(BranchServiceActiveRequire activeRequire) {
+        List<BranchServiceDAO> branchServices = branchServiceRepository
+                .findAllByBranchIdAndStatusCode(activeRequire.branchId(), EBranchServiceStatus.INACTIVE.getCode());
+        List<BranchServiceEntity> activeBranchServices = branchServices.stream()
+                .map(branchService -> {
+                        if(Objects.equals(branchService.getServiceAssignmentCode(), activeRequire.professionalTypeCode())) {
+                                return branchServiceMapper.toEntity(branchService)
+                                        .withBranchServiceStatusCode(EBranchServiceStatus.ACTIVE.getCode())
+                                        .withBranchServiceStatusName(EBranchServiceStatus.ACTIVE.getName());
+                        }
+                        return branchServiceMapper.toEntity(branchService);
+                }).toList();
+        branchServiceRepository.saveAll(activeBranchServices);
     }
 }

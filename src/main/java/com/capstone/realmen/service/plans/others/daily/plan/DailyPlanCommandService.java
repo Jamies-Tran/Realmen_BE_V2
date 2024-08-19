@@ -1,9 +1,8 @@
 package com.capstone.realmen.service.plans.others.daily.plan;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
-
+import java.util.Objects;
 import org.springframework.stereotype.Service;
 
 import com.capstone.realmen.common.enums.EDailyPlanStatus;
@@ -15,6 +14,7 @@ import com.capstone.realmen.data.dto.plans.daily.account.DailyPlanAccount;
 import com.capstone.realmen.data.dto.plans.daily.service.DailyPlanService;
 import com.capstone.realmen.repository.database.plans.daily.DailyPlanEntity;
 import com.capstone.realmen.repository.database.plans.daily.IDailyPlanRepository;
+import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanActiveRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanCreateRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanDuplicateRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanUpdateRequire;
@@ -90,31 +90,16 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
         }
 
         public void duplicateByWeeklyPlan(DailyPlanDuplicateRequire duplicateRequire) {
+                Long newestWeeklyPlanId = dailyPlanRepository.getNewestWeeklyPlanId();
                 List<DailyPlanEntity> foundDailyPlans = dailyPlanRepository
-                                .findAllByWeeklyPlanId(duplicateRequire.oldWeeklyPlanId());
+                                .findAllByWeeklyPlanId(newestWeeklyPlanId);
 
-                switch (duplicateRequire.duplicateType()) {
-                        case TO_NEXT_WEEK -> {
-                                LocalDateTime lastWeeklyPlanDate = foundDailyPlans.stream()
-                                                .sorted(Comparator.comparing(DailyPlanEntity::getDate).reversed())
-                                                .map(DailyPlanEntity::getDate)
-                                                .findFirst()
-                                                .orElse(LocalDateTime.now());
-
-                                foundDailyPlans.forEach(dailyPlan -> {
-                                        duplicateDailyPlan(dailyPlan, lastWeeklyPlanDate.plusDays(1),
-                                                        duplicateRequire.newWeeklyPlanId());
-                                });
-
-                        }
-                        case TO_PRESENT -> {
-                                foundDailyPlans.forEach(dailyPlan -> {
-                                        duplicateDailyPlan(dailyPlan, LocalDateTime.now(),
-                                                        duplicateRequire.newWeeklyPlanId());
-                                });
-                        }
-                }
-
+                foundDailyPlans.forEach(dailyPlan -> {
+                        duplicateDailyPlan(
+                                        dailyPlan,
+                                        LocalDateTime.now(),
+                                        duplicateRequire.newWeeklyPlanId());
+                });
         }
 
         private void duplicateDailyPlan(
@@ -124,13 +109,16 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
                 LocalDateTime equivalentWeeklyDate = getEquivalentWeeklyDate(oldDailyPlan.getDate(), nextWeeklyDate);
                 DailyPlan newDailyPlan = DailyPlan
                                 .duplicate(
-                                        dailyPlanMapper.toDto(oldDailyPlan)
-                                                .withDate(equivalentWeeklyDate)
-                                                .withWeeklyPlanId(newWeeklyPlanId)
-                                                .withDailyPlanStatusCode(
-                                                        EDailyPlanStatus.verify(equivalentWeeklyDate).getCode())
+                                                dailyPlanMapper.toDto(oldDailyPlan)
+                                                                .withDate(equivalentWeeklyDate)
+                                                                .withWeeklyPlanId(newWeeklyPlanId)
+                                                                .withDailyPlanStatusCode(
+                                                                                EDailyPlanStatus.verify(
+                                                                                                equivalentWeeklyDate)
+                                                                                                .getCode())
                                                                 .withDailyPlanStatusName(
-                                                                                EDailyPlanStatus.verify(equivalentWeeklyDate)
+                                                                                EDailyPlanStatus.verify(
+                                                                                                equivalentWeeklyDate)
                                                                                                 .getName()));
                 DailyPlanEntity saveDailyPlan = dailyPlanRepository.save(
                                 dailyPlanMapper.toEntity(newDailyPlan)
@@ -160,18 +148,62 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
 
         public DailyPlan update(DailyPlanUpdateRequire updateRequire) {
                 DailyPlanEntity foundDailyPlan = dailyPlanRepository.findById(updateRequire.dailyPlanId())
-                        .orElseThrow(NotFoundException::new)
-                        .setAudit(requestContext.auditUpdate());
+                                .orElseThrow(NotFoundException::new)
+                                .setAudit(requestContext.auditUpdate());
                 DailyPlanAccountUpdateRequire staffUpdateRequire = DailyPlanAccountUpdateRequire
-                        .of(updateRequire.dailyPlanId(), updateRequire.dailyPlanStaffUpdates());
+                                .of(updateRequire.dailyPlanId(), updateRequire.dailyPlanStaffUpdates());
                 DailyPlanServiceUpdateRequire serviceUpdateRequire = DailyPlanServiceUpdateRequire
-                        .of(updateRequire.dailyPlanId(), updateRequire.serviceIds());
+                                .of(updateRequire.dailyPlanId(), updateRequire.serviceIds());
                 List<DailyPlanAccount> dailyPlanAccounts = dailyPlanAccountCommandService.update(staffUpdateRequire);
                 List<DailyPlanService> dailyPlanServices = dailyPlanServiceCommandService.update(serviceUpdateRequire);
                 DailyPlanEntity newDailyPlan = dailyPlanRepository.save(foundDailyPlan);
 
                 return dailyPlanMapper.toDto(newDailyPlan)
-                        .withDailyPlanAccounts(dailyPlanAccounts)
-                        .withDailyPlanServices(dailyPlanServices);
+                                .withDailyPlanAccounts(dailyPlanAccounts)
+                                .withDailyPlanServices(dailyPlanServices);
+        }
+
+        public List<DailyPlan> active(DailyPlanActiveRequire activeRequire) {
+                List<DailyPlanEntity> dailyPlans = dailyPlanRepository
+                                .findAllByWeeklyPlanId(activeRequire.weeklyPlanId());
+                List<Long> dailyPlanIds = dailyPlans.stream()
+                                .map(DailyPlanEntity::getDailyPlanId)
+                                .toList();
+                DailyPlanAccountSearchByField aSearchByField = DailyPlanAccountSearchByField.of(dailyPlanIds);
+                DailyPlanServiceSearchByField sSearchByField = DailyPlanServiceSearchByField.of(dailyPlanIds);
+                List<DailyPlanAccount> accounts = dailyPlanAccountQueryService.findAllBy(aSearchByField);
+                List<DailyPlanService> services = dailyPlanServiceQueryService.findAllBy(sSearchByField);
+                List<DailyPlanEntity> activateDailyPlans = dailyPlans.stream()
+                                .map(dailyPlan -> {
+                                        List<DailyPlanAccount> getAccounts = daGroupingBy(accounts)
+                                                        .get(dailyPlan.getDailyPlanId());
+                                        List<DailyPlanService> getServices = dsGroupingBy(services)
+                                                        .get(dailyPlan.getDailyPlanId());
+                                        if (Objects.nonNull(getAccounts) && Objects.nonNull(getServices)) {
+                                                return dailyPlan
+                                                                .withDailyPlanStatusCode(
+                                                                                EDailyPlanStatus.PROCESSING.getCode())
+                                                                .withDailyPlanStatusName(
+                                                                                EDailyPlanStatus.PROCESSING.getName());
+                                        } else {
+                                                return dailyPlan
+                                                                .withDailyPlanStatusCode(
+                                                                                EDailyPlanStatus.DISABLED.getCode())
+                                                                .withDailyPlanStatusName(
+                                                                                EDailyPlanStatus.DISABLED.getName());
+                                        }
+                                }).toList();
+                return dailyPlanRepository.saveAll(activateDailyPlans)
+                                .stream()
+                                .map(dailyPlan -> {
+                                        List<DailyPlanAccount> getAccounts = daGroupingBy(accounts)
+                                                        .computeIfAbsent(dailyPlan.getDailyPlanId(), a -> List.of());
+                                        List<DailyPlanService> getServices = dsGroupingBy(services)
+                                                        .computeIfAbsent(dailyPlan.getDailyPlanId(), s -> List.of());
+                                        return dailyPlanMapper.toDto(dailyPlan)
+                                                        .withDailyPlanAccounts(getAccounts)
+                                                        .withDailyPlanServices(getServices);
+                                })
+                                .toList();
         }
 }

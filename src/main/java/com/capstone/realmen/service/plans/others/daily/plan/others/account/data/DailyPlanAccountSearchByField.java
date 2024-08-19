@@ -7,7 +7,13 @@ import java.util.List;
 public record DailyPlanAccountSearchByField(Long dailyPlanId, List<Long> dailyPlanIds) {
     public static DailyPlanAccountSearchByField of(Long dailyPlanId) {
         return DailyPlanAccountSearchByField.builder()
-            .dailyPlanId(dailyPlanId)
-            .build();
+                .dailyPlanId(dailyPlanId)
+                .build();
+    }
+
+    public static DailyPlanAccountSearchByField of(List<Long> dailyPlanIds) {
+        return DailyPlanAccountSearchByField.builder()
+                .dailyPlanIds(dailyPlanIds)
+                .build();
     }
 }

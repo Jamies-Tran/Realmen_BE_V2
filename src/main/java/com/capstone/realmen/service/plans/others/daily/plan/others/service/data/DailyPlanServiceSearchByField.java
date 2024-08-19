@@ -10,4 +10,10 @@ public record DailyPlanServiceSearchByField(Long dailyPlanId, List<Long> dailyPl
                 .dailyPlanId(dailyPlanId)
                 .build();
     }
+
+    public static DailyPlanServiceSearchByField of(List<Long> dailyPlanIds) {
+        return DailyPlanServiceSearchByField.builder()
+                .dailyPlanIds(dailyPlanIds)
+                .build();
+    }
 }

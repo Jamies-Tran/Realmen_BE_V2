@@ -55,27 +55,4 @@ public class DailyPlanHelpers {
     private LocalDateTime plusDay(LocalDateTime dateTime, Integer plusDay) {
         return dateTime.plusDays(plusDay);
     }
-
-    // private LocalDate getEndDateOfMonth(LocalDate currentDate) {
-    // return YearMonth.from(currentDate).atEndOfMonth();
-    // }
-
-    // private Integer countDayStillEndOfTheMonth(LocalDate pickupDate) {
-    // int count = 0;
-    // while (pickupDate.equals(getEndDateOfMonth(pickupDate))) {
-    // count += 1;
-    // pickupDate.plusDays(1);
-    // }
-    // return count;
-    // }
-
-    // private List<LocalDateTime> getDateInMonth(LocalDateTime pickupDate) {
-    // List<LocalDateTime> dailyInWeek = new ArrayList<>();
-    // LocalDate currentDay = pickupDate.toLocalDate();
-    // for (int day = 0; day < countDayStillEndOfTheMonth(currentDay); day++) {
-    // pickupDate = pickupDate.plusDays(1);
-    // dailyInWeek.add(pickupDate);
-    // }
-    // return dailyInWeek.stream().sorted().toList();
-    // }
 }

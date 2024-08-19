@@ -1,4 +1,4 @@
-package com.capstone.realmen.common.enums;
+package com.capstone.realmen.service.branch.data;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,11 +8,8 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public enum EWeeklyPlanStatus {
-    DRAFT("DRAFT", "Bản nháp"),
-    PROCESSING("PROCESSING", "Kích hoạt"),
-    DISABLED("DISABLED", "Vô hiệu hóa");
+public enum EBranchAction {
+    ACTIVATE("ACTIVATE");
 
     String code;
-    String name;
 }

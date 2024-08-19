@@ -29,4 +29,11 @@ public enum EBranchStatus {
                 .map(BranchStatus::of)
                 .toList();
     }
+
+    public static EBranchStatus findByCode(String code) {
+        return Arrays.stream(values())
+                .filter(status -> Objects.equals(status.getCode(), code))
+                .findAny()
+                .orElse(null);
+    }
 }

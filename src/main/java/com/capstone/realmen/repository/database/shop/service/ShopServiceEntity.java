@@ -29,12 +29,16 @@ public class ShopServiceEntity extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long shopServiceId;
+
     @Column(name = "shop_category_id")
     Long shopCategoryId;
+
     @Column(name = "shop_service_name", nullable = false)
     String shopServiceName;
+
     @Column(name = "shop_service_price", nullable = false)
     Long shopServicePrice;
+    
     @Column(name = "shop_service_thumbnail", nullable = false)
     String shopServiceThumbnail;
 

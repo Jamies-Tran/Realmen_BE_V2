@@ -1,6 +1,7 @@
 package com.capstone.realmen.service.plans.others.daily.plan.others.account;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
@@ -25,9 +26,18 @@ public class DailyPlanAccountQueryService {
     IDailyPlanAccountMapper dailyPlanAccountMapper;
 
     public List<DailyPlanAccount> findAllBy(DailyPlanAccountSearchByField searchByField) {
-        return dailyPlanAccountRepository.findAllByDailyPlanId(searchByField.dailyPlanId())
+        if(Objects.nonNull(searchByField.dailyPlanId())) {
+            return dailyPlanAccountRepository.findAllByDailyPlanId(searchByField.dailyPlanId())
                 .stream()
                 .map(dailyPlanAccountMapper::toDto)
                 .toList();
+        } 
+        if(Objects.nonNull(searchByField.dailyPlanIds())) {
+            return dailyPlanAccountRepository.findAllByDailyPlanIdIn(searchByField.dailyPlanIds())
+                .stream()
+                .map(dailyPlanAccountMapper::toDto)
+                .toList();
+        }
+        return List.of();
     }
 }

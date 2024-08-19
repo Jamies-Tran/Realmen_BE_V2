@@ -24,9 +24,12 @@ import com.capstone.realmen.service.account.data.AccountSearchByField;
 import com.capstone.realmen.service.account.data.AccountSearchCriteria;
 import com.capstone.realmen.service.account.others.branch.AccountBranchCommandService;
 import com.capstone.realmen.service.account.others.branch.data.AccountBranchCreateRequire;
+import com.capstone.realmen.service.branch.data.BranchAction;
 import com.capstone.realmen.service.branch.data.BranchActiveRequire;
 import com.capstone.realmen.service.branch.data.BranchAddServiceRequire;
+import com.capstone.realmen.service.branch.data.BranchAddStaffRequire;
 import com.capstone.realmen.service.branch.data.BranchCreateRequire;
+import com.capstone.realmen.service.branch.data.EBranchAction;
 import com.capstone.realmen.service.branch.helpers.BranchHelpers;
 import com.capstone.realmen.service.branch.others.address.AddressQueryService;
 import com.capstone.realmen.service.branch.others.address.data.AddressSearchByField;
@@ -100,18 +103,32 @@ public class BranchCommandService extends BranchHelpers {
         }
 
         public void active(BranchActiveRequire activeRequire) {
+                BranchEntity foundBranch = branchRepository.findById(activeRequire.branchId())
+                                .orElseThrow(NotFoundException::new);
+                List<BranchAction> branchActions = getAllowableAction(foundBranch.getBranchStatusCode());
+                BranchAction activeAction = branchActions.stream()
+                                .filter(action -> Objects.equals(action.actionCode(), EBranchAction.ACTIVATE.getCode()))
+                                .findAny()
+                                .orElse(null);
+                if (!activeAction.isAllow()) {
+                        throw new InvalidRequest("Không thể kích hoạt chi nhánh");
+                }
                 AccountSearchByField accountSearch = AccountSearchByField
                                 .builder()
                                 .accountIds(activeRequire.staffIdList())
                                 .build();
-                List<Account> staffList = accountQueryService.findAllByIds(accountSearch);
-                staffList.stream()
-                                .filter(staff -> Objects.equals(staff.roleCode(), ERole.BRANCH_MANAGER.getCode()))
-                                .findAny()
-                                .orElseThrow(() -> new InvalidRequest("Chi nhánh cần quản lý"));
+                List<Account> staffList = accountQueryService
+                        .findAllByIds(accountSearch);
+                List<Account> getManager = staffList.stream()
+                                .filter(account -> Objects.equals(account.roleCode(), ERole.BRANCH_MANAGER.getCode()))
+                                .toList();
 
-                BranchEntity foundBranch = branchRepository.findById(activeRequire.branchId())
-                                .orElseThrow(NotFoundException::new);
+                if (getManager.isEmpty()) {
+                        throw new InvalidRequest("Chi nhánh cần quản lý");
+                } else if (getManager.size() > 1) {
+                        throw new InvalidRequest("Chi nhánh chỉ cần một quản lý");
+                }
+
                 AccountBranchCreateRequire accountBranchCreate = AccountBranchCreateRequire
                                 .of(foundBranch.getBranchId(), staffList);
                 List<Long> staffIds = accountBranchCommandService.createList(accountBranchCreate);
@@ -139,5 +156,9 @@ public class BranchCommandService extends BranchHelpers {
                 BranchServiceCreateRequire createRequire = BranchServiceCreateRequire
                                 .of(branchId, addServiceRequire.services(), branchStaffs);
                 branchServiceCommandService.createList(createRequire);
+        }
+
+        public void addStaff(BranchAddStaffRequire addStaffRequire) {
+
         }
 }

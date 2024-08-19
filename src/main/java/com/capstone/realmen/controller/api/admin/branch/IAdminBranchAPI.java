@@ -27,4 +27,6 @@ public interface IAdminBranchAPI {
             @RequestParam(required = false, value = "branchStatusCodes", defaultValue = "") List<String> branchStatusCodes,
             @RequestParam(required = false, value = "current", defaultValue = "1") Integer current,
             @RequestParam(required = false, value = "pageSize", defaultValue = "20") Integer pageSize);
+
+    
 }
