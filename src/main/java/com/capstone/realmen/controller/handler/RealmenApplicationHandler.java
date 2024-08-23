@@ -97,8 +97,8 @@ public class RealmenApplicationHandler {
         return ErrorResponse.builder()
                 .errorCode(appError.code())
                 .errorMsg(appError.message())
-                .statusCode(HttpStatus.UNAUTHORIZED.value())
-                .status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .issueAt(LocalDateTime.now())
                 .build();
     }

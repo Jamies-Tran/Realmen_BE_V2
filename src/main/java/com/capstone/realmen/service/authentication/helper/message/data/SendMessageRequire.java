@@ -10,6 +10,6 @@ public record SendMessageRequire(
         String message) {
 
     public String phone() {
-        return "+84".concat(phone.substring(0));
+        return "+84".concat(phone.substring(1));
     }
 }

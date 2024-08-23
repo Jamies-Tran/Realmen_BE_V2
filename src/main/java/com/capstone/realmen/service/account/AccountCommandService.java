@@ -32,6 +32,7 @@ import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 
 @Service
 @RequiredArgsConstructor
@@ -58,8 +59,11 @@ public class AccountCommandService {
     @NonNull
     final AppPasswordEncoder appPasswordEncoder;
 
+    @NonFinal
     @Value("${app.default.password}")
     String appDefaultPassword;
+
+    @NonFinal
     @Value("${app.mobile.default.password}")
     String appMobDefaultPassword;
 

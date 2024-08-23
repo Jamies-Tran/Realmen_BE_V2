@@ -26,5 +26,5 @@ public interface IDailyPlanRepository extends JpaRepository<DailyPlanEntity, Lon
                 AND wp.branchId = :branchId
                 
             """)
-    List<DailyPlanEntity> findAllByStaffIdAndBranchId(Long accounttId, Long branchId);
+    List<DailyPlanEntity> findAllByStaffIdAndBranchId(Long accountId, Long branchId);
 }
