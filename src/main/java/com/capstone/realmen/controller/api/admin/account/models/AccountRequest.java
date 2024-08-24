@@ -17,7 +17,6 @@ public record AccountRequest(
     String lastName,
     @Phone String phone,
     String address,
-    String staffCode,
     String professionalTypeCode,
     String professionalTypeName,
     @JsonProperty("role") String roleCode,

@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum EAccountStatus {
-    ACTIVE("Active", "Kích hoạt"),
+    ACTIVE("ACTIVE", "Kích hoạt"),
     PENDING_ACTIVE("PENDING_ACTIVE", "Chờ kích hoạt"),
     PENDING_BRANCH("PENDING_BRANCH", "Chờ kích hoạt"),
     DELETED("DELETED", "Đã xóa");

@@ -21,6 +21,7 @@ import com.capstone.realmen.repository.database.account.AccountEntity;
 import com.capstone.realmen.repository.database.account.IAccountRepository;
 import com.capstone.realmen.repository.database.audit.Auditable;
 import com.capstone.realmen.service.account.data.AccountCreateRequire;
+import com.capstone.realmen.service.account.helpers.AccountHelper;
 import com.capstone.realmen.service.account.others.branch.AccountBranchCommandService;
 import com.capstone.realmen.service.account.others.branch.AccountBranchQueryService;
 import com.capstone.realmen.service.account.others.branch.data.AccountBranchCreateRequire;
@@ -37,7 +38,7 @@ import lombok.experimental.NonFinal;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AccountCommandService {
+public class AccountCommandService extends AccountHelper {
     @NonNull
     IAccountRepository accountRepository;
 
@@ -83,18 +84,27 @@ public class AccountCommandService {
     }
 
     public void active(List<Long> accountIds) {
-        List<AccountEntity> accounts = accountRepository.findAllByIds(accountIds);
+        List<Account> accounts = accountRepository
+                .findAllByIds(accountIds)
+                .stream()
+                .map(accountMapper::toDto)
+                .toList();
         List<AccountEntity> newAccounts = accounts.stream()
-                .map(account -> account
-                        .withAccountStatusCode(EAccountStatus.ACTIVE.getCode())
-                        .withAccountStatusName(EAccountStatus.ACTIVE.getName()))
+                .map(account -> {
+                    String staffCode = generateStaffCode(account);
+                    return accountMapper.toEntity(account)
+                            .withStaffCode(staffCode)
+                            .withAccountStatusCode(EAccountStatus.ACTIVE.getCode())
+                            .withAccountStatusName(EAccountStatus.ACTIVE.getName());
+                })
                 .toList();
         accountRepository.saveAll(newAccounts);
     }
 
     private AccountCreated createStaff(Account account) {
-        if (!Objects.equals(account.roleCode(), ERole.OPERATOR_STAFF.getCode())) {
-            throw new InvalidRequestException("Không phải là tài khoản của nhân viên vận hành");
+        if (!Objects.equals(account.roleCode(), ERole.OPERATOR_STAFF.getCode())
+                && !Objects.equals(account.roleCode(), ERole.BRANCH_MANAGER.getCode())) {
+            throw new InvalidRequest("Yêu cầu tạo tài khoản không hợp lệ");
         }
 
         if (Objects.equals(account.roleCode(), ERole.OPERATOR_STAFF.getCode())
@@ -102,8 +112,7 @@ public class AccountCommandService {
             throw new InvalidRequest("Thông tin nhân viên vận hành không hợp lệ");
         }
 
-        if (accountRepository
-                .existsByStaffCodeOrPhone(account.staffCode(), account.phone())) {
+        if (accountRepository.existsByPhone(account.phone())) {
             throw new ConflicException("Thông tin tài khoản đã tồn tại");
         }
 
@@ -114,23 +123,24 @@ public class AccountCommandService {
         switch (ERole.findByCode(audit.roleCode()).get()) {
             case BRANCH_MANAGER:
                 Long branchId = requestContext.getAccount().branchId();
+                String staffCode = generateStaffCode(account.withBranchId(branchId));
                 newAccount = accountRepository.save(
                         newAccount
+                                .withStaffCode(staffCode)
                                 .withRoleName(ERole
                                         .findByCode(account.roleCode()).get().getName())
                                 .withPassword(passwordEncoder
                                         .encode(appDefaultPassword))
                                 .withStatus(EAccountStatus.ACTIVE.getCode(),
                                         EAccountStatus.ACTIVE.getName())
-                                .setAudit(Auditable.ofCreated(audit))
-                );
+                                .setAudit(Auditable.ofCreated(audit)));
 
                 AccountBranchCreateRequire createRequire = AccountBranchCreateRequire
                         .of(branchId, List.of(accountMapper.toDto(newAccount)));
                 accountBranchCommandService.createList(createRequire);
 
                 BranchServiceActiveRequire bsActiveRequire = BranchServiceActiveRequire
-                    .of(branchId, newAccount);
+                        .of(branchId, newAccount);
                 branchServiceCommandService.activeBranchService(bsActiveRequire);
 
                 return AccountCreated.byManager(newAccount.getAccountId());

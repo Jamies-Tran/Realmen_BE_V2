@@ -80,11 +80,29 @@ public interface IAccountRepository extends JpaRepository<AccountEntity, Long> {
                         Pageable pageable);
 
         @Query("""
-                                SELECT a
+                                SELECT
+                                        a.accountId AS accountId,
+                                        ab.branchId AS branchId,
+                                        a.firstName AS firstName,
+                                        a.lastName AS lastName,
+                                        a.phone AS phone,
+                                        a.address AS address,
+                                        a.staffCode AS staffCode,
+                                        a.professionalTypeCode AS professionalTypeCode,
+                                        a.professionalTypeName AS professionalTypeName,
+                                        a.roleCode AS roleCode,
+                                        a.roleName AS roleName,
+                                        a.thumbnail AS thumbnail,
+                                        a.dob AS dob,
+                                        a.genderCode AS genderCode,
+                                        a.genderName AS genderName,
+                                        a.accountStatusCode AS accountStatusCode,
+                                        a.accountStatusName AS accountStatusName
                                 FROM AccountEntity a
+                                LEFT JOIN AccountBranchEntity ab ON a.accountId = ab.accountId
                                 WHERE a.accountId IN :accountIds
                         """)
-        List<AccountEntity> findAllByIds(List<Long> accountIds);
+        List<AccountDAO> findAllByIds(List<Long> accountIds);
 
         Boolean existsByStaffCodeOrPhone(String staffCode, String phone);
 
