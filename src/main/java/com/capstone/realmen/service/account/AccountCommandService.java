@@ -1,18 +1,13 @@
 package com.capstone.realmen.service.account;
 
 import java.util.List;
-import java.util.Objects;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import com.capstone.realmen.common.enums.EAccountStatus;
 import com.capstone.realmen.common.enums.ERole;
 import com.capstone.realmen.common.request.RequestContext;
 import com.capstone.realmen.controller.handler.exceptions.ConflicException;
-import com.capstone.realmen.controller.handler.exceptions.InvalidRequest;
 import com.capstone.realmen.controller.security.encoder.AppPasswordEncoder;
 import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.account.AccountCreated;
@@ -27,8 +22,6 @@ import com.capstone.realmen.service.account.others.branch.AccountBranchQueryServ
 import com.capstone.realmen.service.account.others.branch.data.AccountBranchCreateRequire;
 import com.capstone.realmen.service.branch.others.services.BranchServiceCommandService;
 import com.capstone.realmen.service.branch.others.services.data.BranchServiceActiveRequire;
-import com.twilio.exception.InvalidRequestException;
-
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -102,15 +95,16 @@ public class AccountCommandService extends AccountHelper {
     }
 
     private AccountCreated createStaff(Account account) {
-        if (!Objects.equals(account.roleCode(), ERole.OPERATOR_STAFF.getCode())
-                && !Objects.equals(account.roleCode(), ERole.BRANCH_MANAGER.getCode())) {
-            throw new InvalidRequest("Yêu cầu tạo tài khoản không hợp lệ");
-        }
+        // if (!Objects.equals(account.roleCode(), ERole.OPERATOR_STAFF.getCode())
+        //         && !Objects.equals(account.roleCode(), ERole.BRANCH_MANAGER.getCode())) {
+        //     throw new InvalidRequest("Yêu cầu tạo tài khoản không hợp lệ");
+        // }
 
-        if (Objects.equals(account.roleCode(), ERole.OPERATOR_STAFF.getCode())
-                && !StringUtils.hasText(account.professionalTypeCode())) {
-            throw new InvalidRequest("Thông tin nhân viên vận hành không hợp lệ");
-        }
+        // if (Objects.equals(account.roleCode(), ERole.OPERATOR_STAFF.getCode())
+        //         && !StringUtils.hasText(account.professionalTypeCode())) {
+        //     throw new InvalidRequest("Thông tin nhân viên vận hành không hợp lệ");
+        // }
+        validateCreateStaff(account);
 
         if (accountRepository.existsByPhone(account.phone())) {
             throw new ConflicException("Thông tin tài khoản đã tồn tại");

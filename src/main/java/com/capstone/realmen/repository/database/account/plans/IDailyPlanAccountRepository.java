@@ -24,7 +24,9 @@ public interface IDailyPlanAccountRepository extends JpaRepository<DailyPlanAcco
                     a.professionalTypeName AS professionalTypeName,
                     a.thumbnail AS thumbnail,
                     a.accountStatusCode AS accountStatusCode,
-                    a.accountStatusName AS accountStatusName
+                    a.accountStatusName AS accountStatusName,
+                    dpa.shiftCode AS shiftCode,
+                    dpa.shiftName AS shiftName
                 FROM DailyPlanAccountEntity dpa
                 INNER JOIN AccountEntity a ON a.accountId = dpa.accountId
                 WHERE dpa.dailyPlanId = :dailyPlanId
@@ -49,7 +51,7 @@ public interface IDailyPlanAccountRepository extends JpaRepository<DailyPlanAcco
                 INNER JOIN AccountEntity a ON a.accountId = dpa.accountId
                 WHERE dpa.dailyPlanId IN :dailyPlanIds
             """)
-    List<DailyPlanAccountEntity> findAllByDailyPlanIdIn(List<Long> dailyPlanIds);
+    List<DailyPlanAccountDAO> findAllByDailyPlanIdIn(List<Long> dailyPlanIds);
 
     void deleteAllByDailyPlanId(Long dailyPlanId);
 }

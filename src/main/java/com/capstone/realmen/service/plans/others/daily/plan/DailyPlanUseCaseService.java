@@ -1,11 +1,15 @@
 package com.capstone.realmen.service.plans.others.daily.plan;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.capstone.realmen.common.request.PageRequestCustom;
+import com.capstone.realmen.common.request.RequestContext;
+import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.plans.daily.DailyPlan;
+import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanSearchByField;
+import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanSearchCriteria;
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanUpdateRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.usecase.IAdminDailyPlanService;
 import com.capstone.realmen.service.plans.others.daily.plan.usecase.IAppDailyPlanService;
@@ -25,6 +29,9 @@ public class DailyPlanUseCaseService implements IAdminDailyPlanService, IAppDail
     @NonNull
     DailyPlanQueryService dailyPlanQueryService;
 
+    @NonNull
+    RequestContext requestContext;
+
     @Override
     @Transactional
     public DailyPlan adminUpdate(DailyPlanUpdateRequire updateRequire) {
@@ -32,8 +39,20 @@ public class DailyPlanUseCaseService implements IAdminDailyPlanService, IAppDail
     }
 
     @Override
-    public List<DailyPlan> appFindByUserLogin() {
-        return dailyPlanQueryService.findByUserLogin();
+    public Page<DailyPlan> appFindAll(DailyPlanSearchCriteria searchCriteria, PageRequestCustom pageRequestCustom) {
+        return dailyPlanQueryService.findAll(searchCriteria, pageRequestCustom);
+    }
+
+    @Override
+    public Page<DailyPlan> appFindForStaff(DailyPlanSearchCriteria searchCriteria,
+            PageRequestCustom pageRequestCustom) {
+        Account account = requestContext.getAccount();
+        return dailyPlanQueryService.findAll(searchCriteria.withAccountId(account.accountId()), pageRequestCustom);
+    }
+
+    @Override
+    public DailyPlan appFindById(DailyPlanSearchByField searchByField) {
+        return dailyPlanQueryService.findById(searchByField);
     }
 
 }

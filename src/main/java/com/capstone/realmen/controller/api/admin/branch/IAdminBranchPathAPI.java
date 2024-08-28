@@ -21,7 +21,7 @@ public interface IAdminBranchPathAPI {
         @PutMapping("/active")
         @PreAuthorize("hasRole('ROLE_SHOPOWNER')")
         void active(@PathVariable Long branchId,
-                        @RequestBody @Valid AdminBranchActiveBranchRequest activeBranchRequest);
+                @RequestBody @Valid AdminBranchActiveBranchRequest activeBranchRequest);
 
         @GetMapping
         @PreAuthorize("hasAnyRole({'ROLE_SHOPOWNER', 'ROLE_BRANCHMANAGER', 'ROLE_RECEPTIONIST'})")

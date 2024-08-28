@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.capstone.realmen.common.enums.EBranchStatus;
-import com.capstone.realmen.common.enums.ERole;
 import com.capstone.realmen.common.request.PageRequestCustom;
 import com.capstone.realmen.common.request.RequestContext;
 import com.capstone.realmen.controller.handler.exceptions.InvalidRequest;
@@ -118,16 +117,8 @@ public class BranchCommandService extends BranchHelpers {
                                 .accountIds(activeRequire.staffIdList())
                                 .build();
                 List<Account> staffList = accountQueryService
-                        .findAllByIds(accountSearch);
-                List<Account> getManager = staffList.stream()
-                                .filter(account -> Objects.equals(account.roleCode(), ERole.BRANCH_MANAGER.getCode()))
-                                .toList();
-
-                if (getManager.isEmpty()) {
-                        throw new InvalidRequest("Chi nhánh cần quản lý");
-                } else if (getManager.size() > 1) {
-                        throw new InvalidRequest("Chi nhánh chỉ cần một quản lý");
-                }
+                                .findAllByIds(accountSearch);
+                verifyActive(staffList);
 
                 AccountBranchCreateRequire accountBranchCreate = AccountBranchCreateRequire
                                 .of(foundBranch.getBranchId(), staffList);

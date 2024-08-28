@@ -9,6 +9,7 @@ import com.capstone.realmen.data.dto.plans.weekly.WeeklyPlan;
 import com.capstone.realmen.service.plans.WeeklyPlanUseCaseService;
 import com.capstone.realmen.service.plans.data.WeeklyPlanActiveRequire;
 import com.capstone.realmen.service.plans.data.WeeklyPlanDuplicateRequire;
+import com.capstone.realmen.service.plans.data.WeeklyPlanSearchByField;
 
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -37,5 +38,12 @@ public class AdminWeeklyPlanPathController implements IAdminWeeklyPlanPathAPI {
         WeeklyPlan activatedWeeklyPlan = weeklyPlanUseCaseService.adminActive(activeRequire);
 
         return new ValueResponse<>(weeklyPlanModelMapper.toModel(activatedWeeklyPlan));
+    }
+
+    @Override
+    public ValueResponse<AdminWeeklyPlanResponse> findById(Long weeklyPlanId) {
+        WeeklyPlanSearchByField searchByField = WeeklyPlanSearchByField.of(weeklyPlanId);
+        WeeklyPlan foundWeeklyPlan = weeklyPlanUseCaseService.adminFindById(searchByField);
+        return new ValueResponse<AdminWeeklyPlanResponse>(weeklyPlanModelMapper.toModel(foundWeeklyPlan));
     }
 }

@@ -6,8 +6,6 @@ import java.util.List;
 
 import com.capstone.realmen.controller.api.admin.branch.models.display.AdminBranchDisplayRequest;
 import com.capstone.realmen.controller.handler.exceptions.InvalidRequest;
-import com.twilio.exception.InvalidRequestException;
-
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.With;

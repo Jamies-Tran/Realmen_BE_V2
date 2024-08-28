@@ -30,6 +30,9 @@ public class WeeklyPlanEntity extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long weeklyPlanId;
 
+    @Column(name = "weekly_plan_name")
+    String weeklyPlanName;
+
     @Column(name = "branch_id")
     Long branchId;
 

@@ -11,17 +11,18 @@ import lombok.With;
 @With
 @Builder
 public record WeeklyPlan(
-    Long weeklyPlanId,
-    Long branchId,
-    String weeklyPlanStatusCode,
-    String weeklyPlanStatusName,
-    List<DailyPlan> dailyPlans
-) {
+        Long weeklyPlanId,
+        String weeklyPlanName,
+        Long branchId,
+        String weeklyPlanStatusCode,
+        String weeklyPlanStatusName,
+        Integer dailyPlanActive,
+        List<DailyPlan> dailyPlans) {
     public static WeeklyPlan duplicate(WeeklyPlan weeklyPlan) {
         return WeeklyPlan.builder()
-            .branchId(weeklyPlan.branchId())
-            .weeklyPlanStatusCode(EWeeklyPlanStatus.DRAFT.getCode())
-            .weeklyPlanStatusName(EWeeklyPlanStatus.DRAFT.getName())
-            .build();
+                .branchId(weeklyPlan.branchId())
+                .weeklyPlanStatusCode(EWeeklyPlanStatus.DRAFT.getCode())
+                .weeklyPlanStatusName(EWeeklyPlanStatus.DRAFT.getName())
+                .build();
     }
 }

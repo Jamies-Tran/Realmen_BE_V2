@@ -14,11 +14,11 @@ public interface IBranchRepository extends JpaRepository<BranchEntity, Long> {
     @Query("""
             SELECT b
             FROM BranchEntity b
-            WHERE :#{#searchCriteria.hasSearchEmpty()} = TRUE
-                OR LOWER(b.branchName) LIKE %:#{#searchCriteria.search()}% 
-                OR LOWER(b.branchDistrict) LIKE %:#{#searchCriteria.search()}%
-                OR LOWER(b.branchWard) LIKE %:#{#searchCriteria.search()}%
-                OR LOWER(b.branchProvince) LIKE %:#{#searchCriteria.search()}% 
+            WHERE (:#{#searchCriteria.hasSearchEmpty()} = TRUE
+                OR (LOWER(b.branchName) LIKE %:#{#searchCriteria.search()}% 
+                    OR LOWER(b.branchDistrict) LIKE %:#{#searchCriteria.search()}%
+                    OR LOWER(b.branchWard) LIKE %:#{#searchCriteria.search()}%
+                    OR LOWER(b.branchProvince) LIKE %:#{#searchCriteria.search()}%) )
             AND (b.branchStatusCode IN :#{#searchCriteria.defaulStatusCodes()})
             """)
     Page<BranchEntity> findAll(BranchSearchCriteria searchCriteria, Pageable pageable);

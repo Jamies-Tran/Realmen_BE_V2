@@ -12,7 +12,7 @@ import lombok.With;
 @With
 @Builder
 public record DailyPlanAccount(
-        Long dailyPlanAccoutId,
+        Long dailyPlanAccountId,
         Long dailyPlanId,
         Long accountId,
         String fullName,
@@ -47,26 +47,27 @@ public record DailyPlanAccount(
                 long endIndexInDouble = Math.round(((double) accountIds.size()) / 2);
                 int endIndex = Long.valueOf(endIndexInDouble).intValue();
                 List<DailyPlanAccount> nShift = accountIds.subList(startIndex, endIndex)
-                    .stream()
-                    .map(accountId -> DailyPlanAccount.builder()
-                        .accountId(accountId)
-                        .dailyPlanId(dailyPlanId)
-                        .shiftCode(EShift.NIGHT_SHIFT.getCode())
-                        .shiftName(EShift.NIGHT_SHIFT.getName())
-                        .build())
-                    .toList();
+                        .stream()
+                        .map(accountId -> DailyPlanAccount.builder()
+                                .accountId(accountId)
+                                .dailyPlanId(dailyPlanId)
+                                .shiftCode(EShift.NIGHT_SHIFT.getCode())
+                                .shiftName(EShift.NIGHT_SHIFT.getName())
+                                .build())
+                        .toList();
                 List<DailyPlanAccount> dShift = accountIds
-                    .stream()
-                    .filter(accountId -> !nShift.stream()
-                        .map(a -> a.accountId)
-                        .toList()
-                        .contains(accountId))
-                    .map(accountId ->  DailyPlanAccount.builder()
-                    .accountId(accountId)
-                    .dailyPlanId(dailyPlanId)
-                    .shiftCode(EShift.MORNING_SHIFT.getCode())
-                    .shiftName(EShift.MORNING_SHIFT.getName())
-                    .build()).toList();
+                        .stream()
+                        .filter(accountId -> !nShift.stream()
+                                .map(a -> a.accountId)
+                                .toList()
+                                .contains(accountId))
+                        .map(accountId -> DailyPlanAccount.builder()
+                                .accountId(accountId)
+                                .dailyPlanId(dailyPlanId)
+                                .shiftCode(EShift.MORNING_SHIFT.getCode())
+                                .shiftName(EShift.MORNING_SHIFT.getName())
+                                .build())
+                        .toList();
                 Stream.concat(dShift.stream(), nShift.stream()).forEach(dailyPlanAccounts::add);
             }
         }

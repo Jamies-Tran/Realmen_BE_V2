@@ -1,4 +1,4 @@
-package com.capstone.realmen.controller.api.admin.plans.daily.models;
+package com.capstone.realmen.controller.api.app.plans.daily.models;
 
 import lombok.Builder;
 

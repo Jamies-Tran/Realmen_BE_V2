@@ -48,4 +48,12 @@ public interface DailyPlanAccountDAO {
     void setAccountStatusName(String accountStatusName);
 
     String getAccountStatusName();
+
+    void setShiftCode(String shiftCode);
+
+    String getShiftCode();
+
+    void setShiftName(String shiftName);
+
+    String getShiftName();
 }

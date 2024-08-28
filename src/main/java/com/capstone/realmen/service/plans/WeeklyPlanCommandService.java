@@ -20,6 +20,7 @@ import com.capstone.realmen.service.account.data.AccountSearchCriteria;
 import com.capstone.realmen.service.plans.data.WeeklyPlanActiveRequire;
 import com.capstone.realmen.service.plans.data.WeeklyPlanCreateRequire;
 import com.capstone.realmen.service.plans.data.WeeklyPlanDuplicateRequire;
+import com.capstone.realmen.service.plans.helpers.WeeklyPlanHelper;
 import com.capstone.realmen.service.plans.others.daily.plan.DailyPlanCommandService;
 import com.capstone.realmen.service.plans.others.daily.plan.DailyPlanQueryService;
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanActiveRequire;
@@ -36,7 +37,7 @@ import lombok.experimental.FieldDefaults;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class WeeklyPlanCommandService {
+public class WeeklyPlanCommandService extends WeeklyPlanHelper {
         @NonNull
         IWeeklyPlanRepository weeklyPlanRepository;
 
@@ -60,7 +61,9 @@ public class WeeklyPlanCommandService {
 
         public void create(WeeklyPlanCreateRequire createRequire) {
                 Long branchId = requestContext.getAccount().branchId();
+                String weeklyPlanName = generateWeeklyPlanName(List.of());
                 WeeklyPlan newWeeklyPlan = WeeklyPlan.builder()
+                                .weeklyPlanName(weeklyPlanName)
                                 .branchId(branchId)
                                 .weeklyPlanStatusCode(EWeeklyPlanStatus.DRAFT.getCode())
                                 .weeklyPlanStatusName(EWeeklyPlanStatus.DRAFT.getName())
@@ -88,9 +91,13 @@ public class WeeklyPlanCommandService {
 
         public void duplicate(WeeklyPlanDuplicateRequire duplicateRequire) {
                 WeeklyPlanEntity foundWeeklyPlan = getWeeklyPlanById(duplicateRequire.weeklyPlanId());
-                WeeklyPlan newWeeklyPlan = WeeklyPlan.duplicate(weeklyPlanMapper.toDto(foundWeeklyPlan));
-                WeeklyPlanEntity savedWeeklyPlan = weeklyPlanRepository.save(weeklyPlanMapper.toEntity(newWeeklyPlan)
-                                .setAudit(requestContext.auditCreate()))
+                String weeklyPlanName = generateWeeklyPlanName(List.of());
+                WeeklyPlan duplicateWeeklyPlan = WeeklyPlan
+                                .duplicate(weeklyPlanMapper.toDto(foundWeeklyPlan))
+                                .withWeeklyPlanName(weeklyPlanName);
+                WeeklyPlanEntity newWeeklyPlan = weeklyPlanMapper
+                                .toEntity(duplicateWeeklyPlan);
+                WeeklyPlanEntity savedWeeklyPlan = weeklyPlanRepository.save(newWeeklyPlan)
                                 .setAudit(requestContext.auditCreate());
 
                 DailyPlanDuplicateRequire dPlanDuplicateRequire = DailyPlanDuplicateRequire
@@ -102,12 +109,15 @@ public class WeeklyPlanCommandService {
                 WeeklyPlanEntity foundWeeklyPlan = getWeeklyPlanById(activeRequire.weeklyPlanId());
                 DailyPlanActiveRequire dActiveRequire = DailyPlanActiveRequire.of(foundWeeklyPlan.getWeeklyPlanId());
                 List<DailyPlan> dailyPlans = dailyPlanCommandService.active(dActiveRequire);
+
+                String weeklyPlanName = generateWeeklyPlanName(dailyPlans);
                 WeeklyPlanEntity activateWeeklyPlan = foundWeeklyPlan
-                        .withWeeklyPlanStatusCode(EWeeklyPlanStatus.PROCESSING.getCode())
-                        .withWeeklyPlanStatusName(EWeeklyPlanStatus.PROCESSING.getName());
+                                .withWeeklyPlanName(weeklyPlanName)
+                                .withWeeklyPlanStatusCode(EWeeklyPlanStatus.PROCESSING.getCode())
+                                .withWeeklyPlanStatusName(EWeeklyPlanStatus.PROCESSING.getName());
                 WeeklyPlanEntity updateWeeklyPlan = weeklyPlanRepository.save(activateWeeklyPlan);
                 return weeklyPlanMapper.toDto(updateWeeklyPlan)
-                        .withDailyPlans(dailyPlans); 
+                                .withDailyPlans(dailyPlans);
         }
 
         private WeeklyPlanEntity getWeeklyPlanById(Long weeklyPlanId) {

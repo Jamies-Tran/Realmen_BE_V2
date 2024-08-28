@@ -2,9 +2,11 @@ package com.capstone.realmen.service.account.helpers;
 
 import java.util.Objects;
 
+import org.springframework.util.StringUtils;
+
 import com.capstone.realmen.common.enums.ERole;
+import com.capstone.realmen.controller.handler.exceptions.InvalidRequest;
 import com.capstone.realmen.data.dto.account.Account;
-import com.capstone.realmen.repository.database.account.AccountEntity;
 
 public class AccountHelper {
     protected String generateStaffCode(Account account) {
@@ -22,6 +24,21 @@ public class AccountHelper {
         }
         return "%s%s%s"
                 .formatted(prefix, phone, branchId.toString());
+    }
+
+    protected void validateCreateStaff(Account account) {
+        switch (ERole.findByCode(account.roleCode()).get()) {
+            case OPERATOR_STAFF:
+                if(!StringUtils.hasText(account.professionalTypeCode())) {
+                    throw new InvalidRequest("Thông tin nhân viên vận hành không hợp lệ");
+                }
+                break;
+            case BRANCH_MANAGER, RECPETIONIST:
+                break;
+        
+            default:
+                throw new InvalidRequest("Yêu cầu tạo tài khoản không hợp lệ");
+        }
     }
 
 }
