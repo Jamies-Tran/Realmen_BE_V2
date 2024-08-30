@@ -8,6 +8,7 @@ import com.capstone.realmen.controller.api.admin.plans.daily.models.DailyPlanRes
 import com.capstone.realmen.controller.api.admin.plans.daily.models.IAdminDailyPlanModelMapper;
 import com.capstone.realmen.data.dto.plans.daily.DailyPlan;
 import com.capstone.realmen.service.plans.others.daily.plan.DailyPlanUseCaseService;
+import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanSearchByField;
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanUpdateRequire;
 
 import lombok.AccessLevel;
@@ -31,6 +32,14 @@ public class DailyPlanPathController implements IDailyPlanPathAPI {
                 .of(dailyPlanId, request);
         DailyPlan dailyPlan = useCaseService.adminUpdate(updateRequire);
         return new ValueResponse<DailyPlanResponse>(modelMapper.toModel(dailyPlan));
+    }
+
+    @Override
+    public ValueResponse<DailyPlanResponse> findById(Long dailyPlanId) {
+        DailyPlanSearchByField searchByField = DailyPlanSearchByField.of(dailyPlanId);
+        DailyPlan foundDailyPlan = useCaseService.adminFindById(searchByField);
+
+        return new ValueResponse<DailyPlanResponse>(modelMapper.toModel(foundDailyPlan));
     }
 
 }

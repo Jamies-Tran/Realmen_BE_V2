@@ -16,17 +16,17 @@ public interface IDailyPlanRepository extends JpaRepository<DailyPlanEntity, Lon
     List<DailyPlanEntity> findAllByWeeklyPlanId(Long weeklyPlanId);
 
     @Query("""
-        SELECT
-            MAX (dp.weeklyPlanId)
-        FROM DailyPlanEntity dp        
-    """)
+                SELECT
+                    MAX (dp.weeklyPlanId)
+                FROM DailyPlanEntity dp
+            """)
     Long getNewestWeeklyPlanId();
 
     @Query("""
             SELECT dp
             FROM DailyPlanEntity dp
             INNER JOIN WeeklyPlanEntity wp ON dp.weeklyPlanId = wp.weeklyPlanId
-            WHERE dp.weeklyPlanId IN :#{#searchByField.weeklyPlanIds()}
+            WHERE (dp.weeklyPlanId IN :#{#searchByField.weeklyPlanIds()})
                 AND (:#{#searchByField.hasStatusEmpty()} = TRUE
                     OR dp.dailyPlanStatusCode = :#{#searchByField.status()})
             """)
@@ -40,10 +40,10 @@ public interface IDailyPlanRepository extends JpaRepository<DailyPlanEntity, Lon
             WHERE (:#{#searchCriteria.hasTimeRangeEmpty()} = TRUE
                 OR dp.date BETWEEN :#{#searchCriteria.timeFrom()} AND :#{#searchCriteria.timeTo()})
             AND (:#{#searchCriteria.hasWeeklyPlanIdEmpty()} = TRUE
-                OR dp.weeklyPlanId = :#{#searchCriteria.weeklyPlanId()})    
+                OR dp.weeklyPlanId = :#{#searchCriteria.weeklyPlanId()})
             AND (:#{#searchCriteria.hasAccountIdEmpty()} = TRUE
                 OR dpa.accountId = :#{#searchCriteria.accountId()})
-                
+
             """)
     Page<DailyPlanEntity> findAll(DailyPlanSearchCriteria searchCriteria, Pageable pageable);
 }

@@ -58,7 +58,7 @@ public class WeeklyPlanQueryService {
     public WeeklyPlan findById(WeeklyPlanSearchByField searchByField) {
         WeeklyPlanEntity foundWeeklyPlan = repository.findById(searchByField.weeklyPlanId())
                 .orElseThrow(NotFoundException::new);
-        DailyPlanSearchByField dSearchByField = DailyPlanSearchByField.of(searchByField.weeklyPlanId());
+        DailyPlanSearchByField dSearchByField = DailyPlanSearchByField.ofWeeklyPlanId(searchByField.weeklyPlanId());
         List<DailyPlan> dailyPlans = dailyPlanQueryService.findByWeeklyPlanIds(dSearchByField);
 
         return mapper.toDto(foundWeeklyPlan)
