@@ -5,6 +5,7 @@ import lombok.Builder;
 @Builder
 public record DailyPlanAccountRequest(
         Long accountId,
+        String serviceAssignmentCode,
         String shiftCode,
         String shiftName) {
 

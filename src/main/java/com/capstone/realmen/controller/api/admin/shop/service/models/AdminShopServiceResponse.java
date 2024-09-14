@@ -14,10 +14,16 @@ public record AdminShopServiceResponse(
         Long branchId,
         String shopServiceName,
         Long shopServicePrice,
+        Long branchServicePrice,
         String shopServiceThumbnail,
+        Integer estimateDuration,
+        String durationUnitCode,
+        String durationUnitName,
         Long shopCategoryId,
         String shopCategoryCode,
         String shopCategoryName,
+        String serviceAssignmentCode,
+        String serviceAssignmentName,
         List<ServiceDisplayResponse> serviceDisplays) {
 
 }

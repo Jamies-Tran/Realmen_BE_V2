@@ -71,8 +71,8 @@ public class RealmenApplicationHandler {
         return ErrorResponse.builder()
                 .errorCode(appError.code())
                 .errorMsg(appError.message())
-                .statusCode(HttpStatus.UNAUTHORIZED.value())
-                .status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .status(HttpStatus.NOT_FOUND.getReasonPhrase())
                 .issueAt(LocalDateTime.now())
                 .build();
     }

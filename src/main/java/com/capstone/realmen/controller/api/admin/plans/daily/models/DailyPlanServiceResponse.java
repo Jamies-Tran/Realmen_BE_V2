@@ -4,12 +4,18 @@ import lombok.Builder;
 
 @Builder
 public record DailyPlanServiceResponse(
-        Long dailyPlanServiceId,
-        Long dailyPlanId,
-        Long shopServiceId,
-        String shopServiceName,
-        Long shopServicePrice,
-        String categoryCode,
-        String categoryName) {
+                Long dailyPlanServiceId,
+                Long dailyPlanId,
+                Long weeklyPlanId,
+                Long branchId,
+                Long shopServiceId,
+                String shopServiceName,
+                Long branchServicePrice,
+                Long shopServicePrice,
+                String categoryCode,
+                String categoryName,
+                Integer estimateDuration,
+                String durationUnitCode,
+                String durationUnitName) {
 
 }

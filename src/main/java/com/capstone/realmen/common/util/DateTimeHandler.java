@@ -1,22 +1,24 @@
 package com.capstone.realmen.common.util;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
+import com.capstone.realmen.data.dto.common.DayInWeek;
 
 public class DateTimeHandler {
-    
+
     public static List<LocalDateTime> validateTimeRange(List<LocalDateTime> timeRange) {
-        if(Objects.nonNull(timeRange) && timeRange.size() == 1) {
+        if (Objects.nonNull(timeRange) && timeRange.size() == 1) {
             timeRange.add(timeRange.get(0).plusDays(7));
         }
         return timeRange;
     }
 
-    public static LocalDateTime dayNextWeek(LocalDateTime dateTime) {
+    public static LocalDate dayNextWeek(LocalDate dateTime) {
         return dateTime.plusDays(7);
     }
 
@@ -41,9 +43,9 @@ public class DateTimeHandler {
         }
     }
 
-    public static List<LocalDateTime> firstAndLast(LocalDateTime dateTime) {
+    public static List<LocalDate> firstAndLastWeek(LocalDate dateTime) {
         DayOfWeek dayOfWeek = dateTime.getDayOfWeek();
-        LocalDateTime firstDate = dateTime;
+        LocalDate firstDate = dateTime;
         switch (dayOfWeek) {
             case MONDAY -> {
                 break;
@@ -78,7 +80,11 @@ public class DateTimeHandler {
             }
         }
 
-        LocalDateTime lastDate = firstDate.plusDays(6);
+        LocalDate lastDate = firstDate.plusDays(6);
         return List.of(firstDate, lastDate);
+    }
+
+    public static DayInWeek getDayInWeek(LocalDate date) {
+        return DayInWeek.of(date.getDayOfWeek());
     }
 }

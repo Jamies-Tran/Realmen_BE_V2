@@ -26,8 +26,10 @@ import lombok.experimental.FieldDefaults;
 public class ShopServiceQueryService {
     @NonNull
     IShopServiceRepository shopServiceRepository;
+
     @NonNull
     ServiceDisplayQueryService serviceDisplayQueryService;
+
     @NonNull
     ShopServiceMapper shopServiceMapper;
 

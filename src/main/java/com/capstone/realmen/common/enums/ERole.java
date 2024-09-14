@@ -18,7 +18,7 @@ public enum ERole {
     SHOP_OWNER("SHOPOWNER", "Chủ sở hữu"),
     OPERATOR_STAFF("OPERATOR_STAFF", "Nhân viên vận hành"),
     BRANCH_MANAGER("BRANCHMANAGER", "Quản lý chi nhánh"),
-    RECPETIONIST("RECPETIONIST", "Tiếp tân"),
+    RECPETIONIST("RECEPTIONIST", "Tiếp tân"),
     CUSTOMER("CUSTOMER", "Khách hàng");
 
     String code;

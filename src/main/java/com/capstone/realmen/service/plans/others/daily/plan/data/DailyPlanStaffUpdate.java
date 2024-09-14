@@ -8,12 +8,14 @@ import lombok.Builder;
 @Builder
 public record DailyPlanStaffUpdate(
         Long accountId,
+        String serviceAssignmentCode,
         String shiftCode,
         String shiftName) {
     public static List<DailyPlanStaffUpdate> of(List<DailyPlanAccountRequest> request) {
         return request.stream()
                 .map(account -> DailyPlanStaffUpdate.builder()
                         .accountId(account.accountId())
+                        .serviceAssignmentCode(account.serviceAssignmentCode())
                         .shiftCode(account.shiftCode())
                         .shiftName(account.shiftName())
                         .build())

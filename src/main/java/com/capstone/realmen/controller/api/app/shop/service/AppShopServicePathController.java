@@ -5,10 +5,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capstone.realmen.common.response.ValueResponse;
 import com.capstone.realmen.controller.api.app.shop.service.models.AppShopServiceResponse;
 import com.capstone.realmen.controller.api.app.shop.service.models.IAppShopServiceModelMapper;
-import com.capstone.realmen.data.dto.shop.service.ShopService;
-import com.capstone.realmen.service.shop.service.ShopServiceUseCaseService;
-import com.capstone.realmen.service.shop.service.data.ShopServiceSearchByField;
-
+import com.capstone.realmen.data.dto.branch.service.BranchService;
+import com.capstone.realmen.service.branch.others.services.BranchServiceUseCaseService;
+import com.capstone.realmen.service.branch.others.services.data.BranchServiceSearchByField;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +18,16 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AppShopServicePathController implements IAppShopServicePathAPI{
     @NonNull
-    ShopServiceUseCaseService shopServiceUseCaseService;
+    BranchServiceUseCaseService useCase;
 
     @NonNull
-    IAppShopServiceModelMapper shopServiceModelMapper;
+    IAppShopServiceModelMapper modelMapper;
 
     @Override
-    public ValueResponse<AppShopServiceResponse> findById(Long shopServiceId) {
-        ShopService foundShopService = shopServiceUseCaseService.appFindById(ShopServiceSearchByField.of(shopServiceId));
+    public ValueResponse<AppShopServiceResponse> findById(Long shopServiceId, Long branchId) {
+        BranchServiceSearchByField searchByField = BranchServiceSearchByField.of(branchId, shopServiceId);
+        BranchService foundShopService = useCase.appFindById(searchByField);
 
-        return new ValueResponse<>(shopServiceModelMapper.toModel(foundShopService));
+        return new ValueResponse<AppShopServiceResponse>(modelMapper.toModel(foundShopService));
     }
 }

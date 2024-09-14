@@ -9,11 +9,19 @@ import lombok.Builder;
 public record DailyPlanService(
         Long dailyPlanServiceId,
         Long dailyPlanId,
+        Long weeklyPlanId,
+        Long branchId,
         Long shopServiceId,
         String shopServiceName,
+        Long branchServicePrice,
         Long shopServicePrice,
         String categoryCode,
         String categoryName,
+        String serviceAssignmentCode,
+        String serviceAssignmentName,
+        Integer estimateDuration,
+        String durationUnitCode,
+        String durationUnitName,
         String shopServiceStatusCode,
         String shopServiceStatusName) {
     public List<DailyPlanService> of(List<Long> shopServiceIds) {

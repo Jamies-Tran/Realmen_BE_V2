@@ -25,7 +25,7 @@ public record AccountSearchCriteria(
         return AccountSearchCriteria.builder()
                 .branchId(branchId)
                 .search("")
-                .roles(List.of(ERole.OPERATOR_STAFF.getCode()))
+                .roles(List.of(ERole.OPERATOR_STAFF.getCode(), ERole.RECPETIONIST.getCode()))
                 .professionalTypeCodes(List.of())
                 .accountStatusCodes(List.of(EAccountStatus.ACTIVE.getCode()))
                 .build();

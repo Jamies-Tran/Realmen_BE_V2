@@ -12,17 +12,25 @@ import lombok.With;
 public record DailyPlanSearchCriteria(
         List<LocalDateTime> timeRange,
         Long weeklyPlanId,
-        Long accountId) {
+        Long branchId,
+        Long accountId,
+        Long serviceId) {
     public static DailyPlanSearchCriteria of(Long weeklyPlanId) {
         return DailyPlanSearchCriteria.builder()
                 .weeklyPlanId(weeklyPlanId)
                 .build();
     }
 
-    public static DailyPlanSearchCriteria of(List<LocalDateTime> timeRange, Long accountId) {
+    public static DailyPlanSearchCriteria of(
+        List<LocalDateTime> timeRange,
+        Long branchId, 
+        Long accountId, 
+        Long serviceId) {
         return DailyPlanSearchCriteria.builder()
                 .timeRange(timeRange)
+                .branchId(branchId)
                 .accountId(accountId)
+                .serviceId(serviceId)
                 .build();
     }
 
@@ -59,5 +67,13 @@ public record DailyPlanSearchCriteria(
 
     public Boolean hasAccountIdEmpty() {
         return Objects.isNull(accountId);
+    }
+
+    public Boolean hasServiceIdEmpty() {
+        return Objects.isNull(serviceId);
+    }
+
+    public Boolean hasBranchIdEmpty() {
+        return Objects.isNull(branchId);
     }
 }

@@ -1,6 +1,11 @@
 package com.capstone.realmen.common.enums;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Objects;
+
+import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,8 +24,12 @@ public enum EDailyPlanStatus {
     String code;
     String name;
 
-    public static EDailyPlanStatus verify(LocalDateTime dateTime) {
-        return LocalDateTime.now().toLocalDate().compareTo(dateTime.toLocalDate()) <= 0 ? EDailyPlanStatus.DRAFT
+    public static EDailyPlanStatus findByCode(String code) {
+        return Arrays.stream(values()).filter(status -> Objects.equals(status.getCode(), code)).findAny().orElseThrow(NotFoundException::new);
+    }
+
+    public static EDailyPlanStatus verify(LocalDate dateTime, EDailyPlanStatus status) {
+        return LocalDateTime.now().toLocalDate().compareTo(dateTime) <= 0 ? status
                 : EDailyPlanStatus.OVERDUE;
     }
 }

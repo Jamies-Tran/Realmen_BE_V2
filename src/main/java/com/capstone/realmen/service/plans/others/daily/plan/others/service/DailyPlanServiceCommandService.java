@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.capstone.realmen.data.dto.plans.daily.service.DailyPlanService;
 import com.capstone.realmen.data.dto.plans.daily.service.IDailyPlanServiceMapper;
-import com.capstone.realmen.repository.database.shop.service.plans.DailyPlanServiceEntity;
-import com.capstone.realmen.repository.database.shop.service.plans.IDailyPlanServiceRepository;
+import com.capstone.realmen.repository.database.plans.daily.service.DailyPlanServiceEntity;
+import com.capstone.realmen.repository.database.plans.daily.service.IDailyPlanServiceRepository;
+import com.capstone.realmen.service.branch.others.services.BranchServiceQueryService;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.data.DailyPlanServiceCreateRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.data.DailyPlanServiceDeleteRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.data.DailyPlanServiceUpdateRequire;
@@ -27,6 +28,9 @@ public class DailyPlanServiceCommandService {
 
     @NonNull
     IDailyPlanServiceMapper dailyPlanServiceMapper;
+
+    @NonNull
+    BranchServiceQueryService bsQuery;
 
     public void createList(DailyPlanServiceCreateRequire createRequire) {
         if (Objects.nonNull(createRequire.dailyPlanServices())) {

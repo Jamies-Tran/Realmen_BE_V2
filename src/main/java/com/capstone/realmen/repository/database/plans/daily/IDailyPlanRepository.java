@@ -35,7 +35,8 @@ public interface IDailyPlanRepository extends JpaRepository<DailyPlanEntity, Lon
     @Query("""
             SELECT dp
             FROM DailyPlanEntity dp
-            INNER JOIN DailyPlanAccountEntity dpa ON dp.dailyPlanId = dpa.dailyPlanId
+            LEFT JOIN DailyPlanAccountEntity dpa ON dp.dailyPlanId = dpa.dailyPlanId
+            LEFT JOIN DailyPlanServiceEntity dps on dp.dailyPlanId = dps.dailyPlanId
             INNER JOIN WeeklyPlanEntity wp ON dp.weeklyPlanId = wp.weeklyPlanId
             WHERE (:#{#searchCriteria.hasTimeRangeEmpty()} = TRUE
                 OR dp.date BETWEEN :#{#searchCriteria.timeFrom()} AND :#{#searchCriteria.timeTo()})
@@ -43,6 +44,10 @@ public interface IDailyPlanRepository extends JpaRepository<DailyPlanEntity, Lon
                 OR dp.weeklyPlanId = :#{#searchCriteria.weeklyPlanId()})
             AND (:#{#searchCriteria.hasAccountIdEmpty()} = TRUE
                 OR dpa.accountId = :#{#searchCriteria.accountId()})
+            AND (:#{#searchCriteria.hasServiceIdEmpty()} = TRUE
+                OR dps.shopServiceId = :#{#searchCriteria.serviceId()})
+            AND (:#{#searchCriteria.hasBranchIdEmpty()} = TRUE
+                OR wp.branchId = :#{#searchCriteria.branchId()})
 
             """)
     Page<DailyPlanEntity> findAll(DailyPlanSearchCriteria searchCriteria, Pageable pageable);

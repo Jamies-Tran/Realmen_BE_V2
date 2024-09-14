@@ -1,6 +1,6 @@
 package com.capstone.realmen.service.plans.helpers;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class WeeklyPlanHelper {
             return "Kế hoạch hoạt đông (Bản nháp)";
         }
 
-        List<LocalDateTime> sortedByDate = dailyPlans.stream()
+        List<LocalDate> sortedByDate = dailyPlans.stream()
                 .map(DailyPlan::date)
                 .sorted()
                 .toList();

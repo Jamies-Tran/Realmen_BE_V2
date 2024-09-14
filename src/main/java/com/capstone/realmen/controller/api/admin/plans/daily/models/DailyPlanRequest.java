@@ -5,7 +5,7 @@ import java.util.List;
 
 @Builder
 public record DailyPlanRequest(
-                List<Long> serviceIds,
-                List<DailyPlanAccountRequest> staffs) {
+        List<DailyPlanServiceRequest> services,
+        List<DailyPlanAccountRequest> staffs) {
 
 }

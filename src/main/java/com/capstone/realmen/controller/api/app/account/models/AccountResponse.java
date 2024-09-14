@@ -9,12 +9,15 @@ import lombok.With;
 @Builder
 public record AccountResponse(
         Long accountId,
+        Long branchId,
         String firstName,
         String lastName,
         String phone,
         String address,
         String roleCode,
         String roleName,
+        String professionalTypeCode,
+        String professionalTypeName,
         String thumbnail,
         LocalDate dob,
         String genderCode,

@@ -17,6 +17,10 @@ public interface ShopServiceDAO {
 
     Long getShopServicePrice();
 
+    void setBranchServicePrice(Long branchServicePrice);
+
+    Long getBranchServicePrice();
+
     void setShopServiceThumbnail(String shopServiceThumbnail);
 
     String getShopServiceThumbnail();
@@ -36,4 +40,16 @@ public interface ShopServiceDAO {
     void setServiceAssignmentCode(String serviceAssignmentCode);
 
     String getServiceAssignmentCode();
+
+    void setEstimateDuration(Integer estimateDuration);
+
+    Integer getEstimateDuration();
+
+    void setDurationUnitCode(String durationUnitCode);
+
+    String getDurationUnitCode();
+
+    void setDurationUnitName(String durationUnitName);
+
+    String getDurationUnitName();
 }

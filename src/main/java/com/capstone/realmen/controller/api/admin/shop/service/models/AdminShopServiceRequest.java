@@ -11,12 +11,14 @@ import lombok.With;
 @With
 @Builder
 public record AdminShopServiceRequest(
-    Long shopCategoryId,
-    @Pattern(regexp = "^[^!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?~`]+$", message = "Tên dịch vụ không hợp lệ")
-    String shopServiceName,
-    Long shopServicePrice,
-    String shopServiceThumbnail,
-    List<ServiceDisplayRequest> serviceDisplays
-) {
-    
+        Long shopCategoryId,
+        @Pattern(regexp = "^[^!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?~`]+$", message = "Tên dịch vụ không hợp lệ") 
+        String shopServiceName,
+        Long shopServicePrice,
+        String shopServiceThumbnail,
+        Integer estimateDuration,
+        String durationUnitCode,
+        String durationUnitName,
+        List<ServiceDisplayRequest> serviceDisplays) {
+
 }

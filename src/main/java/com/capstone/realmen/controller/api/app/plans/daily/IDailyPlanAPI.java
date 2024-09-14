@@ -13,13 +13,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.capstone.realmen.common.response.ListResponse;
 import com.capstone.realmen.controller.api.app.plans.daily.models.DailyPlanResponse;
 
-@RequestMapping("/app/daily-plan")
+@RequestMapping("/mobile/daily-plan")
 public interface IDailyPlanAPI {
     @GetMapping
     @PreAuthorize("hasAnyRole({'ROLE_CUSTOMER', 'ROLE_OPERATOR_STAFF'})")
     ListResponse<DailyPlanResponse> findAll(
             @RequestParam(required = false, value = "timeRange", defaultValue = "") @DateTimeFormat(iso = ISO.DATE_TIME) List<LocalDateTime> timeRange,
-            @RequestParam Long accountId);
+            @RequestParam(required = false, value = "branchId", defaultValue = "") Long branchId,
+            @RequestParam(required = false, value = "serviceId", defaultValue = "") Long serviceId,
+            @RequestParam(required = false, value = "accountId", defaultValue = "") Long accountId);
 
     @GetMapping("/staff")
     @PreAuthorize("hasRole('ROLE_OPERATOR_STAFF')")

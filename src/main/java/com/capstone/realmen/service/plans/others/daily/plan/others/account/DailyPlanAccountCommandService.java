@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.capstone.realmen.data.dto.plans.daily.account.DailyPlanAccount;
 import com.capstone.realmen.data.dto.plans.daily.account.IDailyPlanAccountMapper;
-import com.capstone.realmen.repository.database.account.plans.DailyPlanAccountEntity;
-import com.capstone.realmen.repository.database.account.plans.IDailyPlanAccountRepository;
+import com.capstone.realmen.repository.database.plans.daily.account.DailyPlanAccountEntity;
+import com.capstone.realmen.repository.database.plans.daily.account.IDailyPlanAccountRepository;
 import com.capstone.realmen.service.plans.others.daily.plan.others.account.data.DailyPlanAccountCreateRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.others.account.data.DailyPlanAccountDeleteRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.others.account.data.DailyPlanAccountUpdateRequire;
@@ -37,7 +37,7 @@ public class DailyPlanAccountCommandService {
                                                         .toList());
                 } else {
                         List<DailyPlanAccount> dailyPlanAccounts = DailyPlanAccount
-                                        .of(createRequire.dailyPlanIds(), createRequire.accountIds());
+                                        .of(createRequire.dailyPlanIds(), createRequire.accounts());
                         List<DailyPlanAccountEntity> newDailyPlanAccount = dailyPlanAccounts
                                         .stream()
                                         .map(dailyPlanAccountMapper::toEntity)

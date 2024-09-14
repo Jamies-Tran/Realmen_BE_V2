@@ -9,6 +9,14 @@ public interface DailyPlanServiceDAO {
 
     Long getDailyPlanId();
 
+    void setWeeklyPlanId(Long weeklyPlanId);
+
+    Long getWeeklyPlanId();
+
+    void setBranchId(Long branchId);
+
+    Long getBranchId();
+
     void setShopServiceId(Long shopServiceId);
 
     Long getShopServiceId();
@@ -16,6 +24,10 @@ public interface DailyPlanServiceDAO {
     void setShopServiceName(String shopServiceName);
 
     String getShopServiceName();
+
+    void setBranchServicePrice(Long branchServicePrice);
+
+    Long getBranchServicePrice();
 
     void setShopServicePrice(Long shopServicePrice);
 
@@ -28,4 +40,24 @@ public interface DailyPlanServiceDAO {
     void setCategoryName(String categoryName);
 
     String getCategoryName();
+
+    void setServiceAssignmentCode(String serviceAssignmentCode);
+
+    String getServiceAssignmentCode();
+
+    void setServiceAssignmentName(String serviceAssignmentName);
+
+    String getServiceAssignmentName();
+
+    void setEstimateDuration(Integer estimateDuration);
+
+    Integer getEstimateDuration();
+
+    void setDurationUnitCode(String durationUnitCode);
+
+    String getDurationUnitCode();
+
+    void setDurationUnitName(String durationUnitName);
+
+    String getDurationUnitName();
 }

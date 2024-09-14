@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.capstone.realmen.common.response.ValueResponse;
 import com.capstone.realmen.controller.api.app.plans.daily.models.DailyPlanResponse;
 
-@RequestMapping("/app/daily-plan/{dailyPlanId}")
+@RequestMapping("/mobile/daily-plan/{dailyPlanId}")
 public interface IDailyPlanPathAPI {
     @GetMapping
     ValueResponse<DailyPlanResponse> findById(@PathVariable Long dailyPlanId);

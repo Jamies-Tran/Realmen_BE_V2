@@ -8,15 +8,18 @@ import lombok.Builder;
 
 @Builder
 public record AppShopServiceResponse(
-    Long shopServiceId,
-        Long branchId,
-        String shopServiceName,
-        Long shopServicePrice,
-        String shopServiceThumbnail,
-        Long shopCategoryId,
-        String shopCategoryCode,
-        String shopCategoryName,
-        List<ServiceDisplayResponse> serviceDisplays
-) {
-    
+                Long branchServiceId,
+                Long shopServiceId,
+                Long branchId,
+                Long dailyPlanId,
+                String shopServiceName,
+                Long branchServicePrice,
+                String shopServiceThumbnail,
+                Integer estimateDuration,
+                String durationUnitCode,
+                String durationUnitName,
+                String shopCategoryCode,
+                String shopCategoryName,
+                List<ServiceDisplayResponse> serviceDisplays) {
+
 }

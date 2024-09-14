@@ -1,13 +1,15 @@
 package com.capstone.realmen.service.plans.others.daily.plan;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.stereotype.Service;
 
 import com.capstone.realmen.common.enums.EDailyPlanStatus;
 import com.capstone.realmen.common.request.RequestContext;
+import com.capstone.realmen.common.util.DateTimeHandler;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
+import com.capstone.realmen.data.dto.common.DayInWeek;
 import com.capstone.realmen.data.dto.plans.daily.DailyPlan;
 import com.capstone.realmen.data.dto.plans.daily.IDailyPlanMapper;
 import com.capstone.realmen.data.dto.plans.daily.account.DailyPlanAccount;
@@ -61,14 +63,21 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
         RequestContext requestContext;
 
         public void create(DailyPlanCreateRequire createRequire) {
-                List<LocalDateTime> dailyPlanDateList = getDailyPlanDateList(createRequire.pickUpDate());
+                List<LocalDate> dailyPlanDateList = getDailyPlanDateList(createRequire.pickUpDate());
+                EDailyPlanStatus defaultStatus = getDailyPlanStatus(createRequire.accounts(), createRequire.services());
                 List<DailyPlan> dailyPlan = dailyPlanDateList.stream()
-                                .map(dailyPlanDate -> DailyPlan.builder()
-                                                .weeklyPlanId(createRequire.weeklyPlanId())
-                                                .date(dailyPlanDate)
-                                                .dailyPlanStatusCode(EDailyPlanStatus.verify(dailyPlanDate).getCode())
-                                                .dailyPlanStatusName(EDailyPlanStatus.verify(dailyPlanDate).getName())
-                                                .build())
+                                .map(dailyPlanDate -> {
+                                        DayInWeek dayInWeek = DateTimeHandler.getDayInWeek(dailyPlanDate);
+                                        EDailyPlanStatus status = EDailyPlanStatus.verify(dailyPlanDate, defaultStatus);
+                                        return DailyPlan.builder()
+                                                        .weeklyPlanId(createRequire.weeklyPlanId())
+                                                        .date(dailyPlanDate)
+                                                        .dayInWeekCode(dayInWeek.dayInWeekCode())
+                                                        .dayInWeekName(dayInWeek.dayInWeekName())
+                                                        .dailyPlanStatusCode(status.getCode())
+                                                        .dailyPlanStatusName(status.getName())
+                                                        .build();
+                                })
                                 .toList();
                 List<DailyPlanEntity> savedDailyPlan = dailyPlanRepository
                                 .saveAll(dailyPlan.stream()
@@ -81,7 +90,7 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
                 dailyPlanAccountCommandService.createList(
                                 DailyPlanAccountCreateRequire.builder()
                                                 .dailyPlanIds(savedDailyPlanIds)
-                                                .accountIds(createRequire.accountIds())
+                                                .accounts(createRequire.accounts())
                                                 .build());
                 dailyPlanServiceCommandService.createList(DailyPlanServiceCreateRequire.builder()
                                 .dailyPlanIds(savedDailyPlanIds)
@@ -97,16 +106,17 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
                 foundDailyPlans.forEach(dailyPlan -> {
                         duplicateDailyPlan(
                                         dailyPlan,
-                                        LocalDateTime.now(),
+                                        LocalDate.now(),
                                         duplicateRequire.newWeeklyPlanId());
                 });
         }
 
         private void duplicateDailyPlan(
                         DailyPlanEntity oldDailyPlan,
-                        LocalDateTime nextWeeklyDate,
+                        LocalDate nextWeeklyDate,
                         Long newWeeklyPlanId) {
-                LocalDateTime equivalentWeeklyDate = getEquivalentWeeklyDate(oldDailyPlan.getDate(), nextWeeklyDate);
+                LocalDate equivalentWeeklyDate = getEquivalentWeeklyDate(oldDailyPlan.getDate(), nextWeeklyDate);
+                EDailyPlanStatus defaultStatus = EDailyPlanStatus.findByCode(oldDailyPlan.getDailyPlanStatusCode());
                 DailyPlan newDailyPlan = DailyPlan
                                 .duplicate(
                                                 dailyPlanMapper.toDto(oldDailyPlan)
@@ -114,11 +124,13 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
                                                                 .withWeeklyPlanId(newWeeklyPlanId)
                                                                 .withDailyPlanStatusCode(
                                                                                 EDailyPlanStatus.verify(
-                                                                                                equivalentWeeklyDate)
+                                                                                                equivalentWeeklyDate,
+                                                                                                defaultStatus)
                                                                                                 .getCode())
                                                                 .withDailyPlanStatusName(
                                                                                 EDailyPlanStatus.verify(
-                                                                                                equivalentWeeklyDate)
+                                                                                                equivalentWeeklyDate,
+                                                                                                defaultStatus)
                                                                                                 .getName()));
                 DailyPlanEntity saveDailyPlan = dailyPlanRepository.save(
                                 dailyPlanMapper.toEntity(newDailyPlan)
@@ -147,11 +159,12 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
         }
 
         public DailyPlan update(DailyPlanUpdateRequire updateRequire) {
+                verifyUpdate(updateRequire.staffUpdates(), updateRequire.serviceUpdates());
                 DailyPlanEntity foundDailyPlan = dailyPlanRepository.findById(updateRequire.dailyPlanId())
                                 .orElseThrow(NotFoundException::new)
                                 .setAudit(requestContext.auditUpdate());
                 DailyPlanAccountUpdateRequire staffUpdateRequire = DailyPlanAccountUpdateRequire
-                                .of(updateRequire.dailyPlanId(), updateRequire.dailyPlanStaffUpdates());
+                                .of(updateRequire.dailyPlanId(), updateRequire.staffUpdates());
                 DailyPlanServiceUpdateRequire serviceUpdateRequire = DailyPlanServiceUpdateRequire
                                 .of(updateRequire.dailyPlanId(), updateRequire.serviceIds());
                 List<DailyPlanAccount> dailyPlanAccounts = dailyPlanAccountCommandService.update(staffUpdateRequire);

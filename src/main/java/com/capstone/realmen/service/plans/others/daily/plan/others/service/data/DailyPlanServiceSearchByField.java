@@ -4,7 +4,10 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record DailyPlanServiceSearchByField(Long dailyPlanId, List<Long> dailyPlanIds) {
+public record DailyPlanServiceSearchByField(
+        Long dailyPlanId,
+        Long dailyPlanServiceId,
+        List<Long> dailyPlanIds) {
     public static DailyPlanServiceSearchByField of(Long dailyPlanId) {
         return DailyPlanServiceSearchByField.builder()
                 .dailyPlanId(dailyPlanId)
@@ -14,6 +17,12 @@ public record DailyPlanServiceSearchByField(Long dailyPlanId, List<Long> dailyPl
     public static DailyPlanServiceSearchByField of(List<Long> dailyPlanIds) {
         return DailyPlanServiceSearchByField.builder()
                 .dailyPlanIds(dailyPlanIds)
+                .build();
+    }
+
+    public static DailyPlanServiceSearchByField ofDailyPlanServiceId(Long dailyPlanServiceId) {
+        return DailyPlanServiceSearchByField.builder()
+                .dailyPlanServiceId(dailyPlanServiceId)
                 .build();
     }
 }

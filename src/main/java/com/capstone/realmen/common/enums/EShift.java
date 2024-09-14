@@ -1,5 +1,8 @@
 package com.capstone.realmen.common.enums;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,4 +17,11 @@ public enum EShift {
 
     String code;
     String name;
+
+    public static EShift findByCode(String code) {
+        return Arrays.stream(values())
+                .filter(shift -> Objects.equals(shift.getCode(), code))
+                .findAny()
+                .get();
+    }
 }

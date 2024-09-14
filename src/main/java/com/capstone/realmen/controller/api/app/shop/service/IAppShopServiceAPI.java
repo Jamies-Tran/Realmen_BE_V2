@@ -17,6 +17,7 @@ public interface IAppShopServiceAPI {
             @RequestParam(required = false, value = "branchId", defaultValue = "") Long branchId,
             @RequestParam(required = false, value = "shopCategoryId", defaultValue = "") Long shopCategoryId,
             @RequestParam(required = false, value = "shopServicePriceRange", defaultValue = "") List<Long> shopServicePriceRange,
+            @RequestParam(required = false, value = "assignmentTypeCode", defaultValue = "") String assignmentTypeCode,
             @RequestParam(required = false, value = "current", defaultValue = "1") Integer current,
             @RequestParam(required = false, value = "pageSize", defaultValue = "20") Integer pageSize);
 }

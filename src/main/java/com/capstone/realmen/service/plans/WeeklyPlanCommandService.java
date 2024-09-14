@@ -4,19 +4,22 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.capstone.realmen.common.enums.EBranchServiceStatus;
 import com.capstone.realmen.common.enums.EWeeklyPlanStatus;
 import com.capstone.realmen.common.request.PageRequestCustom;
 import com.capstone.realmen.common.request.RequestContext;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.account.Account;
+import com.capstone.realmen.data.dto.branch.service.BranchService;
 import com.capstone.realmen.data.dto.plans.daily.DailyPlan;
 import com.capstone.realmen.data.dto.plans.weekly.IWeeklyPlanMapper;
 import com.capstone.realmen.data.dto.plans.weekly.WeeklyPlan;
-import com.capstone.realmen.data.dto.shop.service.ShopService;
 import com.capstone.realmen.repository.database.plans.weekly.IWeeklyPlanRepository;
 import com.capstone.realmen.repository.database.plans.weekly.WeeklyPlanEntity;
 import com.capstone.realmen.service.account.AccountQueryService;
 import com.capstone.realmen.service.account.data.AccountSearchCriteria;
+import com.capstone.realmen.service.branch.others.services.BranchServiceQueryService;
+import com.capstone.realmen.service.branch.others.services.data.BranchServiceSearchCriteria;
 import com.capstone.realmen.service.plans.data.WeeklyPlanActiveRequire;
 import com.capstone.realmen.service.plans.data.WeeklyPlanCreateRequire;
 import com.capstone.realmen.service.plans.data.WeeklyPlanDuplicateRequire;
@@ -26,9 +29,6 @@ import com.capstone.realmen.service.plans.others.daily.plan.DailyPlanQueryServic
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanActiveRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanCreateRequire;
 import com.capstone.realmen.service.plans.others.daily.plan.data.DailyPlanDuplicateRequire;
-import com.capstone.realmen.service.shop.service.ShopServiceQueryService;
-import com.capstone.realmen.service.shop.service.data.ShopServiceSearchCriteria;
-
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +48,7 @@ public class WeeklyPlanCommandService extends WeeklyPlanHelper {
         AccountQueryService accountQueryService;
 
         @NonNull
-        ShopServiceQueryService shopServiceQueryService;
+        BranchServiceQueryService bsQuery;
 
         @NonNull
         DailyPlanCommandService dailyPlanCommandService;
@@ -62,6 +62,10 @@ public class WeeklyPlanCommandService extends WeeklyPlanHelper {
         public void create(WeeklyPlanCreateRequire createRequire) {
                 Long branchId = requestContext.getAccount().branchId();
                 String weeklyPlanName = generateWeeklyPlanName(List.of());
+                BranchServiceSearchCriteria bsSearchCriteria = BranchServiceSearchCriteria
+                                .of(branchId, List.of(EBranchServiceStatus.ACTIVE.getCode()));
+                AccountSearchCriteria aSearchCriteria = AccountSearchCriteria
+                                .filterStaffOnBranch(branchId);
                 WeeklyPlan newWeeklyPlan = WeeklyPlan.builder()
                                 .weeklyPlanName(weeklyPlanName)
                                 .branchId(branchId)
@@ -71,22 +75,20 @@ public class WeeklyPlanCommandService extends WeeklyPlanHelper {
                 WeeklyPlanEntity saveWeeklyPlan = weeklyPlanRepository.save(
                                 weeklyPlanMapper.toEntity(newWeeklyPlan)
                                                 .setAudit(requestContext.auditCreate()));
-                List<Long> accountIds = accountQueryService
-                                .findAll(AccountSearchCriteria.filterStaffOnBranch(branchId),
-                                                PageRequestCustom.unPaged())
-                                .map(Account::accountId)
+                List<Account> accounts = accountQueryService
+                                .findAll(aSearchCriteria, PageRequestCustom.unPaged())
                                 .toList();
-                List<Long> serviceIds = shopServiceQueryService
-                                .findAll(ShopServiceSearchCriteria.filterBranch(branchId), PageRequestCustom.unPaged())
-                                .map(ShopService::shopServiceId)
+                List<BranchService> services = bsQuery
+                                .findAll(bsSearchCriteria, PageRequestCustom.unPaged())
                                 .toList();
-                dailyPlanCommandService.create(
-                                DailyPlanCreateRequire.builder()
-                                                .weeklyPlanId(saveWeeklyPlan.getWeeklyPlanId())
-                                                .accountIds(accountIds)
-                                                .serviceIds(serviceIds)
-                                                .pickUpDate(createRequire.pickUpDate())
-                                                .build());
+
+                DailyPlanCreateRequire dCreateRequire = DailyPlanCreateRequire.builder()
+                                .weeklyPlanId(saveWeeklyPlan.getWeeklyPlanId())
+                                .accounts(accounts)
+                                .services(services)
+                                .pickUpDate(createRequire.pickUpDate())
+                                .build();
+                dailyPlanCommandService.create(dCreateRequire);
         }
 
         public void duplicate(WeeklyPlanDuplicateRequire duplicateRequire) {

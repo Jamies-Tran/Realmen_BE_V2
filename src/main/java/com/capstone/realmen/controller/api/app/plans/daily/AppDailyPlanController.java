@@ -22,7 +22,7 @@ import lombok.experimental.FieldDefaults;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AppDailyPlanController implements IDailyPlanAPI{
+public class AppDailyPlanController implements IDailyPlanAPI {
     @NonNull
     DailyPlanUseCaseService useCaseService;
 
@@ -30,14 +30,17 @@ public class AppDailyPlanController implements IDailyPlanAPI{
     IDailyPlanModelMapper modelMapper;
 
     @Override
-    public ListResponse<DailyPlanResponse> findAll(List<LocalDateTime> timeRange, Long accountId) {
-        DailyPlanSearchCriteria searchCriteria = DailyPlanSearchCriteria.of(timeRange, accountId);
+    public ListResponse<DailyPlanResponse> findAll(List<LocalDateTime> timeRange, 
+        Long branchId,
+        Long serviceId, 
+        Long accountId) {
+        DailyPlanSearchCriteria searchCriteria = DailyPlanSearchCriteria.of(timeRange, branchId, accountId, serviceId);
         PageRequestCustom pageRequestCustom = PageRequestCustom.unPaged();
         Page<DailyPlan> dailyPlans = useCaseService.appFindAll(searchCriteria, pageRequestCustom);
         List<DailyPlanResponse> responses = dailyPlans.getContent().stream()
-            .map(modelMapper::toModel)
-            .toList();
-        
+                .map(modelMapper::toModel)
+                .toList();
+
         return new ListResponse<>(responses);
     }
 
@@ -47,9 +50,9 @@ public class AppDailyPlanController implements IDailyPlanAPI{
         PageRequestCustom pageRequestCustom = PageRequestCustom.unPaged();
         Page<DailyPlan> dailyPlans = useCaseService.appFindForStaff(searchCriteria, pageRequestCustom);
         List<DailyPlanResponse> responses = dailyPlans.getContent().stream()
-            .map(modelMapper::toModel)
-            .toList();
-        
+                .map(modelMapper::toModel)
+                .toList();
+
         return new ListResponse<>(responses);
     }
 

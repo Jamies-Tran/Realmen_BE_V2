@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 import com.capstone.realmen.data.dao.plans.daily.service.DailyPlanServiceDAO;
-import com.capstone.realmen.repository.database.shop.service.plans.DailyPlanServiceEntity;
+import com.capstone.realmen.repository.database.plans.daily.service.DailyPlanServiceEntity;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IDailyPlanServiceMapper {

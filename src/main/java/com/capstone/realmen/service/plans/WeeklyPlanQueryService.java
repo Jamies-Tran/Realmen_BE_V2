@@ -29,39 +29,41 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class WeeklyPlanQueryService {
-    @NonNull
-    IWeeklyPlanRepository repository;
+        @NonNull
+        IWeeklyPlanRepository repository;
 
-    @NonNull
-    DailyPlanQueryService dailyPlanQueryService;
+        @NonNull
+        DailyPlanQueryService dailyPlanQueryService;
 
-    @NonNull
-    IWeeklyPlanMapper mapper;
+        @NonNull
+        IWeeklyPlanMapper mapper;
 
-    public Page<WeeklyPlan> findAll(WeeklyPlanSearchCriteria searchCriteria, PageRequestCustom pageRequestCustom) {
-        Page<WeeklyPlan> weeklyPlans = repository.findAll(searchCriteria, pageRequestCustom.pageRequest())
-                .map(mapper::toDto);
-        List<Long> weeklyPlanIds = weeklyPlans.stream().map(WeeklyPlan::weeklyPlanId).toList();
-        DailyPlanSearchByField searchByField = DailyPlanSearchByField.of(weeklyPlanIds,
-                EDailyPlanStatus.PROCESSING.getCode());
-        Map<Long, List<DailyPlan>> dailyPlans = dailyPlanQueryService.findByWeeklyPlanIds(searchByField)
-                .stream().collect(Collectors.groupingBy(DailyPlan::weeklyPlanId));
+        public Page<WeeklyPlan> findAll(WeeklyPlanSearchCriteria searchCriteria, PageRequestCustom pageRequestCustom) {
+                Page<WeeklyPlan> weeklyPlans = repository.findAll(searchCriteria, pageRequestCustom.pageRequest())
+                                .map(mapper::toDto);
+                List<Long> weeklyPlanIds = weeklyPlans.stream().map(WeeklyPlan::weeklyPlanId).toList();
+                DailyPlanSearchByField searchByField = DailyPlanSearchByField.of(weeklyPlanIds,
+                                EDailyPlanStatus.PROCESSING.getCode());
+                Map<Long, List<DailyPlan>> dailyPlans = dailyPlanQueryService.findByWeeklyPlanIds(searchByField)
+                                .stream().collect(Collectors.groupingBy(DailyPlan::weeklyPlanId));
 
-        return weeklyPlans.map(weeklyPlan -> {
-            List<DailyPlan> getDailyPlans = dailyPlans.get(weeklyPlan.weeklyPlanId());
-            Integer dailyPlanActives = getDailyPlans.size();
+                return weeklyPlans.map(weeklyPlan -> {
+                        List<DailyPlan> getDailyPlans = dailyPlans.computeIfAbsent(weeklyPlan.weeklyPlanId(),
+                                        d -> List.of());
+                        Integer dailyPlanActives = getDailyPlans.size();
 
-            return weeklyPlan.withDailyPlanActive(dailyPlanActives);
-        });
-    }
+                        return weeklyPlan.withDailyPlanActive(dailyPlanActives);
+                });
+        }
 
-    public WeeklyPlan findById(WeeklyPlanSearchByField searchByField) {
-        WeeklyPlanEntity foundWeeklyPlan = repository.findById(searchByField.weeklyPlanId())
-                .orElseThrow(NotFoundException::new);
-        DailyPlanSearchByField dSearchByField = DailyPlanSearchByField.ofWeeklyPlanId(searchByField.weeklyPlanId());
-        List<DailyPlan> dailyPlans = dailyPlanQueryService.findByWeeklyPlanIds(dSearchByField);
+        public WeeklyPlan findById(WeeklyPlanSearchByField searchByField) {
+                WeeklyPlanEntity foundWeeklyPlan = repository.findById(searchByField.weeklyPlanId())
+                                .orElseThrow(NotFoundException::new);
+                DailyPlanSearchByField dSearchByField = DailyPlanSearchByField
+                                .ofWeeklyPlanId(searchByField.weeklyPlanId());
+                List<DailyPlan> dailyPlans = dailyPlanQueryService.findByWeeklyPlanIds(dSearchByField);
 
-        return mapper.toDto(foundWeeklyPlan)
-                .withDailyPlans(dailyPlans);
-    }
+                return mapper.toDto(foundWeeklyPlan)
+                                .withDailyPlans(dailyPlans);
+        }
 }

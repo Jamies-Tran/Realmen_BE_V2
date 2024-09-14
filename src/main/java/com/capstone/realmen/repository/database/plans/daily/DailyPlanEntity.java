@@ -1,8 +1,7 @@
 package com.capstone.realmen.repository.database.plans.daily;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
-
 import com.capstone.realmen.repository.database.audit.Auditable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,12 +35,18 @@ public class DailyPlanEntity extends Auditable {
     @Column(name = "weekly_plan_id")
     Long weeklyPlanId;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(name = "date")
-    LocalDateTime date;
+    LocalDate date;
 
     @Column(name = "daily_plan_status_code")
     String dailyPlanStatusCode;
+
+    @Column(name = "day_in_week_code")
+    String dayInWeekCode;
+
+    @Column(name = "day_in_week_name")
+    String dayInWeekName;
 
     @Column(name = "daily_plan_status_name")
     String dailyPlanStatusName;

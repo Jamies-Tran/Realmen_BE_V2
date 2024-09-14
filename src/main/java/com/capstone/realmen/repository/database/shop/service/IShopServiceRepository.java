@@ -18,16 +18,17 @@ public interface IShopServiceRepository extends JpaRepository<ShopServiceEntity,
     @Query("""
                 SELECT
                     ss.shopServiceId AS shopServiceId,
-                    bs.branchId AS branchId,
                     ss.shopServiceName AS shopServiceName,
                     ss.shopServicePrice AS shopServicePrice,
                     ss.shopServiceThumbnail AS shopServiceThumbnail,
+                    ss.estimateDuration AS estimateDuration,
+                    ss.durationUnitCode AS durationUnitCode,
+                    ss.durationUnitName AS durationUnitName,
                     sc.shopCategoryId AS shopCategoryId,
                     sc.shopCategoryCode AS shopCategoryCode,
                     sc.shopCategoryName AS shopCategoryName
                 FROM ShopServiceEntity ss
                 INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
-                LEFT JOIN BranchServiceEntity bs ON ss.shopServiceId = bs.shopServiceId
                 WHERE ss.shopServiceId = :shopServiceId
             """)
     Optional<ShopServiceDAO> findByShopServiceId(Long shopServiceId);
@@ -35,25 +36,21 @@ public interface IShopServiceRepository extends JpaRepository<ShopServiceEntity,
     @Query("""
                 SELECT
                     ss.shopServiceId AS shopServiceId,
-                    bs.branchId AS branchId,
                     ss.shopServiceName AS shopServiceName,
                     ss.shopServicePrice AS shopServicePrice,
                     ss.shopServiceThumbnail AS shopServiceThumbnail,
+                    ss.estimateDuration AS estimateDuration,
+                    ss.durationUnitCode AS durationUnitCode,
+                    ss.durationUnitName AS durationUnitName,
                     sc.shopCategoryId AS shopCategoryId,
                     sc.shopCategoryCode AS shopCategoryCode,
                     sc.shopCategoryName AS shopCategoryName
                 FROM ShopServiceEntity ss
                 INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
-                LEFT JOIN BranchServiceEntity bs ON bs.shopServiceId = ss.shopServiceId
                 WHERE (:#{#searchCriteria.hasSearchEmpty()} = TRUE
                     OR LOWER(ss.shopServiceName) LIKE '%'||:#{#searchCriteria.search()}||'%')
                 AND (:#{#searchCriteria.hasShopServicePriceRangeEmpty()} = TRUE
                     OR ss.shopServicePrice BETWEEN :#{#searchCriteria.priceFrom()} AND :#{#searchCriteria.priceTo()})
-                AND (:#{#searchCriteria.hasBranchIdEmpty()} = TRUE
-                    OR bs.branchId = :#{#searchCriteria.branchId()})
-                AND (:#{#searchCriteria.hasBranchServiceStatusEmpty()} = TRUE
-                    OR bs.branchServiceStatusCode IN :#{#searchCriteria.branchServiceCodes()})
-
             """)
     Page<ShopServiceDAO> findAll(ShopServiceSearchCriteria searchCriteria, Pageable pageable);
 
@@ -63,6 +60,9 @@ public interface IShopServiceRepository extends JpaRepository<ShopServiceEntity,
                     ss.shopServiceName AS shopServiceName,
                     ss.shopServicePrice AS shopServicePrice,
                     ss.shopServiceThumbnail AS shopServiceThumbnail,
+                    ss.estimateDuration AS estimateDuration,
+                    ss.durationUnitCode AS durationUnitCode,
+                    ss.durationUnitName AS durationUnitName,
                     sc.shopCategoryId AS shopCategoryId,
                     sc.shopCategoryCode AS shopCategoryCode,
                     sc.shopCategoryName AS shopCategoryName,

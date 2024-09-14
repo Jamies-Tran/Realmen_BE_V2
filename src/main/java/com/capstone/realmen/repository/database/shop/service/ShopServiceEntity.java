@@ -26,35 +26,44 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "shop_service")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ShopServiceEntity extends Auditable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long shopServiceId;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        Long shopServiceId;
 
-    @Column(name = "shop_category_id")
-    Long shopCategoryId;
+        @Column(name = "shop_category_id")
+        Long shopCategoryId;
 
-    @Column(name = "shop_service_name", nullable = false)
-    String shopServiceName;
+        @Column(name = "shop_service_name")
+        String shopServiceName;
 
-    @Column(name = "shop_service_price", nullable = false)
-    Long shopServicePrice;
-    
-    @Column(name = "shop_service_thumbnail", nullable = false)
-    String shopServiceThumbnail;
+        @Column(name = "shop_service_price")
+        Long shopServicePrice;
 
-    public ShopServiceEntity setAudit(Auditable auditable) {
-        this.setCreatedBy(Objects.nonNull(auditable.getCreatedBy())
-                ? auditable.getCreatedBy()
-                : this.getCreatedBy());
-        this.setCreatedAt(Objects.nonNull(auditable.getCreatedAt())
-                ? auditable.getCreatedAt()
-                : this.getCreatedAt());
-        this.setUpdatedBy(Objects.nonNull(auditable.getUpdatedBy())
-                ? auditable.getUpdatedBy()
-                : this.getUpdatedBy());
-        this.setUpdatedAt(Objects.nonNull(auditable.getUpdatedAt())
-                ? auditable.getUpdatedAt()
-                : this.getUpdatedAt());
-        return this;
-    }
+        @Column(name = "shop_service_thumbnail")
+        String shopServiceThumbnail;
+
+        @Column(name = "estimate_duration")
+        Integer estimateDuration;
+
+        @Column(name = "duration_unit_code")
+        String durationUnitCode;
+
+        @Column(name = "duration_unit_name")
+        String durationUnitName;
+
+        public ShopServiceEntity setAudit(Auditable auditable) {
+                this.setCreatedBy(Objects.nonNull(auditable.getCreatedBy())
+                                ? auditable.getCreatedBy()
+                                : this.getCreatedBy());
+                this.setCreatedAt(Objects.nonNull(auditable.getCreatedAt())
+                                ? auditable.getCreatedAt()
+                                : this.getCreatedAt());
+                this.setUpdatedBy(Objects.nonNull(auditable.getUpdatedBy())
+                                ? auditable.getUpdatedBy()
+                                : this.getUpdatedBy());
+                this.setUpdatedAt(Objects.nonNull(auditable.getUpdatedAt())
+                                ? auditable.getUpdatedAt()
+                                : this.getUpdatedAt());
+                return this;
+        }
 }

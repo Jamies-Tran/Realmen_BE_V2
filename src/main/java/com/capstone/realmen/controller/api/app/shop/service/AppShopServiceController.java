@@ -10,9 +10,8 @@ import com.capstone.realmen.common.request.PageRequestCustom;
 import com.capstone.realmen.common.response.PageImplResponse;
 import com.capstone.realmen.controller.api.app.shop.service.models.AppShopServiceResponse;
 import com.capstone.realmen.controller.api.app.shop.service.models.IAppShopServiceModelMapper;
-import com.capstone.realmen.service.shop.service.ShopServiceUseCaseService;
-import com.capstone.realmen.service.shop.service.data.ShopServiceSearchCriteria;
-
+import com.capstone.realmen.service.branch.others.services.BranchServiceUseCaseService;
+import com.capstone.realmen.service.branch.others.services.data.BranchServiceSearchCriteria;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AppShopServiceController implements IAppShopServiceAPI {
     @NonNull
-    ShopServiceUseCaseService shopServiceUseCaseService;
+    BranchServiceUseCaseService useCase;
 
     @NonNull
     IAppShopServiceModelMapper shopServiceModelMapper;
@@ -34,16 +33,18 @@ public class AppShopServiceController implements IAppShopServiceAPI {
             Long branchId,
             Long shopCategoryId,
             List<Long> shopServicePriceRange,
+            String assignmentTypeCode,
             Integer current,
             Integer pageSize) {
-        ShopServiceSearchCriteria searchCriteria = ShopServiceSearchCriteria.builder()
+        BranchServiceSearchCriteria searchCriteria = BranchServiceSearchCriteria.builder()
                 .search(search)
                 .branchId(branchId)
                 .shopCategoryId(shopCategoryId)
-                .shopServicePriceRange(shopServicePriceRange)
+                .priceRange(shopServicePriceRange)
+                .assignmentTypeCode(assignmentTypeCode)
                 .build();
         PageRequestCustom pageRequestCustom = PageRequestCustom.of(current, pageSize);
-        Page<AppShopServiceResponse> responses = shopServiceUseCaseService
+        Page<AppShopServiceResponse> responses = useCase
                 .appFindAll(searchCriteria, pageRequestCustom)
                 .map(shopServiceModelMapper::toModel);
         List<AppShopServiceResponse> verifyResponse = responses.getContent()

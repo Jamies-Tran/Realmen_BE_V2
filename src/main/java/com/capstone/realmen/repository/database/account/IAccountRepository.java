@@ -74,14 +74,13 @@ public interface IAccountRepository extends JpaRepository<AccountEntity, Long> {
                         AND (:#{#searchCriteria.hasBranchIdEmpty()} = TRUE
                                 OR ab.branchId = :#{#searchCriteria.branchId()})
                         """)
-        Page<AccountDAO> findAll(
-                        AccountSearchCriteria searchCriteria,
-                        List<String> defaultStatusCodes,
+        Page<AccountDAO> findAll(AccountSearchCriteria searchCriteria, List<String> defaultStatusCodes,
                         Pageable pageable);
 
         @Query("""
                                 SELECT
                                         a.accountId AS accountId,
+                                        a.password AS password,
                                         ab.branchId AS branchId,
                                         a.firstName AS firstName,
                                         a.lastName AS lastName,
