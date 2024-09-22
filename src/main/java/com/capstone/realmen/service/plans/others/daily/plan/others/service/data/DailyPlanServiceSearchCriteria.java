@@ -7,16 +7,16 @@ import lombok.Builder;
 
 @Builder
 public record DailyPlanServiceSearchCriteria(
-        Long dailyPlanServiceId,
         Long dailyPlanId,
         Long branchId,
+        List<Long> dailyPlanServiceIds,
         List<String> serviceAssignmentCodes,
         List<Long> serviceIds) {
-    public static DailyPlanServiceSearchCriteria of(Long dailyPlanServiceId, Long branchId, List<Long> serviceIds) {
+    public static DailyPlanServiceSearchCriteria ofDailyPlanServiceIds(List<Long> dailyPlanServiceIds, Long branchId, Long dailyPlanId) {
         return DailyPlanServiceSearchCriteria.builder()
-                .dailyPlanServiceId(dailyPlanServiceId)
+                .dailyPlanServiceIds(dailyPlanServiceIds)
                 .branchId(branchId)
-                .serviceIds(serviceIds)
+                .dailyPlanId(dailyPlanId)
                 .build();
     }
 
@@ -36,8 +36,8 @@ public record DailyPlanServiceSearchCriteria(
         return Objects.isNull(serviceIds) || serviceIds.isEmpty();
     }
 
-    public Boolean hasDailyPlanServiceIdEmpty() {
-        return Objects.isNull(dailyPlanServiceId);
+    public Boolean hasDailyPlanServiceIdsEmpty() {
+        return Objects.isNull(dailyPlanServiceIds) || dailyPlanServiceIds.isEmpty();
     }
 
     public Boolean hasDailyPlanIdEmpty() {

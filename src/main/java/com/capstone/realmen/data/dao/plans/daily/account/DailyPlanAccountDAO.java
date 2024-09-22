@@ -1,6 +1,6 @@
 package com.capstone.realmen.data.dao.plans.daily.account;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public interface DailyPlanAccountDAO {
     void setDailyPlanAccountId(Long dailyPlanAccountId);
@@ -11,9 +11,9 @@ public interface DailyPlanAccountDAO {
 
     Long getDailyPlanId();
 
-    void setDate(LocalDateTime date);
+    void setDate(LocalDate date);
 
-    LocalDateTime getDate();
+    LocalDate getDate();
 
     void setAccountId(Long accountId);
 

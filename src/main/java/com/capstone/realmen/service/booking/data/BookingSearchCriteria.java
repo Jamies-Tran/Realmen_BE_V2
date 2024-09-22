@@ -8,17 +8,33 @@ import lombok.Builder;
 
 @Builder
 public record BookingSearchCriteria(
+    Long accountId,
     Long branchId,
     Long dailyPlanId,
     List<String> statusCodes,
+    LocalDate bookedAt,
     LocalDate createdAt
 ) {
-    public static BookingSearchCriteria of(Long branchId, List<String> statusCodes, Long dailyPlanId) {
+    public static BookingSearchCriteria of(Long accountId, Long branchId, List<String> statusCodes, Long dailyPlanId) {
         return BookingSearchCriteria.builder()
+            .accountId(accountId)
             .branchId(branchId)
             .statusCodes(statusCodes)
             .dailyPlanId(dailyPlanId)
             .build();
+    }
+
+    public static BookingSearchCriteria of(Long accountId, Long branchId, List<String> statusCodes, LocalDate bookedAt) {
+        return BookingSearchCriteria.builder()
+            .accountId(accountId)
+            .branchId(branchId)
+            .statusCodes(statusCodes)
+            .bookedAt(bookedAt)
+            .build();
+    }
+
+    public Boolean hasAccountIdEmpty() {
+        return Objects.isNull(accountId);
     }
 
     public Boolean hasBranchIdEmpty() {
@@ -35,5 +51,9 @@ public record BookingSearchCriteria(
 
     public Boolean hasDailyPlanIdEmpty() {
         return Objects.isNull(dailyPlanId);
+    }
+
+    public Boolean hasBookedAtEmpty() {
+        return Objects.isNull(bookedAt);
     }
 }

@@ -9,9 +9,10 @@ import lombok.Builder;
 
 @Builder
 public record BranchServiceSearchCriteria(
-        Long branchId,
         String search,
+        Long branchId,
         Long shopCategoryId,
+        List<Long> branchServiceIds,
         String assignmentTypeCode,
         List<String> statusCodes,
         List<Long> priceRange,
@@ -33,6 +34,17 @@ public record BranchServiceSearchCriteria(
                 .branchId(branchId)
                 .statusCodes(statusCodes)
                 .build();
+    }
+
+    public static BranchServiceSearchCriteria searchByBrIdAndBrsIds(Long branchId, List<Long> branchServiceIds) {
+        return BranchServiceSearchCriteria.builder()
+            .branchId(branchId)
+            .branchServiceIds(branchServiceIds)
+            .build();
+    }
+
+    public Boolean hasBranchServiceIdsEmpty() {
+        return Objects.isNull(branchServiceIds) || branchServiceIds.isEmpty();
     }
 
     public Boolean hasSearchEmpty() {

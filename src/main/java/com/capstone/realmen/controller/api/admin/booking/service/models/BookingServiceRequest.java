@@ -1,4 +1,4 @@
-package com.capstone.realmen.controller.api.app.booking.service.models;
+package com.capstone.realmen.controller.api.admin.booking.service.models;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -8,12 +8,14 @@ import lombok.Builder;
 
 @Builder
 public record BookingServiceRequest(
-        Long dailyPlanServiceId,
+        Long branchServiceId,
         Long staffId,
         Long price,
         LocalDateTime beginAtReq,
         LocalTime beginAt) {
+
     public LocalTime beginAt() {
         return Objects.requireNonNullElse(beginAt, beginAtReq.toLocalTime());
     }
+
 }

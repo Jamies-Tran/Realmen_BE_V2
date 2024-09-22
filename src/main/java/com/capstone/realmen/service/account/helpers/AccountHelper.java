@@ -33,7 +33,7 @@ public class AccountHelper {
                     throw new InvalidRequest("Thông tin nhân viên vận hành không hợp lệ");
                 }
                 break;
-            case BRANCH_MANAGER, RECPETIONIST:
+            case BRANCH_MANAGER, RECEPTIONIST:
                 break;
         
             default:

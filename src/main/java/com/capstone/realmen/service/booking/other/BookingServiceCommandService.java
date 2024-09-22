@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.capstone.realmen.common.enums.EBookingStatus;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.booking.service.IBookingServiceMapper;
+import com.capstone.realmen.data.dto.branch.service.BranchService;
 import com.capstone.realmen.data.dto.plans.daily.service.DailyPlanService;
 import com.capstone.realmen.repository.database.booking.IBookingRepository;
 import com.capstone.realmen.repository.database.booking.service.BookingServiceEntity;
@@ -35,26 +36,49 @@ public class BookingServiceCommandService extends BookingServiceHelper {
         @NonNull
         IBookingServiceMapper mapper;
 
-        public void saveAll(BookingServiceCreateRequire createRequire) {
-                Map<Long, DailyPlanService> services = createRequire.services()
+        public void saveListByDailyPlanService(BookingServiceCreateRequire createRequire) {
+                Map<Long, DailyPlanService> services = createRequire.dailyPlanServices()
                                 .stream()
-                                .collect(Collectors.toMap(DailyPlanService::shopServiceId, s -> s));
+                                .collect(Collectors.toMap(DailyPlanService::dailyPlanServiceId, s -> s));
 
                 List<BookingServiceEntity> newBookingServices = createRequire.bookingServices()
                                 .stream()
                                 .map(bookingService -> {
-                                        DailyPlanService s = services.get(bookingService.serviceId());
-                                        LocalTime finishAt = getEstimateFinishAt(bookingService.beginAt(),
+                                        DailyPlanService s = services.get(bookingService.dailyPlanServiceId());
+                                        LocalTime finishAt = getEstimateFinishAt(
+                                                        bookingService.beginAt(),
                                                         s.estimateDuration(),
                                                         s.durationUnitCode());
                                         return mapper.toEntity(bookingService)
                                                         .withBookingId(createRequire.bookingId())
+                                                        .withServiceId(s.shopServiceId())
                                                         .withFinishAt(finishAt)
                                                         .withStatusCode(EBookingStatus.DRAFT.getCode())
                                                         .withStatusName(EBookingStatus.DRAFT.getName());
-                                })
-                                .toList();
+                                }).toList();
 
+                repository.saveAll(newBookingServices);
+        }
+
+        public void saveListByBranchService(BookingServiceCreateRequire createRequire) {
+                Map<Long, BranchService> services = createRequire.branchServices()
+                                .stream()
+                                .collect(Collectors.toMap(BranchService::branchServiceId, s -> s));
+                List<BookingServiceEntity> newBookingServices = createRequire.bookingServices()
+                                .stream()
+                                .map(bookingService -> {
+                                        BranchService s = services.get(bookingService.branchServiceId());
+                                        LocalTime finishAt = getEstimateFinishAt(
+                                                        bookingService.beginAt(),
+                                                        s.estimateDuration(),
+                                                        s.durationUnitCode());
+                                        return mapper.toEntity(bookingService)
+                                                        .withBookingId(createRequire.bookingId())
+                                                        .withServiceId(s.shopServiceId())
+                                                        .withFinishAt(finishAt)
+                                                        .withStatusCode(EBookingStatus.DRAFT.getCode())
+                                                        .withStatusName(EBookingStatus.DRAFT.getName());
+                                }).toList();
                 repository.saveAll(newBookingServices);
         }
 

@@ -33,6 +33,7 @@ public class AppBranchController implements IAppBranchAPI {
                         String search,
                         Double latitude,
                         Double longitude,
+                        List<Long> serviceIds,
                         List<String> branchStatusCodes,
                         Integer current,
                         Integer pageSize) {
@@ -40,6 +41,7 @@ public class AppBranchController implements IAppBranchAPI {
                                 .search(search)
                                 .latitude(latitude)
                                 .longitude(longitude)
+                                .serviceIds(serviceIds)
                                 .branchStatusCodes(branchStatusCodes)
                                 .build();
                 PageRequestCustom pageRequestCustom = PageRequestCustom.of(current, pageSize);
@@ -72,10 +74,10 @@ public class AppBranchController implements IAppBranchAPI {
                                 .appFindAll(searchCriteria, pageRequestCustom)
                                 .map(modelMapper::toModel);
                 return new PageImplResponse<>(
-                        AppBranchProvinceGroupResponse.of(responses.getContent()), 
-                        responses.getTotalElements(), 
-                        responses.getTotalPages(), 
-                        current, 
-                        pageSize);
+                                AppBranchProvinceGroupResponse.of(responses.getContent()),
+                                responses.getTotalElements(),
+                                responses.getTotalPages(),
+                                current,
+                                pageSize);
         }
 }

@@ -8,16 +8,18 @@ import lombok.With;
 @With
 @Builder
 public record BookingService(
-                Long bookingServiceId,
-                Long bookingId,
-                Long serviceId,
-                Long staffId,
-                Long price,
-                String pickUpTypeCode,
-                String pickUpTypeName,
-                LocalTime beginAt,
-                LocalTime finishAt,
-                LocalTime actualBeginAt,
-                LocalTime actualFinishedAt) {
+        Long bookingServiceId,
+        Long branchServiceId,
+        Long bookingId,
+        Long serviceId,
+        Long dailyPlanServiceId,
+        Long staffId,
+        Long price,
+        String pickUpTypeCode,
+        String pickUpTypeName,
+        LocalTime beginAt,
+        LocalTime finishAt,
+        LocalTime actualBeginAt,
+        LocalTime actualFinishedAt) {
 
 }

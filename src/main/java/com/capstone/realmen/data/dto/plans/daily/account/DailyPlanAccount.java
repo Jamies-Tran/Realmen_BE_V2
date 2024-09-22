@@ -48,7 +48,7 @@ public record DailyPlanAccount(
                                         .toList();
                         List<Long> receptIds = accounts.stream()
                                         .filter(account -> Objects.equals(account.roleCode(),
-                                                        ERole.RECPETIONIST.getCode()))
+                                                        ERole.RECEPTIONIST.getCode()))
                                         .map(Account::accountId)
                                         .toList();
 

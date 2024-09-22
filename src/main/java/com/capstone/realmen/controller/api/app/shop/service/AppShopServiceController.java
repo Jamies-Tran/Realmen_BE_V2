@@ -21,41 +21,39 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AppShopServiceController implements IAppShopServiceAPI {
-    @NonNull
-    BranchServiceUseCaseService useCase;
+        @NonNull
+        BranchServiceUseCaseService useCase;
 
-    @NonNull
-    IAppShopServiceModelMapper shopServiceModelMapper;
+        @NonNull
+        IAppShopServiceModelMapper shopServiceModelMapper;
 
-    @Override
-    public PageImplResponse<AppShopServiceResponse> findAll(
-            String search,
-            Long branchId,
-            Long shopCategoryId,
-            List<Long> shopServicePriceRange,
-            String assignmentTypeCode,
-            Integer current,
-            Integer pageSize) {
-        BranchServiceSearchCriteria searchCriteria = BranchServiceSearchCriteria.builder()
-                .search(search)
-                .branchId(branchId)
-                .shopCategoryId(shopCategoryId)
-                .priceRange(shopServicePriceRange)
-                .assignmentTypeCode(assignmentTypeCode)
-                .build();
-        PageRequestCustom pageRequestCustom = PageRequestCustom.of(current, pageSize);
-        Page<AppShopServiceResponse> responses = useCase
-                .appFindAll(searchCriteria, pageRequestCustom)
-                .map(shopServiceModelMapper::toModel);
-        List<AppShopServiceResponse> verifyResponse = responses.getContent()
-            .stream()
-            .filter(res -> Objects.nonNull(res.branchId()))
-            .toList();
-        return new PageImplResponse<>(
-                verifyResponse,
-                Long.valueOf(verifyResponse.size()),
-                responses.getTotalPages(),
-                pageRequestCustom.current(),
-                pageSize);
-    }
+        @Override
+        public PageImplResponse<AppShopServiceResponse> findAll(
+                        String search,
+                        Long branchId,
+                        String assignmentTypeCode,
+                        List<Long> shopServicePriceRange,
+                        Integer current,
+                        Integer pageSize) {
+                BranchServiceSearchCriteria searchCriteria = BranchServiceSearchCriteria.builder()
+                                .search(search)
+                                .branchId(branchId)
+                                .priceRange(shopServicePriceRange)
+                                .assignmentTypeCode(assignmentTypeCode)
+                                .build();
+                PageRequestCustom pageRequestCustom = PageRequestCustom.of(current, pageSize);
+                Page<AppShopServiceResponse> responses = useCase
+                                .appFindAll(searchCriteria, pageRequestCustom)
+                                .map(shopServiceModelMapper::toModel);
+                List<AppShopServiceResponse> verifyResponse = responses.getContent()
+                                .stream()
+                                .filter(res -> Objects.nonNull(res.branchId()))
+                                .toList();
+                return new PageImplResponse<>(
+                                verifyResponse,
+                                Long.valueOf(verifyResponse.size()),
+                                responses.getTotalPages(),
+                                pageRequestCustom.current(),
+                                pageSize);
+        }
 }

@@ -59,7 +59,7 @@ public class DailyPlanAccountQueryService {
             .orElseThrow(NotFoundException::new);
         
         List<DailyPlanShiftHour> shifts = DailyPlanShiftHour.workingShifts(EShift.findByCode(foundDailyPlanAccount.getShiftCode()));
-        BookingServiceCountRequire countRequire = BookingServiceCountRequire.of(foundDailyPlanAccount.getAccountId(), foundDailyPlanAccount.getDate().toLocalDate(), shifts);
+        BookingServiceCountRequire countRequire = BookingServiceCountRequire.of(foundDailyPlanAccount.getAccountId(), foundDailyPlanAccount.getDate(), shifts);
         List<DailyPlanShiftHour> countBookingInShift = bsQuery.countBookingInShift(countRequire);
 
         return dailyPlanAccountMapper.toDto(foundDailyPlanAccount)

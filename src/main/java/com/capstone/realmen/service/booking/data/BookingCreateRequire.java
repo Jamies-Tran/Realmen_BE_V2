@@ -14,43 +14,53 @@ import lombok.Builder;
 
 @Builder
 public record BookingCreateRequire(Booking booking, Account customer) {
-    public static BookingCreateRequire of(Booking booking) {
-        return BookingCreateRequire.builder()
-                .booking(booking.withBookingCode(getBookingCode()))
-                .build();
-    }
+        public static BookingCreateRequire of(Booking booking) {
+                return BookingCreateRequire.builder()
+                                .booking(booking.withBookingCode(getBookingCode()))
+                                .build();
+        }
 
-    public static BookingCreateRequire of(Booking booking, Account customer) {
-        return BookingCreateRequire.builder()
-                .booking(booking.withBookingCode(getBookingCode()))
-                .customer(customer)
-                .build();
-    }
+        public static BookingCreateRequire of(Booking booking, Account customer) {
+                return BookingCreateRequire.builder()
+                                .booking(booking.withBookingCode(getBookingCode()))
+                                .customer(customer)
+                                .build();
+        }
 
-    public List<BookingService> bookingServices() {
-        String pickUpTypeCode = Objects.isNull(booking.accountId())
-                ? EPickUpType.NO_SPECIFIC.getCode()
-                : EPickUpType.PICKED.getCode();
-        String pickUpTypeName = Objects.isNull(booking.accountId())
-                ? EPickUpType.NO_SPECIFIC.getName()
-                : EPickUpType.PICKED.getName();
+        public String customerPhone() {
+                return customer.phone();
+        }
 
-        return booking.bookingServices()
-                .stream()
-                .map(bService -> bService
-                        .withPickUpTypeCode(pickUpTypeCode)
-                        .withPickUpTypeName(pickUpTypeName))
-                .toList();
-    }
+        public List<BookingService> bookingServices() {
 
-    public List<Long> serviceIds() {
-        return booking.bookingServices()
-                .stream()
-                .map(BookingService::serviceId)
-                .toList();
-    }
+                return booking.bookingServices()
+                                .stream()
+                                .map(bService -> {
+                                        String pickUpTypeCode = Objects.isNull(bService.staffId())
+                                                        ? EPickUpType.NO_SPECIFIC.getCode()
+                                                        : EPickUpType.PICKED.getCode();
+                                        String pickUpTypeName = Objects.isNull(bService.staffId())
+                                                        ? EPickUpType.NO_SPECIFIC.getName()
+                                                        : EPickUpType.PICKED.getName();
+                                        return bService
+                                                        .withPickUpTypeCode(pickUpTypeCode)
+                                                        .withPickUpTypeName(pickUpTypeName);
+                                })
+                                .toList();
+        }
 
-    private static String getBookingCode() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-    }
+        public Boolean isAccountIdEmpty() {
+                return Objects.isNull(customer.accountId());
+        }
+
+        public List<Long> dailyPlanServiceIds() {
+                return booking.bookingServices()
+                                .stream()
+                                .map(BookingService::dailyPlanServiceId)
+                                .toList();
+        }
+
+        private static String getBookingCode() {
+                return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        }
 }

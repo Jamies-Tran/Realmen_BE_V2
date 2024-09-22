@@ -15,7 +15,18 @@ public record BranchSearchCriteria(
         String search,
         Double latitude,
         Double longitude,
+        List<Long> serviceIds,
         List<String> branchStatusCodes) {
+
+    public static BranchSearchCriteria of(String search, Double latitude, Double longitude, List<Long> serviceIds, List<String> statusCodes) {
+        return BranchSearchCriteria.builder()
+            .search(search.toLowerCase())
+            .latitude(latitude)
+            .longitude(longitude)
+            .serviceIds(serviceIds)
+            .branchStatusCodes(statusCodes)
+            .build();
+    }
             
     public List<String> defaulStatusCodes() {
         return EBranchStatus.defaultStatuses(branchStatusCodes)
@@ -34,5 +45,9 @@ public record BranchSearchCriteria(
 
     public Boolean hasBranchStatusCodeEmpty() {
         return Objects.isNull(branchStatusCodes) || branchStatusCodes.isEmpty();
+    }
+
+    public Boolean hasServiceIdEmpty() {
+        return Objects.isNull(serviceIds) || serviceIds.isEmpty();
     }
 }

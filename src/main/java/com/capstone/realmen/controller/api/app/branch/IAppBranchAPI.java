@@ -17,6 +17,7 @@ public interface IAppBranchAPI {
             @RequestParam(required = false, value = "search", defaultValue = "") String search,
             @RequestParam(required = false, value = "latitude", defaultValue = "0.0") Double latitude,
             @RequestParam(required = false, value = "longitude", defaultValue = "0.0") Double longitude,
+            @RequestParam(required = false, value = "serviceIds",defaultValue = "") List<Long> serviceIds,
             @RequestParam(required = false, value = "branchStatusCodes", defaultValue = "") List<String> branchStatusCodes,
             @RequestParam(required = false, value = "current", defaultValue = "1") Integer current,
             @RequestParam(required = false, value = "pageSize", defaultValue = "20") Integer pageSize);

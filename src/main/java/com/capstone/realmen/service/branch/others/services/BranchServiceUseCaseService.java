@@ -9,8 +9,6 @@ import com.capstone.realmen.service.branch.others.services.data.BranchServiceSea
 import com.capstone.realmen.service.branch.others.services.data.BranchServiceSearchCriteria;
 import com.capstone.realmen.service.branch.others.services.usecase.admin.IAdminBranchServiceService;
 import com.capstone.realmen.service.branch.others.services.usecase.app.IAppBranchServiceService;
-import com.capstone.realmen.service.branch.usecase.admin.IAdminBranchService;
-
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

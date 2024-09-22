@@ -2,6 +2,8 @@ package com.capstone.realmen.data.dto.account;
 
 import java.time.LocalDate;
 
+import com.capstone.realmen.controller.api.admin.booking.models.Customer;
+
 import lombok.Builder;
 import lombok.With;
 
@@ -26,5 +28,13 @@ public record Account(
         String genderName,
         String accountStatusCode,
         String accountStatusName) {
+                public static Account toCustomer(Customer customer) {
+                        return Account.builder()
+                                .accountId(customer.accountId())
+                                .firstName(customer.firstName())
+                                .lastName(customer.lastName())
+                                .phone(customer.phone())
+                                .build();
+                }
 
 }

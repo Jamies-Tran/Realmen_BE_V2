@@ -15,12 +15,17 @@ public interface IBookingRepository extends JpaRepository<BookingEntity, Long> {
             SELECT b
             FROM BookingEntity b
             LEFT JOIN DailyPlanEntity dp ON b.dailyPlanId = dp.dailyPlanId
-            WHERE (:#{#searchCriteria.hasBranchIdEmpty()} = TRUE
+            WHERE (:#{#searchCriteria.hasAccountIdEmpty()} = TRUE
+                OR b.accountId = :#{#searchCriteria.accountId()})
+            AND (:#{#searchCriteria.hasBranchIdEmpty()} = TRUE
                 OR b.branchId = :#{#searchCriteria.branchId})
             AND (:#{#searchCriteria.hasDailyPlanIdEmpty()} = TRUE
                 OR dp.dailyPlanId = :#{#searchCriteria.dailyPlanId()})
             AND (:#{#searchCriteria.hasStatusCodeEmpty()} = TRUE
                 OR b.statusCode IN :#{#searchCriteria.statusCodes()})
+            AND (:#{#searchCriteria.hasBookedAtEmpty()} = TRUE
+                OR (b.bookedAt = :#{#searchCriteria.bookedAt()}
+                    OR dp.date = :#{#searchCriteria.bookedAt()}))
             """)
     Page<BookingEntity> findAll(BookingSearchCriteria searchCriteria, Pageable pageable);
 }

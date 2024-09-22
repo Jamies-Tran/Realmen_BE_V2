@@ -12,6 +12,7 @@ import lombok.With;
 public record AdminShopServiceResponse(
         Long shopServiceId,
         Long branchId,
+        Long branchServiceId,
         String shopServiceName,
         Long shopServicePrice,
         Long branchServicePrice,

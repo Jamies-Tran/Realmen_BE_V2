@@ -36,7 +36,7 @@ public class BranchHelpers {
                 .filter(account -> Objects.equals(account.roleCode(), ERole.OPERATOR_STAFF.getCode()))
                 .toList();
         List<Account> getRec = staffList.stream()
-                .filter(account -> Objects.equals(account.roleCode(), ERole.RECPETIONIST.getCode()))
+                .filter(account -> Objects.equals(account.roleCode(), ERole.RECEPTIONIST.getCode()))
                 .toList();
 
         if (getManager.isEmpty()) {

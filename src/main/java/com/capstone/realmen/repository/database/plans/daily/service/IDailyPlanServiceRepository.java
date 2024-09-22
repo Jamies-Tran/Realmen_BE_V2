@@ -96,12 +96,10 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 INNER JOIN BranchServiceEntity bs ON dps.shopServiceId = bs.shopServiceId
             WHERE (:#{#searchCriteria.hasBranchIdEmpty()} = TRUE
                 OR wp.branchId = :#{#searchCriteria.branchId()})
-            AND (:#{#searchCriteria.hasServiceIdEmpty()} = TRUE
-                OR dps.shopServiceId IN :#{#searchCriteria.serviceIds()})
             AND (:#{#searchCriteria.hasDailyPlanIdEmpty()} = TRUE
                 OR dp.dailyPlanId = :#{#searchCriteria.dailyPlanId()})
-            AND (:#{#searchCriteria.hasDailyPlanServiceIdEmpty()} = TRUE
-                OR dps.dailyPlanServiceId = :#{#searchCriteria.dailyPlanServiceId()})
+            AND (:#{#searchCriteria.hasDailyPlanServiceIdsEmpty()} = TRUE
+                OR dps.dailyPlanServiceId IN :#{#searchCriteria.dailyPlanServiceIds()})
             AND (:#{#searchCriteria.hasServiceAssignmentCodeEmpty()} = TRUE
                 OR sc.serviceAssignmentCode IN :#{#searchCriteria.serviceAssignmentCodes()})
             """)

@@ -15,7 +15,7 @@ public class BookingHelper {
                         .withBookingMethodCode(EBookingMethod.APP.getCode())
                         .withStatusCode(EBookingStatus.DRAFT.getCode())
                         .withStatusName(EBookingStatus.DRAFT.getName());
-            case RECPETIONIST:
+            case RECEPTIONIST:
                 return booking
                         .withAccountId(accountId)
                         .withBookingMethodCode(EBookingMethod.DIRECT.getCode())

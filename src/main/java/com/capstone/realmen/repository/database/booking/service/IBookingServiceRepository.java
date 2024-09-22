@@ -20,7 +20,7 @@ public interface IBookingServiceRepository extends JpaRepository<BookingServiceE
             INNER JOIN DailyPlanEntity dp ON b.dailyPlanId = dp.dailyPlanId
             WHERE bs.staffId = :#{#countRequire.staffId()}
                 AND dp.date = :#{#countRequire.date()}
-                AND (bs.beginAt BETWEEN :from AND :TO
+                AND (bs.beginAt BETWEEN :from AND :to
                     OR bs.finishAt BETWEEN :from AND :to)
                 AND bs.statusCode IN :#{#countRequire.statusCodes()}
             """)

@@ -2,6 +2,7 @@ package com.capstone.realmen.service.booking;
 
 import java.util.List;
 import java.util.Objects;
+
 import org.springframework.stereotype.Service;
 
 import com.capstone.realmen.common.enums.EBookingStatus;
@@ -12,11 +13,14 @@ import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.account.AccountCreated;
 import com.capstone.realmen.data.dto.booking.Booking;
 import com.capstone.realmen.data.dto.booking.IBookingMapper;
+import com.capstone.realmen.data.dto.branch.service.BranchService;
 import com.capstone.realmen.data.dto.plans.daily.service.DailyPlanService;
 import com.capstone.realmen.repository.database.booking.BookingEntity;
 import com.capstone.realmen.repository.database.booking.IBookingRepository;
 import com.capstone.realmen.service.account.AccountCommandService;
+import com.capstone.realmen.service.account.AccountQueryService;
 import com.capstone.realmen.service.account.data.AccountCreateRequire;
+import com.capstone.realmen.service.account.data.AccountSearchByField;
 import com.capstone.realmen.service.booking.data.BookingCreateRequire;
 import com.capstone.realmen.service.booking.data.BookingDeleteRequire;
 import com.capstone.realmen.service.booking.data.BookingSearchCriteria;
@@ -24,6 +28,8 @@ import com.capstone.realmen.service.booking.helpers.BookingHelper;
 import com.capstone.realmen.service.booking.other.BookingServiceCommandService;
 import com.capstone.realmen.service.booking.other.data.BookingServiceCreateRequire;
 import com.capstone.realmen.service.booking.other.data.BookingServiceDeleteRequire;
+import com.capstone.realmen.service.branch.others.services.BranchServiceQueryService;
+import com.capstone.realmen.service.branch.others.services.data.BranchServiceSearchCriteria;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.DailyPlanServiceQueryService;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.data.DailyPlanServiceSearchCriteria;
 
@@ -52,35 +58,76 @@ public class BookingCommandService extends BookingHelper {
         AccountCommandService aCommand;
 
         @NonNull
+        AccountQueryService aQuery;
+
+        @NonNull
         DailyPlanServiceQueryService dpQuery;
+
+        @NonNull
+        BranchServiceQueryService brsQuery;
 
         @NonNull
         RequestContext requestContext;
 
-        public void save(BookingCreateRequire createRequire) {
-                DailyPlanServiceSearchCriteria dpsSearchCriteria = DailyPlanServiceSearchCriteria.of(
-                                createRequire.booking().dailyPlanId(),
+        public void saveByRecept(BookingCreateRequire createRequire) {
+                BranchServiceSearchCriteria brsSearchCriteria = BranchServiceSearchCriteria.searchByBrIdAndBrsIds(
                                 createRequire.booking().branchId(),
-                                createRequire.serviceIds());
-                List<DailyPlanService> searvices = dpQuery
-                                .findAll(dpsSearchCriteria, PageRequestCustom.unPaged())
+                                createRequire.dailyPlanServiceIds());
+                List<BranchService> searvices = brsQuery
+                                .findAll(brsSearchCriteria, PageRequestCustom.unPaged())
                                 .getContent();
                 if (searvices.isEmpty())
                         throw new NotFoundException("Không tìm thấy dịch vụ");
 
                 Account requestAccount = requestContext.getAccount();
-                AccountCreateRequire aCreateRequire = AccountCreateRequire.ofReceptionist(createRequire.customer());
-                AccountCreated cusCreated = aCommand.createAccount(aCreateRequire);
-                BookingEntity newBooking = mapper.toEntity(createRequire.booking());
+                Long bookingId;
+                if (createRequire.isAccountIdEmpty()) {
+                        AccountCreateRequire aCreateRequire = AccountCreateRequire
+                                        .ofReceptionist(createRequire.customer());
+                        AccountCreated cusCreated = aCommand.createAccount(aCreateRequire);
+                        BookingEntity newBooking = mapper.toEntity(createRequire.booking());
+                        BookingEntity updatedBooking = createBookingByRole(newBooking, requestAccount.roleCode(),
+                                        cusCreated.accountId());
 
-                BookingEntity updatedBooking = createBookingByRole(newBooking, requestAccount.roleCode(),
-                                cusCreated.accountId());
-                repository.save(updatedBooking);
+                        BookingEntity savedBooking = repository.save(updatedBooking);
+                        bookingId = savedBooking.getBookingId();
+                } else {
+                        AccountSearchByField aSearchByField = AccountSearchByField.of(createRequire.customerPhone());
+                        Account cusAccount = aQuery.find(aSearchByField);
+                        BookingSearchCriteria searchCriteria = BookingSearchCriteria.of(
+                                        cusAccount.accountId(),
+                                        createRequire.booking().branchId(),
+                                        List.of(EBookingStatus.DRAFT.getCode()),
+                                        createRequire.booking().bookedAt());
+                        List<Booking> bookings = bQuery
+                                        .findAll(searchCriteria, PageRequestCustom.unPaged())
+                                        .getContent();
+
+                        if (Objects.nonNull(bookings) && !bookings.isEmpty()) {
+                                Booking draftBooking = bookings.stream().findFirst().get();
+                                bookingId = draftBooking.bookingId();
+                        } else {
+                                BookingEntity newBooking = mapper.toEntity(createRequire.booking());
+                                BookingEntity updateNewBooking = createBookingByRole(newBooking,
+                                                requestAccount.roleCode(),
+                                                cusAccount.accountId()).setAudit(requestContext.auditCreate());
+
+                                BookingEntity savedBooking = repository.save(updateNewBooking);
+                                bookingId = savedBooking.getBookingId();
+                        }
+                }
+
+                BookingServiceCreateRequire bsCreateRequire = BookingServiceCreateRequire
+                                .createByBranchService(bookingId, createRequire.bookingServices(), searvices);
+
+                bsCommand.saveListByBranchService(bsCreateRequire);
 
         }
 
-        public void saveOrUpdate(BookingCreateRequire createRequire) {
+        public Booking saveByCus(BookingCreateRequire createRequire) {
+                Account requestAccount = requestContext.getAccount();
                 BookingSearchCriteria searchCriteria = BookingSearchCriteria.of(
+                                requestAccount.accountId(),
                                 createRequire.booking().branchId(),
                                 List.of(EBookingStatus.DRAFT.getCode()),
                                 createRequire.booking().dailyPlanId());
@@ -88,35 +135,40 @@ public class BookingCommandService extends BookingHelper {
                                 .findAll(searchCriteria, PageRequestCustom.unPaged())
                                 .getContent();
 
-                DailyPlanServiceSearchCriteria dpsSearchCriteria = DailyPlanServiceSearchCriteria.of(
-                                createRequire.booking().dailyPlanId(),
+                DailyPlanServiceSearchCriteria dpsSearchCriteria = DailyPlanServiceSearchCriteria.ofDailyPlanServiceIds(
+                                createRequire.dailyPlanServiceIds(),
                                 createRequire.booking().branchId(),
-                                createRequire.serviceIds());
+                                createRequire.booking().dailyPlanId());
                 List<DailyPlanService> searvices = dpQuery
                                 .findAll(dpsSearchCriteria, PageRequestCustom.unPaged())
                                 .getContent();
                 if (searvices.isEmpty())
                         throw new NotFoundException("Các dịch vụ này không có trong kế hoạch hoạt động của chi nhánh");
 
-                Long bookingId;
                 if (Objects.nonNull(bookings) && !bookings.isEmpty()) {
                         Booking draftBooking = bookings.stream().findFirst().get();
-                        bookingId = draftBooking.bookingId();
+                        BookingServiceCreateRequire bsCreateRequire = BookingServiceCreateRequire
+                                        .createByDailyPlanService(draftBooking.bookingId(),
+                                                        createRequire.bookingServices(), searvices);
+
+                        bsCommand.saveListByDailyPlanService(bsCreateRequire);
+                        return draftBooking;
                 } else {
-                        Account requestAccount = requestContext.getAccount();
+
                         BookingEntity newBooking = mapper.toEntity(createRequire.booking());
                         BookingEntity updateNewBooking = createBookingByRole(newBooking, requestAccount.roleCode(),
                                         requestAccount.accountId())
                                         .setAudit(requestContext.auditCreate());
 
                         BookingEntity savedBooking = repository.save(updateNewBooking);
-                        bookingId = savedBooking.getBookingId();
+                        BookingServiceCreateRequire bsCreateRequire = BookingServiceCreateRequire
+                                        .createByDailyPlanService(savedBooking.getBookingId(),
+                                                        createRequire.bookingServices(), searvices);
+
+                        bsCommand.saveListByDailyPlanService(bsCreateRequire);
+                        return mapper.toDto(savedBooking);
                 }
 
-                BookingServiceCreateRequire bsCreateRequire = BookingServiceCreateRequire
-                                .of(bookingId, createRequire.bookingServices(), searvices);
-
-                bsCommand.saveAll(bsCreateRequire);
         }
 
         public void delete(BookingDeleteRequire deleteRequire) {

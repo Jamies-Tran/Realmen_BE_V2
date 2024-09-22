@@ -38,7 +38,7 @@ public record DailyPlanCreateRequire(
                 if(Objects.equals(account.roleCode(), ERole.OPERATOR_STAFF.getCode())) {
                     return serviceAssignmentCodes.contains(account.professionalTypeCode());
                 }
-                return Objects.equals(account.roleCode(), ERole.RECPETIONIST.getCode());
+                return Objects.equals(account.roleCode(), ERole.RECEPTIONIST.getCode());
             })
             .toList();
     }

@@ -1,9 +1,6 @@
 package com.capstone.realmen.data.dto.common;
 
 import java.time.DayOfWeek;
-import java.time.format.TextStyle;
-import java.util.Locale;
-
 import lombok.Builder;
 
 @Builder
