@@ -1,5 +1,6 @@
 package com.capstone.realmen.service.plans.others.daily.plan.data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -10,7 +11,7 @@ import lombok.With;
 @With
 @Builder
 public record DailyPlanSearchCriteria(
-        List<LocalDateTime> timeRange,
+        List<LocalDate> timeRange,
         Long weeklyPlanId,
         Long branchId,
         Long accountId,
@@ -27,7 +28,7 @@ public record DailyPlanSearchCriteria(
         Long accountId, 
         Long serviceId) {
         return DailyPlanSearchCriteria.builder()
-                .timeRange(timeRange)
+                .timeRange(timeRange.stream().map(LocalDateTime::toLocalDate).toList())
                 .branchId(branchId)
                 .accountId(accountId)
                 .serviceId(serviceId)
@@ -36,18 +37,18 @@ public record DailyPlanSearchCriteria(
 
     public static DailyPlanSearchCriteria of(List<LocalDateTime> timeRange) {
         return DailyPlanSearchCriteria.builder()
-                .timeRange(timeRange)
+                .timeRange(timeRange.stream().map(LocalDateTime::toLocalDate).toList())
                 .build();
     }
 
-    public LocalDateTime timeFrom() {
+    public LocalDate timeFrom() {
         if(Objects.isNull(timeRange) || timeRange.isEmpty()) {
             return null;
         }
         return timeRange.get(0);
     }
 
-    public LocalDateTime timeTo() {
+    public LocalDate timeTo() {
         if(Objects.isNull(timeRange) || timeRange.isEmpty()) {
             return null;
         } else if(timeRange.size() == 1) {
