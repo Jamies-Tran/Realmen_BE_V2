@@ -3,6 +3,7 @@ package com.capstone.realmen.common.util;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,13 +11,6 @@ import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.common.DayInWeek;
 
 public class DateTimeHandler {
-
-    public static List<LocalDateTime> validateTimeRange(List<LocalDateTime> timeRange) {
-        if (Objects.nonNull(timeRange) && timeRange.size() == 1) {
-            timeRange.add(timeRange.get(0).plusDays(7));
-        }
-        return timeRange;
-    }
 
     public static LocalDate dayNextWeek(LocalDate dateTime) {
         return dateTime.plusDays(7);
@@ -86,5 +80,22 @@ public class DateTimeHandler {
 
     public static DayInWeek getDayInWeek(LocalDate date) {
         return DayInWeek.of(date.getDayOfWeek());
+    }
+
+    public static List<LocalDateTime> validateTimeRange(List<LocalDateTime> timeRange) {
+        if (Objects.isNull(timeRange) || timeRange.isEmpty()) {
+            return List.of();
+        } else if (timeRange.size() == 2) {
+            return timeRange.stream()
+                    .sorted(Comparator.naturalOrder())
+                    .toList();
+        } else if (timeRange.size() == 1) {
+            return List.of(
+                    timeRange.get(0).minusDays(7),
+                    timeRange.get(0));
+        } else {
+            return List.of();
+        }
+
     }
 }

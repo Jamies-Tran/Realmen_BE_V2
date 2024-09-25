@@ -16,9 +16,6 @@ public record AdminShopServiceRequest(
         String shopServiceName,
         Long shopServicePrice,
         String shopServiceThumbnail,
-        Integer estimateDuration,
-        String durationUnitCode,
-        String durationUnitName,
         List<ServiceDisplayRequest> serviceDisplays) {
 
 }

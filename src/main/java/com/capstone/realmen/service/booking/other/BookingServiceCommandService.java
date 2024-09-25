@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.capstone.realmen.common.enums.EBookingStatus;
+import com.capstone.realmen.common.request.RequestContext;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.booking.service.IBookingServiceMapper;
 import com.capstone.realmen.data.dto.branch.service.BranchService;
@@ -36,6 +37,9 @@ public class BookingServiceCommandService extends BookingServiceHelper {
         @NonNull
         IBookingServiceMapper mapper;
 
+        @NonNull
+        RequestContext requestContext;
+
         public void saveListByDailyPlanService(BookingServiceCreateRequire createRequire) {
                 Map<Long, DailyPlanService> services = createRequire.dailyPlanServices()
                                 .stream()
@@ -54,7 +58,8 @@ public class BookingServiceCommandService extends BookingServiceHelper {
                                                         .withServiceId(s.shopServiceId())
                                                         .withFinishAt(finishAt)
                                                         .withStatusCode(EBookingStatus.DRAFT.getCode())
-                                                        .withStatusName(EBookingStatus.DRAFT.getName());
+                                                        .withStatusName(EBookingStatus.DRAFT.getName())
+                                                        .setAudit(requestContext.auditCreate());
                                 }).toList();
 
                 repository.saveAll(newBookingServices);
@@ -77,7 +82,8 @@ public class BookingServiceCommandService extends BookingServiceHelper {
                                                         .withServiceId(s.shopServiceId())
                                                         .withFinishAt(finishAt)
                                                         .withStatusCode(EBookingStatus.DRAFT.getCode())
-                                                        .withStatusName(EBookingStatus.DRAFT.getName());
+                                                        .withStatusName(EBookingStatus.DRAFT.getName())
+                                                        .setAudit(requestContext.auditCreate());
                                 }).toList();
                 repository.saveAll(newBookingServices);
         }

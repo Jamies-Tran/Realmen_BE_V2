@@ -38,7 +38,7 @@ public class DailyPlanServiceCommandService {
                     createRequire.dailyPlanServices().stream().map(dailyPlanServiceMapper::toEntity).toList());
         } else {
             List<DailyPlanServiceEntity> newDailyPlanServices = DailyPlanService
-                    .of(createRequire.dailyPlanIds(), createRequire.shopServiceIds())
+                    .of(createRequire.dailyPlanIds(), createRequire.branchServices())
                     .stream()
                     .map(dailyPlanServiceMapper::toEntity)
                     .toList();

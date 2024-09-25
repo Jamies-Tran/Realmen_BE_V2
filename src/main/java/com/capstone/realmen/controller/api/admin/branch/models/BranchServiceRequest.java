@@ -5,6 +5,9 @@ import lombok.Builder;
 @Builder
 public record BranchServiceRequest(
         Long shopServiceId,
+        Integer estimateDuration,
+        String durationUnitCode,
+        String durationUnitName,
         Long price) {
 
 }

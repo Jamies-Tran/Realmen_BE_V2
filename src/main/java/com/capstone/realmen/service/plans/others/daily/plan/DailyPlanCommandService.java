@@ -94,7 +94,7 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
                                                 .build());
                 dailyPlanServiceCommandService.createList(DailyPlanServiceCreateRequire.builder()
                                 .dailyPlanIds(savedDailyPlanIds)
-                                .shopServiceIds(createRequire.serviceIds())
+                                .branchServices(createRequire.services())
                                 .build());
         }
 

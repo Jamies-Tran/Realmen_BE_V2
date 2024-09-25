@@ -24,10 +24,6 @@ public record DailyPlanCreateRequire(
         return accounts.stream().map(Account::accountId).toList();
     }
 
-    public List<Long> serviceIds() {
-        return services.stream().map(BranchService::shopServiceId).toList();
-    }
-
     public List<Account> accounts() {
         List<String> serviceAssignmentCodes = services.stream()
             .map(BranchService::serviceAssignmentCode)

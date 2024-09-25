@@ -3,11 +3,14 @@ package com.capstone.realmen.repository.database.booking.service;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.capstone.realmen.service.booking.other.data.BookingServiceCountRequire;
+import com.capstone.realmen.service.booking.other.data.BookingServiceSearchCriteria;
 
 @Repository
 public interface IBookingServiceRepository extends JpaRepository<BookingServiceEntity, Long> {
@@ -25,4 +28,19 @@ public interface IBookingServiceRepository extends JpaRepository<BookingServiceE
                 AND bs.statusCode IN :#{#countRequire.statusCodes()}
             """)
     Integer coungBooking(BookingServiceCountRequire countRequire, LocalTime from, LocalTime to);
+
+    @Query("""
+                SELECT
+                    bs
+                FROM BookingServiceEntity bs
+                WHERE (:#{#searchCriteria.hasTimeRangeEmpty()} = TRUE
+                    OR bs.createdAt BETWEEN :#{#searchCriteria.timeFrom()} AND :#{#searchCriteria.timeTo()})
+                AND (:#{#searchCriteria.hasStatusCodesEmpty()} = TRUE
+                    OR bs.statusCode IN :#{#searchCriteria.statusCodes()})
+                AND (:#{#searchCriteria.hasStaffIdEmpty()} = TRUE
+                    OR bs.staffId = :#{#searchCriteria.staffId()})
+                AND (:#{#searchCriteria.hasBookingIdEmpty()} = TRUE
+                    OR bs.bookingId = :#{#searchCriteria.bookingId()})
+            """)
+    Page<BookingServiceEntity> findAll(BookingServiceSearchCriteria searchCriteria, Pageable pageable);
 }

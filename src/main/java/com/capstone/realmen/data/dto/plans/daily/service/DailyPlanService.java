@@ -3,6 +3,8 @@ package com.capstone.realmen.data.dto.plans.daily.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.capstone.realmen.data.dto.branch.service.BranchService;
+
 import lombok.Builder;
 
 @Builder
@@ -32,13 +34,16 @@ public record DailyPlanService(
                 .toList();
     }
 
-    public static List<DailyPlanService> of(List<Long> dailyPlanIds, List<Long> shopServiceIds) {
+    public static List<DailyPlanService> of(List<Long> dailyPlanIds, List<BranchService> branchServices) {
         List<DailyPlanService> dailyPlanServices = new ArrayList<>();
         for (Long dailyPlanId : dailyPlanIds) {
-            for (Long shopServiceId : shopServiceIds) {
+            for (BranchService brs : branchServices) {
                 DailyPlanService dailyPlanService = DailyPlanService.builder()
                         .dailyPlanId(dailyPlanId)
-                        .shopServiceId(shopServiceId)
+                        .shopServiceId(brs.branchServiceId())
+                        .estimateDuration(brs.estimateDuration())
+                        .durationUnitCode(brs.durationUnitCode())
+                        .durationUnitName(brs.durationUnitName())
                         .build();
                 dailyPlanServices.add(dailyPlanService);
             }

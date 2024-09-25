@@ -32,4 +32,13 @@ public class DailyPlanServiceEntity {
 
     @Column(name = "shop_service_id")
     Long shopServiceId;
+
+    @Column(name = "estimate_duration")
+    Integer estimateDuration;
+
+    @Column(name = "duration_unit_code")
+    String durationUnitCode;
+
+    @Column(name = "duration_unit_name")
+    String durationUnitName;
 }

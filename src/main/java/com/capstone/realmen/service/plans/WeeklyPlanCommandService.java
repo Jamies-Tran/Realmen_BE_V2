@@ -62,10 +62,7 @@ public class WeeklyPlanCommandService extends WeeklyPlanHelper {
         public void create(WeeklyPlanCreateRequire createRequire) {
                 Long branchId = requestContext.getAccount().branchId();
                 String weeklyPlanName = generateWeeklyPlanName(List.of());
-                BranchServiceSearchCriteria bsSearchCriteria = BranchServiceSearchCriteria
-                                .of(branchId, List.of(EBranchServiceStatus.ACTIVE.getCode()));
-                AccountSearchCriteria aSearchCriteria = AccountSearchCriteria
-                                .filterStaffOnBranch(branchId);
+
                 WeeklyPlan newWeeklyPlan = WeeklyPlan.builder()
                                 .weeklyPlanName(weeklyPlanName)
                                 .branchId(branchId)
@@ -75,9 +72,13 @@ public class WeeklyPlanCommandService extends WeeklyPlanHelper {
                 WeeklyPlanEntity saveWeeklyPlan = weeklyPlanRepository.save(
                                 weeklyPlanMapper.toEntity(newWeeklyPlan)
                                                 .setAudit(requestContext.auditCreate()));
+                AccountSearchCriteria aSearchCriteria = AccountSearchCriteria
+                                .filterStaffOnBranch(branchId);
                 List<Account> accounts = accountQueryService
                                 .findAll(aSearchCriteria, PageRequestCustom.unPaged())
                                 .toList();
+                BranchServiceSearchCriteria bsSearchCriteria = BranchServiceSearchCriteria
+                                .of(branchId, List.of(EBranchServiceStatus.ACTIVE.getCode()));
                 List<BranchService> services = bsQuery
                                 .findAll(bsSearchCriteria, PageRequestCustom.unPaged())
                                 .toList();

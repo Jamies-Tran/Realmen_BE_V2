@@ -47,9 +47,9 @@ public interface IBranchServiceRepository extends JpaRepository<BranchServiceEnt
                 sc.shopCategoryName AS shopCategoryName,
                 ss.shopServicePrice AS shopServicePrice,
                 bs.branchServicePrice AS branchServicePrice,
-                ss.estimateDuration AS estimateDuration,
-                ss.durationUnitCode AS durationUnitCode,
-                ss.durationUnitName AS durationUnitName
+                bs.estimateDuration AS estimateDuration,
+                bs.durationUnitCode AS durationUnitCode,
+                bs.durationUnitName AS durationUnitName
             FROM BranchServiceEntity bs
             INNER JOIN ShopServiceEntity ss ON bs.shopServiceId = ss.shopServiceId
             INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
@@ -82,9 +82,9 @@ public interface IBranchServiceRepository extends JpaRepository<BranchServiceEnt
                 sc.shopCategoryName AS shopCategoryName,
                 ss.shopServicePrice AS shopServicePrice,
                 bs.branchServicePrice AS branchServicePrice,
-                ss.estimateDuration AS estimateDuration,
-                ss.durationUnitCode AS durationUnitCode,
-                ss.durationUnitName AS durationUnitName
+                bs.estimateDuration AS estimateDuration,
+                bs.durationUnitCode AS durationUnitCode,
+                bs.durationUnitName AS durationUnitName
             FROM BranchServiceEntity bs
             INNER JOIN ShopServiceEntity ss ON bs.shopServiceId = ss.shopServiceId
             INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
@@ -108,9 +108,9 @@ public interface IBranchServiceRepository extends JpaRepository<BranchServiceEnt
                 sc.shopCategoryName AS shopCategoryName,
                 ss.shopServicePrice AS shopServicePrice,
                 bs.branchServicePrice AS branchServicePrice,
-                ss.estimateDuration AS estimateDuration,
-                ss.durationUnitCode AS durationUnitCode,
-                ss.durationUnitName AS durationUnitName
+                bs.estimateDuration AS estimateDuration,
+                bs.durationUnitCode AS durationUnitCode,
+                bs.durationUnitName AS durationUnitName
             FROM BranchServiceEntity bs
             INNER JOIN ShopServiceEntity ss ON bs.shopServiceId = ss.shopServiceId
             INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId

@@ -29,9 +29,9 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 sc.shopCategoryName AS categoryName,
                 sc.serviceAssignmentCode AS serviceAssignmentCode,
                 sc.serviceAssignmentName AS serviceAssignmentName,
-                ss.estimateDuration AS estimateDuration,
-                ss.durationUnitCode AS durationUnitCode,
-                ss.durationUnitName AS durationUnitName
+                dps.estimateDuration AS estimateDuration,
+                dps.durationUnitCode AS durationUnitCode,
+                dps.durationUnitName AS durationUnitName
             FROM DailyPlanServiceEntity dps
                 INNER JOIN ShopServiceEntity ss ON dps.shopServiceId = ss.shopServiceId
                 INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
@@ -57,9 +57,9 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 sc.shopCategoryName AS categoryName,
                 sc.serviceAssignmentCode AS serviceAssignmentCode,
                 sc.serviceAssignmentName AS serviceAssignmentName,
-                ss.estimateDuration AS estimateDuration,
-                ss.durationUnitCode AS durationUnitCode,
-                ss.durationUnitName AS durationUnitName
+                dps.estimateDuration AS estimateDuration,
+                dps.durationUnitCode AS durationUnitCode,
+                dps.durationUnitName AS durationUnitName
             FROM DailyPlanServiceEntity dps
                 INNER JOIN ShopServiceEntity ss ON dps.shopServiceId = ss.shopServiceId
                 INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
@@ -85,9 +85,9 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 sc.shopCategoryName AS categoryName,
                 sc.serviceAssignmentCode AS serviceAssignmentCode,
                 sc.serviceAssignmentName AS serviceAssignmentName,
-                ss.estimateDuration AS estimateDuration,
-                ss.durationUnitCode AS durationUnitCode,
-                ss.durationUnitName AS durationUnitName
+                dps.estimateDuration AS estimateDuration,
+                dps.durationUnitCode AS durationUnitCode,
+                dps.durationUnitName AS durationUnitName
             FROM DailyPlanServiceEntity dps
                 INNER JOIN ShopServiceEntity ss ON dps.shopServiceId = ss.shopServiceId
                 INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
@@ -121,9 +121,9 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 sc.shopCategoryName AS categoryName,
                 sc.serviceAssignmentCode AS serviceAssignmentCode,
                 sc.serviceAssignmentName AS serviceAssignmentName,
-                ss.estimateDuration AS estimateDuration,
-                ss.durationUnitCode AS durationUnitCode,
-                ss.durationUnitName AS durationUnitName
+                dps.estimateDuration AS estimateDuration,
+                dps.durationUnitCode AS durationUnitCode,
+                dps.durationUnitName AS durationUnitName
             FROM DailyPlanServiceEntity dps
                 INNER JOIN ShopServiceEntity ss ON dps.shopServiceId = ss.shopServiceId
                 INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId

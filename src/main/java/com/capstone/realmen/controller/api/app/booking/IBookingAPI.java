@@ -10,7 +10,7 @@ import com.capstone.realmen.controller.api.app.booking.models.BookingRequest;
 @RequestMapping("/mobile/booking")
 public interface IBookingAPI {
     @PostMapping
-    @PreAuthorize("hasAnyRole({'ROLE_CUSTOMER', 'ROLE_RECPETIONIST'})")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     void createByCustomer(@RequestBody BookingRequest bookingRequest);
 
 }

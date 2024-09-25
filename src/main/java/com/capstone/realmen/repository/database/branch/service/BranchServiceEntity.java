@@ -38,6 +38,15 @@ public class BranchServiceEntity {
     @Column(name = "branch_service_price")
     Long branchServicePrice;
 
+    @Column(name = "estimate_duration")
+    Integer estimateDuration;
+
+    @Column(name = "duration_unit_code")
+    String durationUnitCode;
+
+    @Column(name = "duration_unit_name")
+    String durationUnitName;
+
     @Column(name = "branch_service_status_code")
     String branchServiceStatusCode;
 
