@@ -26,9 +26,9 @@ public record DailyPlan(
                 .toList();
     }
 
-    public List<Long> shopServiceIds() {
+    public List<Long> branchServiceIds() {
         return dailyPlanServices.stream()
-                .map(DailyPlanService::shopServiceId)
+                .map(DailyPlanService::branchServiceId)
                 .toList();
     }
 

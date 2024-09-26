@@ -33,12 +33,11 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 dps.durationUnitCode AS durationUnitCode,
                 dps.durationUnitName AS durationUnitName
             FROM DailyPlanServiceEntity dps
-                INNER JOIN ShopServiceEntity ss ON dps.shopServiceId = ss.shopServiceId
+                INNER JOIN BranchServiceEntity bs ON dps.branchServiceId = bs.branchServiceId
+                INNER JOIN ShopServiceEntity ss ON bs.shopServiceId = ss.shopServiceId
                 INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
                 INNER JOIN DailyPlanEntity dp ON dps.dailyPlanId = dp.dailyPlanId
                 INNER JOIN WeeklyPlanEntity wp ON wp.weeklyPlanId = dp.weeklyPlanId
-                LEFT JOIN BranchServiceEntity bs ON dps.shopServiceId = bs.shopServiceId
-                    AND bs.branchId = wp.branchId
             WHERE dps.dailyPlanId = :dailyPlanId
                 """)
     List<DailyPlanServiceDAO> findAllByDailyPlanId(Long dailyPlanId);
@@ -61,11 +60,11 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 dps.durationUnitCode AS durationUnitCode,
                 dps.durationUnitName AS durationUnitName
             FROM DailyPlanServiceEntity dps
-                INNER JOIN ShopServiceEntity ss ON dps.shopServiceId = ss.shopServiceId
+                INNER JOIN BranchServiceEntity bs ON bs.branchServiceId = dps.branchServiceId
+                INNER JOIN ShopServiceEntity ss ON bs.shopServiceId = ss.shopServiceId
                 INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
                 INNER JOIN DailyPlanEntity dp ON dps.dailyPlanId = dp.dailyPlanId
                 INNER JOIN WeeklyPlanEntity wp ON wp.weeklyPlanId = dp.weeklyPlanId
-                LEFT JOIN BranchServiceEntity bs ON dps.shopServiceId = bs.shopServiceId
                     AND bs.branchId = wp.branchId
             WHERE dps.dailyPlanId IN :dailyPlanIds
                 """)
@@ -77,7 +76,8 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 dps.dailyPlanId AS dailyPlanId,
                 wp.weeklyPlanId AS weeklyPlanId,
                 wp.branchId AS branchId,
-                dps.shopServiceId AS shopServiceId,
+                dps.branchServiceId AS branchServiceId,
+                ss.shopServiceId AS shopServiceId,
                 ss.shopServiceName AS shopServiceName,
                 COALESCE(bs.branchServicePrice, 0) AS branchServicePrice,
                 ss.shopServicePrice AS shopServicePrice,
@@ -89,11 +89,11 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 dps.durationUnitCode AS durationUnitCode,
                 dps.durationUnitName AS durationUnitName
             FROM DailyPlanServiceEntity dps
-                INNER JOIN ShopServiceEntity ss ON dps.shopServiceId = ss.shopServiceId
+                INNER JOIN BranchServiceEntity bs ON bs.branchServiceId = dps.branchServiceId
+                INNER JOIN ShopServiceEntity ss ON bs.shopServiceId = ss.shopServiceId
                 INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
                 INNER JOIN DailyPlanEntity dp ON dps.dailyPlanId = dp.dailyPlanId
                 INNER JOIN WeeklyPlanEntity wp ON wp.weeklyPlanId = dp.weeklyPlanId
-                INNER JOIN BranchServiceEntity bs ON dps.shopServiceId = bs.shopServiceId
             WHERE (:#{#searchCriteria.hasBranchIdEmpty()} = TRUE
                 OR wp.branchId = :#{#searchCriteria.branchId()})
             AND (:#{#searchCriteria.hasDailyPlanIdEmpty()} = TRUE
@@ -113,7 +113,8 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 dps.dailyPlanId AS dailyPlanId,
                 wp.weeklyPlanId AS weeklyPlanId,
                 bs.branchId AS branchId,
-                dps.shopServiceId AS shopServiceId,
+                ss.shopServiceId AS shopServiceId,
+                dps.branchServiceId AS branchServiceId,
                 ss.shopServiceName AS shopServiceName,
                 COALESCE(bs.branchServicePrice, 0) AS branchServicePrice,
                 ss.shopServicePrice AS shopServicePrice,
@@ -125,12 +126,11 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 dps.durationUnitCode AS durationUnitCode,
                 dps.durationUnitName AS durationUnitName
             FROM DailyPlanServiceEntity dps
-                INNER JOIN ShopServiceEntity ss ON dps.shopServiceId = ss.shopServiceId
+                INNER JOIN BranchServiceEntity bs ON dps.branchServiceId = bs.branchServiceId
+                INNER JOIN ShopServiceEntity ss ON bs.shopServiceId = ss.shopServiceId
                 INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
                 INNER JOIN DailyPlanEntity dp ON dps.dailyPlanId = dp.dailyPlanId
                 INNER JOIN WeeklyPlanEntity wp ON wp.weeklyPlanId = dp.weeklyPlanId
-                INNER JOIN BranchServiceEntity bs ON dps.shopServiceId = bs.shopServiceId
-                    AND bs.branchId = wp.branchId
             WHERE dps.dailyPlanServiceId = :dailyPlanServiceId
             """)
     Optional<DailyPlanServiceDAO> findByDailyPlanServiceId(Long dailyPlanServiceId);

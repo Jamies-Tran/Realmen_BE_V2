@@ -30,8 +30,8 @@ public class DailyPlanServiceEntity {
     @Column(name = "daily_plan_id")
     Long dailyPlanId;
 
-    @Column(name = "shop_service_id")
-    Long shopServiceId;
+    @Column(name = "branch_service_id")
+    Long branchServiceId;
 
     @Column(name = "estimate_duration")
     Integer estimateDuration;

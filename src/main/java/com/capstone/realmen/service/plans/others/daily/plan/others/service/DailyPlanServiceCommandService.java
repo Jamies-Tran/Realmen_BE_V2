@@ -52,11 +52,14 @@ public class DailyPlanServiceCommandService {
             .of(updateRequire.dailyPlanId());
         deleteAll(deleteRequire);
         Long dailyPlanId = updateRequire.dailyPlanId();
-        List<DailyPlanServiceEntity> dailyPlanServices = updateRequire.serviceIds()
+        List<DailyPlanServiceEntity> dailyPlanServices = updateRequire.services()
                 .stream()
-                .map(serviceId -> DailyPlanService.builder()
+                .map(service -> DailyPlanService.builder()
                         .dailyPlanId(dailyPlanId)
-                        .shopServiceId(serviceId)
+                        .branchServiceId(service.serviceId())
+                        .estimateDuration(service.estimateDuration())
+                        .durationUnitCode(service.durationUnitCode())
+                        .durationUnitName(service.durationUnitName())
                         .build())
                 .map(dailyPlanServiceMapper::toEntity)
                 .toList();

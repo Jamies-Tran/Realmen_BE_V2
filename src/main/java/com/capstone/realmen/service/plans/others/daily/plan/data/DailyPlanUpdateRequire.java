@@ -33,10 +33,4 @@ public record DailyPlanUpdateRequire(
                 .toList();
     }
 
-    public List<Long> serviceIds() {
-        return serviceUpdates.stream()
-                .map(DailyPlanServiceUpdate::serviceId)
-                .toList();
-    }
-
 }

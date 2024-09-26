@@ -5,6 +5,9 @@ import lombok.Builder;
 @Builder
 public record DailyPlanServiceRequest(
     Long serviceId,
+    Integer estimateDuration,
+    String durationUnitCode,
+    String durationUnitName,
     String assignmentTypeCode
 ) {
     

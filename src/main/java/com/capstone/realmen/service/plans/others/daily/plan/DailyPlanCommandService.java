@@ -166,7 +166,7 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
                 DailyPlanAccountUpdateRequire staffUpdateRequire = DailyPlanAccountUpdateRequire
                                 .of(updateRequire.dailyPlanId(), updateRequire.staffUpdates());
                 DailyPlanServiceUpdateRequire serviceUpdateRequire = DailyPlanServiceUpdateRequire
-                                .of(updateRequire.dailyPlanId(), updateRequire.serviceIds());
+                                .of(updateRequire.dailyPlanId(), updateRequire.serviceUpdates());
                 List<DailyPlanAccount> dailyPlanAccounts = dailyPlanAccountCommandService.update(staffUpdateRequire);
                 List<DailyPlanService> dailyPlanServices = dailyPlanServiceCommandService.update(serviceUpdateRequire);
                 DailyPlanEntity newDailyPlan = dailyPlanRepository.save(foundDailyPlan);

@@ -13,7 +13,7 @@ public record DailyPlanService(
         Long dailyPlanId,
         Long weeklyPlanId,
         Long branchId,
-        Long shopServiceId,
+        Long branchServiceId,
         String shopServiceName,
         Long branchServicePrice,
         Long shopServicePrice,
@@ -26,10 +26,10 @@ public record DailyPlanService(
         String durationUnitName,
         String shopServiceStatusCode,
         String shopServiceStatusName) {
-    public List<DailyPlanService> of(List<Long> shopServiceIds) {
-        return shopServiceIds.stream()
-                .map(shopServiceId -> DailyPlanService.builder()
-                        .shopServiceId(shopServiceId)
+    public List<DailyPlanService> of(List<Long> branchServiceIds) {
+        return branchServiceIds.stream()
+                .map(branchServiceId -> DailyPlanService.builder()
+                        .branchServiceId(branchServiceId)
                         .build())
                 .toList();
     }
@@ -40,7 +40,7 @@ public record DailyPlanService(
             for (BranchService brs : branchServices) {
                 DailyPlanService dailyPlanService = DailyPlanService.builder()
                         .dailyPlanId(dailyPlanId)
-                        .shopServiceId(brs.branchServiceId())
+                        .branchServiceId(brs.branchServiceId())
                         .estimateDuration(brs.estimateDuration())
                         .durationUnitCode(brs.durationUnitCode())
                         .durationUnitName(brs.durationUnitName())
@@ -54,7 +54,7 @@ public record DailyPlanService(
     public static List<DailyPlanService> duplicate(List<DailyPlanService> dailyPlanServices, Long dailyPlanId) {
         return dailyPlanServices.stream()
                 .map(dailyPlanSer -> DailyPlanService.builder()
-                        .shopServiceId(dailyPlanSer.shopServiceId())
+                        .branchServiceId(dailyPlanSer.branchServiceId())
                         .dailyPlanId(dailyPlanId)
                         .build())
                 .toList();

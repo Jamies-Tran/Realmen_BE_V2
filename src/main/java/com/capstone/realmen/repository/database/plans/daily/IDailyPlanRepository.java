@@ -45,7 +45,7 @@ public interface IDailyPlanRepository extends JpaRepository<DailyPlanEntity, Lon
             AND (:#{#searchCriteria.hasAccountIdEmpty()} = TRUE
                 OR dpa.accountId = :#{#searchCriteria.accountId()})
             AND (:#{#searchCriteria.hasServiceIdEmpty()} = TRUE
-                OR dps.shopServiceId = :#{#searchCriteria.serviceId()})
+                OR dps.branchServiceId = :#{#searchCriteria.serviceId()})
             AND (:#{#searchCriteria.hasBranchIdEmpty()} = TRUE
                 OR wp.branchId = :#{#searchCriteria.branchId()})
 

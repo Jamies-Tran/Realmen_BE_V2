@@ -9,6 +9,7 @@ public record DailyPlanServiceResponse(
                 Long weeklyPlanId,
                 Long branchId,
                 Long shopServiceId,
+                Long branchServiceId,
                 String shopServiceName,
                 Long branchServicePrice,
                 Long shopServicePrice,

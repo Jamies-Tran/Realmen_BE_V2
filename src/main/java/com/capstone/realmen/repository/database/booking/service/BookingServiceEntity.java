@@ -33,8 +33,8 @@ public class BookingServiceEntity extends Auditable {
         @Column(name = "booking_id")
         Long bookingId;
 
-        @Column(name = "service_id")
-        Long serviceId;
+        @Column(name = "daily_plan_service_id")
+        Long dailyPlanServiceId;
 
         @Column(name = "staff_id")
         Long staffId;

@@ -55,7 +55,7 @@ public class BookingServiceCommandService extends BookingServiceHelper {
                                                         s.durationUnitCode());
                                         return mapper.toEntity(bookingService)
                                                         .withBookingId(createRequire.bookingId())
-                                                        .withServiceId(s.shopServiceId())
+                                                        .withDailyPlanServiceId(s.dailyPlanServiceId())
                                                         .withFinishAt(finishAt)
                                                         .withStatusCode(EBookingStatus.DRAFT.getCode())
                                                         .withStatusName(EBookingStatus.DRAFT.getName())
@@ -79,7 +79,7 @@ public class BookingServiceCommandService extends BookingServiceHelper {
                                                         s.durationUnitCode());
                                         return mapper.toEntity(bookingService)
                                                         .withBookingId(createRequire.bookingId())
-                                                        .withServiceId(s.shopServiceId())
+                                                        .withDailyPlanServiceId(s.shopServiceId())
                                                         .withFinishAt(finishAt)
                                                         .withStatusCode(EBookingStatus.DRAFT.getCode())
                                                         .withStatusName(EBookingStatus.DRAFT.getName())
