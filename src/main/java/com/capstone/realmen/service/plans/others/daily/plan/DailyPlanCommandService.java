@@ -1,6 +1,7 @@
 package com.capstone.realmen.service.plans.others.daily.plan;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.capstone.realmen.common.enums.EDailyPlanStatus;
 import com.capstone.realmen.common.request.RequestContext;
 import com.capstone.realmen.common.util.DateTimeHandler;
+import com.capstone.realmen.controller.handler.exceptions.InvalidRequest;
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
 import com.capstone.realmen.data.dto.common.DayInWeek;
 import com.capstone.realmen.data.dto.plans.daily.DailyPlan;
@@ -64,6 +66,13 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
 
         public void create(DailyPlanCreateRequire createRequire) {
                 List<LocalDate> dailyPlanDateList = getDailyPlanDateList(createRequire.pickUpDate());
+                dailyPlanDateList.forEach(date -> {
+                        Boolean isExist = dailyPlanRepository.existByDate(date);
+                        if(isExist) {
+                                throw new InvalidRequest("Ngày %s đã có kế hoạch hoạt động"
+                                        .formatted(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+                        }
+                });
                 EDailyPlanStatus defaultStatus = getDailyPlanStatus(createRequire.accounts(), createRequire.services());
                 List<DailyPlan> dailyPlan = dailyPlanDateList.stream()
                                 .map(dailyPlanDate -> {
@@ -169,7 +178,9 @@ public class DailyPlanCommandService extends DailyPlanHelpers {
                                 .of(updateRequire.dailyPlanId(), updateRequire.serviceUpdates());
                 List<DailyPlanAccount> dailyPlanAccounts = dailyPlanAccountCommandService.update(staffUpdateRequire);
                 List<DailyPlanService> dailyPlanServices = dailyPlanServiceCommandService.update(serviceUpdateRequire);
-                DailyPlanEntity newDailyPlan = dailyPlanRepository.save(foundDailyPlan);
+                DailyPlanEntity newDailyPlan = dailyPlanRepository.save(foundDailyPlan
+                        .withDailyPlanStatusCode(EDailyPlanStatus.PROCESSING.getCode()))
+                        .withDailyPlanStatusName(EDailyPlanStatus.PROCESSING.getName());
 
                 return dailyPlanMapper.toDto(newDailyPlan)
                                 .withDailyPlanAccounts(dailyPlanAccounts)

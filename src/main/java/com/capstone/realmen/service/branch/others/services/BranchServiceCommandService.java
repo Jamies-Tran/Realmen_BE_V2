@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.capstone.realmen.common.enums.EBranchServiceStatus;
 import com.capstone.realmen.data.dao.branch.service.BranchServiceDAO;
 import com.capstone.realmen.data.dto.account.Account;
-import com.capstone.realmen.data.dto.branch.service.BranchService;
 import com.capstone.realmen.data.dto.branch.service.IBranchServiceMapper;
 import com.capstone.realmen.data.dto.shop.service.ShopService;
 import com.capstone.realmen.repository.database.branch.service.BranchServiceEntity;

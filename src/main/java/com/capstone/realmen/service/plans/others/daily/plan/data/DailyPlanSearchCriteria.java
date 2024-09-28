@@ -12,6 +12,8 @@ import lombok.With;
 @Builder
 public record DailyPlanSearchCriteria(
         List<LocalDate> timeRange,
+        List<String> statusCodes,
+        LocalDate date,
         Long weeklyPlanId,
         Long branchId,
         Long accountId,
@@ -23,10 +25,10 @@ public record DailyPlanSearchCriteria(
     }
 
     public static DailyPlanSearchCriteria of(
-        List<LocalDateTime> timeRange,
-        Long branchId, 
-        Long accountId, 
-        Long serviceId) {
+            List<LocalDateTime> timeRange,
+            Long branchId,
+            Long accountId,
+            Long serviceId) {
         return DailyPlanSearchCriteria.builder()
                 .timeRange(timeRange.stream().map(LocalDateTime::toLocalDate).toList())
                 .branchId(branchId)
@@ -42,16 +44,16 @@ public record DailyPlanSearchCriteria(
     }
 
     public LocalDate timeFrom() {
-        if(Objects.isNull(timeRange) || timeRange.isEmpty()) {
+        if (Objects.isNull(timeRange) || timeRange.isEmpty()) {
             return null;
         }
         return timeRange.get(0);
     }
 
     public LocalDate timeTo() {
-        if(Objects.isNull(timeRange) || timeRange.isEmpty()) {
+        if (Objects.isNull(timeRange) || timeRange.isEmpty()) {
             return null;
-        } else if(timeRange.size() == 1) {
+        } else if (timeRange.size() == 1) {
             return timeRange.get(0).plusDays(7);
         }
 
@@ -66,6 +68,10 @@ public record DailyPlanSearchCriteria(
         return Objects.isNull(timeRange) || timeRange.isEmpty();
     }
 
+    public Boolean hasDateEmpty() {
+        return Objects.isNull(date);
+    }
+
     public Boolean hasAccountIdEmpty() {
         return Objects.isNull(accountId);
     }
@@ -76,5 +82,9 @@ public record DailyPlanSearchCriteria(
 
     public Boolean hasBranchIdEmpty() {
         return Objects.isNull(branchId);
+    }
+
+    public Boolean hasStatusCodesEmpty() {
+        return Objects.isNull(statusCodes) || statusCodes.isEmpty();
     }
 }

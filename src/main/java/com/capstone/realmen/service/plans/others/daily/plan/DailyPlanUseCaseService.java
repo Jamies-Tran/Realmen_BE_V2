@@ -60,4 +60,9 @@ public class DailyPlanUseCaseService implements IAdminDailyPlanService, IAppDail
         return dailyPlanQueryService.findById(searchByField);
     }
 
+    @Override
+    public Page<DailyPlan> adminFindAll(DailyPlanSearchCriteria searchCriteria, PageRequestCustom pageRequestCustom) {
+        return dailyPlanQueryService.findAll(searchCriteria, pageRequestCustom);
+    }
+
 }

@@ -108,7 +108,9 @@ public interface IDailyPlanAccountRepository extends JpaRepository<DailyPlanAcco
                 WHERE (:#{#searchCriteria.hasDailyPlanIdEmpty()} = TRUE
                     OR dpa.dailyPlanId = :#{#searchCriteria.dailyPlanId})
                 AND (:#{#searchCriteria.hasProfessionalTypeCodeEmpty()} = TRUE
-                    OR a.professionalTypeCode IN :#{#searchCriteria.professionalTypeCodes()})
+                    OR a.professionalTypeCode IN :#{#searchCriteria.professinalTypeCodes()})
+                AND (:#{#searchCriteria.hasSearchEmpty()} = TRUE
+                    OR CONCAT(a.firstName, ' ', a.lastName) ILIKE %:#{#searchCriteria.search()}%)
             """)
     Page<DailyPlanAccountDAO> findAll(DailyPlanAccountSearchCriteria searchCriteria, Pageable pageable);
 }

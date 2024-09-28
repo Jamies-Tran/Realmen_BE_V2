@@ -13,7 +13,6 @@ import com.capstone.realmen.data.dto.account.Account;
 import com.capstone.realmen.data.dto.account.AccountCreated;
 import com.capstone.realmen.data.dto.booking.Booking;
 import com.capstone.realmen.data.dto.booking.IBookingMapper;
-import com.capstone.realmen.data.dto.branch.service.BranchService;
 import com.capstone.realmen.data.dto.plans.daily.service.DailyPlanService;
 import com.capstone.realmen.repository.database.booking.BookingEntity;
 import com.capstone.realmen.repository.database.booking.IBookingRepository;
@@ -29,7 +28,6 @@ import com.capstone.realmen.service.booking.other.BookingServiceCommandService;
 import com.capstone.realmen.service.booking.other.data.BookingServiceCreateRequire;
 import com.capstone.realmen.service.booking.other.data.BookingServiceDeleteRequire;
 import com.capstone.realmen.service.branch.others.services.BranchServiceQueryService;
-import com.capstone.realmen.service.branch.others.services.data.BranchServiceSearchCriteria;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.DailyPlanServiceQueryService;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.data.DailyPlanServiceSearchCriteria;
 
@@ -70,14 +68,24 @@ public class BookingCommandService extends BookingHelper {
         RequestContext requestContext;
 
         public void saveByRecept(BookingCreateRequire createRequire) {
-                BranchServiceSearchCriteria brsSearchCriteria = BranchServiceSearchCriteria.searchByBrIdAndBrsIds(
+                // BranchServiceSearchCriteria brsSearchCriteria =
+                // BranchServiceSearchCriteria.searchByBrIdAndBrsIds(
+                // createRequire.booking().branchId(),
+                // createRequire.dailyPlanServiceIds());
+                // List<BranchService> searvices = brsQuery
+                // .findAll(brsSearchCriteria, PageRequestCustom.unPaged())
+                // .getContent();
+                // if (searvices.isEmpty())
+                // throw new NotFoundException("Không tìm thấy dịch vụ");
+                DailyPlanServiceSearchCriteria dpsSearchCriteria = DailyPlanServiceSearchCriteria.ofDailyPlanServiceIds(
+                                createRequire.dailyPlanServiceIds(),
                                 createRequire.booking().branchId(),
-                                createRequire.dailyPlanServiceIds());
-                List<BranchService> searvices = brsQuery
-                                .findAll(brsSearchCriteria, PageRequestCustom.unPaged())
+                                createRequire.booking().dailyPlanId());
+                List<DailyPlanService> searvices = dpQuery
+                                .findAll(dpsSearchCriteria, PageRequestCustom.unPaged())
                                 .getContent();
                 if (searvices.isEmpty())
-                        throw new NotFoundException("Không tìm thấy dịch vụ");
+                        throw new NotFoundException("Các dịch vụ này không có trong kế hoạch hoạt động của chi nhánh");
 
                 Account requestAccount = requestContext.getAccount();
                 Long bookingId;
@@ -118,10 +126,10 @@ public class BookingCommandService extends BookingHelper {
                 }
 
                 BookingServiceCreateRequire bsCreateRequire = BookingServiceCreateRequire
-                                .createByBranchService(bookingId, createRequire.bookingServices(), searvices);
+                                .createByDailyPlanService(bookingId,
+                                                createRequire.bookingServices(), searvices);
 
-                bsCommand.saveListByBranchService(bsCreateRequire);
-
+                bsCommand.saveListByDailyPlanService(bsCreateRequire);
         }
 
         public Booking saveByCus(BookingCreateRequire createRequire) {

@@ -1,6 +1,8 @@
 package com.capstone.realmen.repository.database.plans.daily;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +42,8 @@ public interface IDailyPlanRepository extends JpaRepository<DailyPlanEntity, Lon
             INNER JOIN WeeklyPlanEntity wp ON dp.weeklyPlanId = wp.weeklyPlanId
             WHERE (:#{#searchCriteria.hasTimeRangeEmpty()} = TRUE
                 OR dp.date BETWEEN :#{#searchCriteria.timeFrom()} AND :#{#searchCriteria.timeTo()})
+            AND (:#{#searchCriteria.hasDateEmpty()} = TRUE
+                OR dp.date = :#{#searchCriteria.date()})
             AND (:#{#searchCriteria.hasWeeklyPlanIdEmpty()} = TRUE
                 OR dp.weeklyPlanId = :#{#searchCriteria.weeklyPlanId()})
             AND (:#{#searchCriteria.hasAccountIdEmpty()} = TRUE
@@ -48,7 +52,16 @@ public interface IDailyPlanRepository extends JpaRepository<DailyPlanEntity, Lon
                 OR dps.branchServiceId = :#{#searchCriteria.serviceId()})
             AND (:#{#searchCriteria.hasBranchIdEmpty()} = TRUE
                 OR wp.branchId = :#{#searchCriteria.branchId()})
+            AND (:#{#searchCriteria.hasStatusCodesEmpty()} = TRUE
+                OR dp.dailyPlanStatusCode IN :#{#searchCriteria.statusCodes()})
 
             """)
     Page<DailyPlanEntity> findAll(DailyPlanSearchCriteria searchCriteria, Pageable pageable);
+
+    @Query("""
+            SELECT COUNT(dp) > 0
+            FROM DailyPlanEntity dp
+            WHERE dp.date = :date
+            """)
+    Boolean existByDate(LocalDate date);
 }

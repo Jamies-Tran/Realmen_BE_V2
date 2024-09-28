@@ -31,13 +31,16 @@ public class AppShopServiceController implements IAppShopServiceAPI {
         public PageImplResponse<AppShopServiceResponse> findAll(
                         String search,
                         Long branchId,
+                        Long branchServiceId,
                         String assignmentTypeCode,
                         List<Long> shopServicePriceRange,
                         Integer current,
                         Integer pageSize) {
+                List<Long> branchServiceIds = Objects.nonNull(branchServiceId) ? List.of(branchServiceId) : List.of();
                 BranchServiceSearchCriteria searchCriteria = BranchServiceSearchCriteria.builder()
                                 .search(search)
                                 .branchId(branchId)
+                                .branchServiceIds(branchServiceIds)
                                 .priceRange(shopServicePriceRange)
                                 .assignmentTypeCode(assignmentTypeCode)
                                 .build();

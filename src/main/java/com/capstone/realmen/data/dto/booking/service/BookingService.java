@@ -1,5 +1,6 @@
 package com.capstone.realmen.data.dto.booking.service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -15,12 +16,19 @@ import lombok.With;
 @Builder
 public record BookingService(
                 Long bookingServiceId,
-                Long branchServiceId,
-                Long bookingId,
-                Long serviceId,
                 Long dailyPlanServiceId,
+                Long bookingId,
                 Long staffId,
+                Long cusId,
+                String shopServiceName,
                 Long price,
+                String bookingCode,
+                LocalDate bookedAt,
+                String staffCode,
+                String staffName,
+                String staffPhone,
+                String cusName,
+                String cusPhone,
                 String pickUpTypeCode,
                 String pickUpTypeName,
                 LocalTime beginAt,

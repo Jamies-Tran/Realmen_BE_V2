@@ -8,7 +8,7 @@ import lombok.Builder;
 
 @Builder
 public record BookingServiceRequest(
-        Long branchServiceId,
+        Long dailyPlanServiceId,
         Long staffId,
         Long price,
         LocalDateTime beginAtReq,

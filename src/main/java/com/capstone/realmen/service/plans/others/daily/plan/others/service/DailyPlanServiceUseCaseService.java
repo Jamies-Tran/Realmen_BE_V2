@@ -7,8 +7,8 @@ import com.capstone.realmen.common.request.PageRequestCustom;
 import com.capstone.realmen.data.dto.plans.daily.service.DailyPlanService;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.data.DailyPlanServiceSearchByField;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.data.DailyPlanServiceSearchCriteria;
+import com.capstone.realmen.service.plans.others.daily.plan.others.service.usecase.admin.IAdminDailyPlanServiceService;
 import com.capstone.realmen.service.plans.others.daily.plan.others.service.usecase.app.IAppDailyPlanServiceService;
-
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class DailyPlanServiceUseCaseService implements IAppDailyPlanServiceService {
+public class DailyPlanServiceUseCaseService implements IAppDailyPlanServiceService, IAdminDailyPlanServiceService {
     @NonNull
     DailyPlanServiceQueryService query;
 
@@ -28,6 +28,12 @@ public class DailyPlanServiceUseCaseService implements IAppDailyPlanServiceServi
 
     @Override
     public Page<DailyPlanService> appFindAll(DailyPlanServiceSearchCriteria searchCriteria,
+            PageRequestCustom pageRequestCustom) {
+        return query.findAll(searchCriteria, pageRequestCustom);
+    }
+
+    @Override
+    public Page<DailyPlanService> adminFindAll(DailyPlanServiceSearchCriteria searchCriteria,
             PageRequestCustom pageRequestCustom) {
         return query.findAll(searchCriteria, pageRequestCustom);
     }

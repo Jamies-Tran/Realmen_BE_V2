@@ -21,7 +21,7 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 dps.dailyPlanId AS dailyPlanId,
                 wp.weeklyPlanId AS weeklyPlanId,
                 bs.branchId AS branchId,
-                ss.shopServiceId AS shopServiceId,
+                dps.branchServiceId AS branchServiceId,
                 ss.shopServiceName AS shopServiceName,
                 COALESCE(bs.branchServicePrice, 0) AS branchServicePrice,
                 ss.shopServicePrice AS shopServicePrice,
@@ -48,7 +48,7 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 dps.dailyPlanId AS dailyPlanId,
                 wp.weeklyPlanId AS weeklyPlanId,
                 bs.branchId AS branchId,
-                ss.shopServiceId AS shopServiceId,
+                dps.branchServiceId AS branchServiceId,
                 ss.shopServiceName AS shopServiceName,
                 COALESCE(bs.branchServicePrice, 0) AS branchServicePrice,
                 ss.shopServicePrice AS shopServicePrice,
@@ -102,6 +102,12 @@ public interface IDailyPlanServiceRepository extends JpaRepository<DailyPlanServ
                 OR dps.dailyPlanServiceId IN :#{#searchCriteria.dailyPlanServiceIds()})
             AND (:#{#searchCriteria.hasServiceAssignmentCodeEmpty()} = TRUE
                 OR sc.serviceAssignmentCode IN :#{#searchCriteria.serviceAssignmentCodes()})
+            AND (:#{#searchCriteria.hasDateEmpty()} = TRUE
+                OR dp.date = :#{#searchCriteria.date()})
+            AND (:#{#searchCriteria.hasDailyPlanStatusCodesEmpty()} = TRUE
+                OR dp.dailyPlanStatusCode IN :#{#searchCriteria.dailyPlanStatusCodes()})
+            AND (:#{#searchCriteria.hasSearchEmpty()} = TRUE
+                OR ss.shopServiceName ILIKE %:#{#searchCriteria.search()}%)
             """)
     Page<DailyPlanServiceDAO> findAll(DailyPlanServiceSearchCriteria searchCriteria, Pageable pageable);
 

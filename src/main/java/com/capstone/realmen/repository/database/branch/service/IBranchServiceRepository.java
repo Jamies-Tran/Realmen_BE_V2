@@ -55,7 +55,7 @@ public interface IBranchServiceRepository extends JpaRepository<BranchServiceEnt
             INNER JOIN ShopCategoryEntity sc ON ss.shopCategoryId = sc.shopCategoryId
             WHERE bs.branchId = :#{#searchCriteria.branchId()}
                 AND (:#{#searchCriteria.hasSearchEmpty()} = TRUE
-                    OR LOWER(ss.shopServiceName) = :#{#searchCriteria.search()})
+                    OR LOWER(ss.shopServiceName) ILIKE %:#{#searchCriteria.search()}%)
                 AND (:#{#searchCriteria.hasPriceRangeEmpty()} = TRUE
                     OR bs.branchServicePrice BETWEEN :#{#searchCriteria.priceRange().get(0)} AND :#{#searchCriteria.priceRange().get(1)})
                 AND (:#{#searchCriteria.hasShopCategoryIdEmpty()} = TRUE
@@ -64,6 +64,7 @@ public interface IBranchServiceRepository extends JpaRepository<BranchServiceEnt
                     OR sc.serviceAssignmentCode = :#{#searchCriteria.assignmentTypeCode()})
                 AND (:#{#searchCriteria.hasServiceIdEmpty()} = TRUE
                     OR bs.shopServiceId IN :#{#searchCriteria.serviceIds()})
+            
             """)
     Page<BranchServiceDAO> findAll(BranchServiceSearchCriteria searchCriteria, Pageable pageable);
 

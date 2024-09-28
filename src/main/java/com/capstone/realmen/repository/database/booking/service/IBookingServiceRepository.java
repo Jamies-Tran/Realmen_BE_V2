@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.capstone.realmen.data.dao.booking.service.BookingServiceDAO;
 import com.capstone.realmen.service.booking.other.data.BookingServiceCountRequire;
 import com.capstone.realmen.service.booking.other.data.BookingServiceSearchCriteria;
 
@@ -31,8 +32,29 @@ public interface IBookingServiceRepository extends JpaRepository<BookingServiceE
 
     @Query("""
                 SELECT
-                    bs
+                    bs.bookingServiceId AS bookingServiceId,
+                    dps.dailyPlanServiceId AS dailyPlanServiceId,
+                    b.bookingId AS bookingId,
+                    astaff.accountId AS staffId,
+                    ss.shopServiceName AS shopServiceName,
+                    bs.price AS price,
+                    b.bookingCode AS bookingCode,
+                    b.bookedAt AS bookedAt,
+                    astaff.staffCode AS staffCode,
+                    CONCAT(astaff.firstName, ' ', astaff.lastName) AS staffName,
+                    astaff.phone AS staffPhone,
+                    bs.beginAt AS beginAt,
+                    bs.finishAt AS finishAt,
+                    bs.actualBeginAt AS actualBeginAt,
+                    bs.actualFinishedAt AS actualFinishedAt,
+                    bs.statusCode AS statusCode,
+                    bs.statusName AS statusName
                 FROM BookingServiceEntity bs
+                INNER JOIN BookingEntity b ON bs.bookingId = b.bookingId
+                INNER JOIN AccountEntity astaff ON bs.staffId = astaff.accountId
+                INNER JOIN DailyPlanServiceEntity dps ON dps.dailyPlanServiceId = bs.dailyPlanServiceId
+                INNER JOIN BranchServiceEntity brs ON brs.branchServiceId = dps.branchServiceId
+                INNER JOIN ShopServiceEntity ss ON brs.shopServiceId = ss.shopServiceId
                 WHERE (:#{#searchCriteria.hasTimeRangeEmpty()} = TRUE
                     OR bs.createdAt BETWEEN :#{#searchCriteria.timeFrom()} AND :#{#searchCriteria.timeTo()})
                 AND (:#{#searchCriteria.hasStatusCodesEmpty()} = TRUE
@@ -42,5 +64,5 @@ public interface IBookingServiceRepository extends JpaRepository<BookingServiceE
                 AND (:#{#searchCriteria.hasBookingIdEmpty()} = TRUE
                     OR bs.bookingId = :#{#searchCriteria.bookingId()})
             """)
-    Page<BookingServiceEntity> findAll(BookingServiceSearchCriteria searchCriteria, Pageable pageable);
+    Page<BookingServiceDAO> findAll(BookingServiceSearchCriteria searchCriteria, Pageable pageable);
 }

@@ -60,4 +60,8 @@ public interface DailyPlanServiceDAO {
     void setDurationUnitName(String durationUnitName);
 
     String getDurationUnitName();
+
+    void setBranchServiceId(Long branchServiceId);
+
+    Long getBranchServiceId();
 }

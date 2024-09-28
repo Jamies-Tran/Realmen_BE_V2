@@ -3,6 +3,7 @@ package com.capstone.realmen.common.enums;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import com.capstone.realmen.controller.handler.exceptions.NotFoundException;
@@ -31,5 +32,13 @@ public enum EDailyPlanStatus {
     public static EDailyPlanStatus verify(LocalDate dateTime, EDailyPlanStatus status) {
         return LocalDateTime.now().toLocalDate().compareTo(dateTime) <= 0 ? status
                 : EDailyPlanStatus.OVERDUE;
+    }
+
+    public static List<EDailyPlanStatus> getAvailableStatus() {
+        return Arrays.stream(values())
+            .filter(status -> !Objects.equals(EDailyPlanStatus.DISABLED.getCode(), status.getCode())
+                && !Objects.equals(EDailyPlanStatus.DRAFT.getCode(), status.getCode())
+                && !Objects.equals(EDailyPlanStatus.OVERDUE.getCode(), status.getCode()))
+            .toList();
     }
 }

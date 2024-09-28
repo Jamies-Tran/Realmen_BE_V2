@@ -15,6 +15,7 @@ public interface IAppShopServiceAPI {
     PageImplResponse<AppShopServiceResponse> findAll(
             @RequestParam(required = false, value = "search", defaultValue = "") String search,
             @RequestParam(required = false, value = "branchId", defaultValue = "") Long branchId,
+            @RequestParam(required = false, value = "branchServiceId", defaultValue = "") Long branchServiceId,
             @RequestParam(required = false, value = "assignmentTypeCode", defaultValue = "") String assignmentTypeCode,
             @RequestParam(required = false, value = "shopServicePriceRange", defaultValue = "") List<Long> shopServicePriceRange,
             @RequestParam(required = false, value = "current", defaultValue = "1") Integer current,

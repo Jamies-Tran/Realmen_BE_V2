@@ -65,28 +65,28 @@ public class BookingServiceCommandService extends BookingServiceHelper {
                 repository.saveAll(newBookingServices);
         }
 
-        public void saveListByBranchService(BookingServiceCreateRequire createRequire) {
-                Map<Long, BranchService> services = createRequire.branchServices()
-                                .stream()
-                                .collect(Collectors.toMap(BranchService::branchServiceId, s -> s));
-                List<BookingServiceEntity> newBookingServices = createRequire.bookingServices()
-                                .stream()
-                                .map(bookingService -> {
-                                        BranchService s = services.get(bookingService.branchServiceId());
-                                        LocalTime finishAt = getEstimateFinishAt(
-                                                        bookingService.beginAt(),
-                                                        s.estimateDuration(),
-                                                        s.durationUnitCode());
-                                        return mapper.toEntity(bookingService)
-                                                        .withBookingId(createRequire.bookingId())
-                                                        .withDailyPlanServiceId(s.shopServiceId())
-                                                        .withFinishAt(finishAt)
-                                                        .withStatusCode(EBookingStatus.DRAFT.getCode())
-                                                        .withStatusName(EBookingStatus.DRAFT.getName())
-                                                        .setAudit(requestContext.auditCreate());
-                                }).toList();
-                repository.saveAll(newBookingServices);
-        }
+        // public void saveListByBranchService(BookingServiceCreateRequire createRequire) {
+        //         Map<Long, BranchService> services = createRequire.branchServices()
+        //                         .stream()
+        //                         .collect(Collectors.toMap(BranchService::branchServiceId, s -> s));
+        //         List<BookingServiceEntity> newBookingServices = createRequire.bookingServices()
+        //                         .stream()
+        //                         .map(bookingService -> {
+        //                                 BranchService s = services.get(bookingService.branchServiceId());
+        //                                 LocalTime finishAt = getEstimateFinishAt(
+        //                                                 bookingService.beginAt(),
+        //                                                 s.estimateDuration(),
+        //                                                 s.durationUnitCode());
+        //                                 return mapper.toEntity(bookingService)
+        //                                                 .withBookingId(createRequire.bookingId())
+        //                                                 .withDailyPlanServiceId(s.shopServiceId())
+        //                                                 .withFinishAt(finishAt)
+        //                                                 .withStatusCode(EBookingStatus.DRAFT.getCode())
+        //                                                 .withStatusName(EBookingStatus.DRAFT.getName())
+        //                                                 .setAudit(requestContext.auditCreate());
+        //                         }).toList();
+        //         repository.saveAll(newBookingServices);
+        // }
 
         public void delete(BookingServiceDeleteRequire deleteRequire) {
                 BookingServiceEntity foundBookingService = repository.findById(deleteRequire.bookingServiceId())

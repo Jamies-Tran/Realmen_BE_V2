@@ -77,14 +77,14 @@ public class ShopServiceController implements IShopServiceAPI {
 
         @Override
         public PageImplResponse<AdminShopServiceResponse> findInBranch(
-                        Long branchId, 
+                        Long branchId,
                         String search,
                         String assignmentTypeCode,
                         List<String> statusCodes, 
                         List<Long> priceRange, 
                         Integer current, Integer pageSize) {
                 BranchServiceSearchCriteria searchCriteria = BranchServiceSearchCriteria
-                        .of(branchId, search, assignmentTypeCode, statusCodes, priceRange);
+                        .of(branchId,search, assignmentTypeCode, statusCodes, priceRange);
                 PageRequestCustom pageRequestCustom = PageRequestCustom.of(current, pageSize);
                 Page<AdminShopServiceResponse> responses = bsUseCase.adminFindAll(searchCriteria, pageRequestCustom)
                                 .map(shopServiceModelMapper::toModel);

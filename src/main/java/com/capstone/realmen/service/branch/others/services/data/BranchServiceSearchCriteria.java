@@ -12,14 +12,13 @@ public record BranchServiceSearchCriteria(
         String search,
         Long branchId,
         Long shopCategoryId,
-        List<Long> branchServiceIds,
         String assignmentTypeCode,
+        List<Long> branchServiceIds,
         List<String> statusCodes,
         List<Long> priceRange,
         List<Long> serviceIds) {
-    public static BranchServiceSearchCriteria of(Long branchId, String search, String assignmentTypeCode,
-            List<String> statusCodes,
-            List<Long> priceRange) {
+    public static BranchServiceSearchCriteria of(Long branchId, String search, 
+        String assignmentTypeCode, List<String> statusCodes, List<Long> priceRange) {
         return BranchServiceSearchCriteria.builder()
                 .branchId(branchId)
                 .search(search.toLowerCase())
